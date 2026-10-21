@@ -49,6 +49,7 @@ nav.tabs button:not(.active):hover{background:var(--accent-soft);color:var(--tex
   nav.tabs .lbl-long{display:none}
   .brand small{display:none}
 }
+@media (max-width:420px){nav.tabs{gap:2px;padding:4px}nav.tabs button{padding:9px 5px;font-size:12px}}
 section.view{display:none;animation:fadeUp .35s ease}
 section.view.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -187,6 +188,133 @@ details.import summary{cursor:pointer;font-weight:700}
 code{background:var(--panel2);border:1px solid var(--border);padding:1px 5px;border-radius:6px;font-size:12.5px}
 .status-line{font-size:13px;margin-top:8px}
 .status-line.ok{color:var(--good)} .status-line.err{color:var(--again)}
+/* ---------- Stories ---------- */
+.st-stage{margin-top:20px}
+.st-stage-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 2px 10px}
+.st-stage-h h3{margin:0;font-size:16px}
+.st-stage-h .muted{font-size:12.5px}
+.st-lockmsg{font-size:13px;color:var(--muted);margin:-4px 2px 10px}
+.st-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.st-grid{grid-template-columns:minmax(0,1fr)}}
+.st-card{position:relative;text-align:left;border:1px solid var(--border);background:var(--panel);border-radius:16px;padding:14px 14px 12px;cursor:pointer;box-shadow:var(--shadow);transition:transform .15s,border-color .2s,box-shadow .2s;display:flex;flex-direction:column;gap:3px;width:100%;color:var(--text)}
+.st-card:hover{transform:translateY(-2px);border-color:var(--accent)}
+.st-card .tko{font-family:var(--font-ko);font-size:19px;font-weight:800;letter-spacing:-.01em;word-break:keep-all;padding-right:32px;line-height:1.3}
+.st-card .ten{font-size:13px;color:var(--muted);padding-right:32px}
+.st-card .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.st-card .tick{position:absolute;top:12px;right:12px;width:24px;height:24px;border-radius:50%;border:2px solid var(--border);display:grid;place-items:center;font-size:12px;font-weight:900;color:transparent;transition:background .2s}
+.st-card.read .tick{background:var(--good);border-color:var(--good);color:#fff}
+.st-card.next{border:2px solid var(--accent);padding:13px 13px 11px;box-shadow:0 0 0 4px var(--accent-soft),var(--shadow)}
+.st-card.locked{opacity:.48;cursor:not-allowed;filter:grayscale(.5)}
+.st-card.locked:hover{transform:none;border-color:var(--border)}
+.chip-fmt{background:var(--panel2);color:var(--muted);border:1px solid var(--border)}
+.chip-next{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.chip-read{background:rgba(34,160,107,.14);color:var(--good)}
+.rd-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.rd-title{font-family:var(--font-ko);font-size:clamp(25px,6.5vw,34px);font-weight:800;letter-spacing:-.02em;margin:12px 0 0;line-height:1.25;word-break:keep-all}
+.rd-bar{position:sticky;top:8px;z-index:20;display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0 4px;padding:8px;border:1px solid var(--border);border-radius:16px;background:var(--panel);box-shadow:var(--shadow)}
+@supports (backdrop-filter:blur(8px)){.rd-bar{background:color-mix(in srgb,var(--panel) 86%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}}
+.btn.en-toggle{font-size:15px;padding:10px 16px}
+.btn.en-toggle[aria-pressed=true]{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
+.rd-hint{font-size:12px;color:var(--muted);margin-left:auto}
+@media (max-width:640px){.rd-hint{display:none}.rd-bar .btn{flex:1 1 0;min-width:0;padding:10px 8px;font-size:14px;white-space:nowrap}}
+.en-wrap{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .3s ease,opacity .3s ease}
+.en-wrap>div{overflow:hidden;min-height:0}
+.show-en .en-wrap,.peek .en-wrap{grid-template-rows:1fr;opacity:1}
+.en-txt{font-family:var(--font);font-size:14px;line-height:1.45;color:var(--muted);padding-top:4px;font-weight:500}
+.rd-text{margin-top:16px;font-family:var(--font-ko);word-break:keep-all;overflow-wrap:anywhere}
+.rd-text p{margin:0 0 18px;font-size:18px;line-height:1.85}
+.rd-text p:last-child{margin-bottom:6px}
+.chat{display:flex;flex-direction:column;gap:12px;margin:0 0 18px}
+.chat:last-child{margin-bottom:6px}
+.msg{display:flex;flex-direction:column;align-items:flex-start;max-width:88%}
+.msg.right{align-self:flex-end;align-items:flex-end}
+.msg .who{font-family:var(--font);font-size:12px;font-weight:700;color:var(--muted);margin:0 12px 3px}
+.bubble{display:flex;gap:8px;align-items:flex-start;background:var(--panel2);border:1px solid var(--border);border-radius:18px 18px 18px 6px;padding:10px 10px 10px 14px;cursor:pointer;transition:background .2s,border-color .2s,box-shadow .2s}
+.msg.right .bubble{background:var(--accent-soft);border-color:transparent;border-radius:18px 18px 6px 18px}
+.bubble:hover{border-color:var(--accent)}
+.bubble .bko{font-size:17.5px;line-height:1.6}
+.msg.speaking .bubble,.sent.speaking .sko{box-shadow:0 0 0 3px rgba(245,158,11,.45)}
+.sent.speaking .sko{background:rgba(245,158,11,.16);border-radius:6px}
+.sent{cursor:pointer}
+.sent .sko{border-radius:6px;transition:background .2s}
+.sent:hover .sko{background:var(--accent-soft)}
+.sent .sx{display:none}
+.show-en .sent,.sent.peek{display:block;margin:0 0 10px}
+.show-en .sent .sx,.sent.peek .sx{display:flex;gap:8px;align-items:flex-start;animation:fadeUp .3s ease}
+.sent .sx .en-txt{padding-top:5px}
+.vw{text-decoration:underline dotted var(--accent);text-decoration-thickness:2px;text-underline-offset:5px;cursor:pointer;border-radius:4px;transition:background .15s}
+.vw:hover,.vw.on{background:var(--accent-soft)}
+.vw:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.vpop{position:absolute;z-index:90;background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-lg);padding:12px 14px;width:min(300px,calc(100vw - 24px));animation:fadeUp .18s ease}
+.vpop .w{font-family:var(--font-ko);font-size:21px;font-weight:800}
+.vpop .m{font-weight:700;margin-top:2px}
+.vpop .nt{font-size:13px;color:var(--muted);margin-top:4px;word-break:keep-all}
+.badge-deck{background:rgba(34,160,107,.14);color:var(--good)}
+.rd-sec h2{display:flex;align-items:center;gap:8px}
+.qitem{border:1px solid var(--border);background:var(--panel2);border-radius:14px;padding:12px 14px}
+.qitem+.qitem{margin-top:10px}
+.qitem .qko{font-family:var(--font-ko);font-weight:700;font-size:16.5px;word-break:keep-all}
+.qitem .qn{color:var(--accent);margin-right:4px}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opts button{text-align:left;border:1px solid var(--border);background:var(--panel);border-radius:12px;padding:10px 12px;cursor:pointer;font-family:var(--font-ko);font-size:15px;font-weight:600;display:flex;gap:10px;align-items:center;transition:transform .12s,background .2s,opacity .2s}
+.opts button:not(:disabled):hover{border-color:var(--accent);transform:translateY(-1px)}
+.opts button .n{flex:none;width:22px;height:22px;border-radius:7px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-size:12px;font-family:var(--font)}
+.opts button.right{background:var(--good);color:#fff;border-color:transparent;animation:pop .35s}
+.opts button.wrong{background:var(--again);color:#fff;border-color:transparent;animation:shake .35s}
+.opts button.dim{opacity:.45}
+.opts button:disabled{cursor:default}
+.qfb{margin-top:8px;font-weight:700;font-size:14.5px}
+.qfb.ok{color:var(--good)} .qfb.bad{color:var(--again)}
+.qans{margin-top:8px;font-family:var(--font-ko);font-weight:600;border-left:3px solid var(--good);padding:2px 0 2px 10px}
+.vrow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.vrow:last-child{border-bottom:0}
+.vrow .vk{font-family:var(--font-ko);font-weight:800;font-size:17px}
+.vrow .vm{font-weight:600}
+.vrow .vn{font-size:12.5px;color:var(--muted);word-break:keep-all}
+@media (max-width:520px){.vrow{grid-template-columns:auto minmax(0,1fr)}.vrow .vact{grid-column:2}}
+.grow{padding:10px 0;border-bottom:1px solid var(--border)}
+.grow:last-child{border-bottom:0}
+.grow .gp{font-family:var(--font-ko);font-weight:800;color:var(--accent);font-size:16px}
+.grow .ge{font-size:14px;margin-top:2px;word-break:keep-all}
+.readbar{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px}
+.readbar .btn{padding:12px 18px;font-size:15px}
+.sp-row{display:grid;grid-template-columns:150px minmax(0,1fr) 56px;gap:10px;align-items:center;margin:8px 0;font-size:14px}
+.sp-row b{text-align:right}
+@media (max-width:520px){.sp-row{grid-template-columns:96px minmax(0,1fr) 48px}}
+/* Story Quiz + question types */
+.status-line.note{color:var(--muted)}
+details.adv{margin-top:14px;border-top:1px dashed var(--border);padding-top:10px}
+details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--muted)}
+.qt{display:inline-block;font-family:var(--font);font-size:11px;font-weight:800;padding:2px 7px;border-radius:99px;background:var(--accent-soft);color:var(--accent);margin-right:7px;vertical-align:2px;letter-spacing:.02em}
+.opts.two{grid-template-columns:1fr 1fr}
+.opts.ord button.picked{border-color:var(--accent);background:var(--accent-soft);opacity:1}
+.opts.ord button .n:empty{background:transparent;border:1.5px dashed var(--border)}
+.sq-order{margin:4px 0 0;padding-left:22px;font-family:var(--font-ko);font-size:14.5px;line-height:1.6}
+.sq-self{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.sq-short{margin-top:10px}
+.btn.sq-good{border-color:var(--good);color:var(--good)} .btn.sq-bad{border-color:var(--again);color:var(--again)}
+.sq-card{text-align:left}
+.sq-story{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
+.linkbtn{background:none;border:0;color:var(--accent);font-weight:700;cursor:pointer;padding:4px 2px;font-size:14px;text-decoration:underline;text-underline-offset:3px;font-family:var(--font-ko)}
+.sq-inst{font-family:var(--font-ko);color:var(--muted);font-size:14px;margin:6px 0 10px;word-break:keep-all}
+.sq-q{border:1px solid var(--border);background:var(--panel2);border-radius:14px;padding:14px 16px}
+.sq-qrow{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.sq-q .qko{font-family:var(--font-ko);font-weight:700;font-size:18px;word-break:keep-all;line-height:1.55}
+.sq-hint{flex:none;font-size:12px;padding:5px 9px}
+.sq-hint[aria-pressed=true]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+#sqBody .opts{margin-top:12px}
+.sq-ctx{margin-top:14px;border-left:3px solid var(--accent);padding:4px 0 4px 12px}
+.sq-ctx .h{font-size:12.5px;font-weight:800;color:var(--muted);margin-bottom:3px}
+.sq-line{font-family:var(--font-ko);font-size:15.5px;display:flex;gap:6px 8px;align-items:center;flex-wrap:wrap;line-height:1.55;word-break:keep-all}
+.sq-line .who{font-weight:800;color:var(--accent)}
+.sq-stats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0 16px}
+.chip-score.hi{background:rgba(34,160,107,.14);color:var(--good)}
+.chip-score.mid{background:rgba(245,158,11,.16);color:#b45309}
+.chip-score.lo{background:rgba(229,72,77,.13);color:var(--again)}
+[data-theme=dark] .chip-score.mid{color:var(--hard)}
+.sc-hi>i{background:var(--good)} .sc-mid>i{background:var(--hard)} .sc-lo>i{background:var(--again)}
+.sp-t{font-family:var(--font-ko);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#quizKind button{font-size:14px;padding:8px 16px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -203,6 +331,7 @@ code{background:var(--panel2);border:1px solid var(--border);padding:1px 5px;bor
   <nav class="tabs" id="tabs">
     <button data-tab="study" class="active">📚 Study</button>
     <button data-tab="quiz">✍️ Quiz</button>
+    <button data-tab="stories">📖 Stories</button>
     <button data-tab="words">🗂️ Words</button>
     <button data-tab="progress">📈 <span class="lbl-long">Progress</span><span class="lbl-short"></span></button>
     <button data-tab="settings">⚙️ <span class="lbl-long">Settings</span></button>
@@ -226,6 +355,11 @@ code{background:var(--panel2);border:1px solid var(--border);padding:1px 5px;bor
   <!-- QUIZ -->
   <section class="view" id="view-quiz">
     <div class="panel" id="quizArea"></div>
+  </section>
+
+  <!-- STORIES -->
+  <section class="view" id="view-stories">
+    <div id="storiesArea"></div>
   </section>
 
   <!-- WORDS -->
@@ -269,6 +403,7 @@ code{background:var(--panel2);border:1px solid var(--border);padding:1px 5px;bor
       <div id="chart"></div>
       <div class="legend"><span><i style="background:var(--accent)"></i>New words learned</span><span><i style="background:var(--good)"></i>Reviews</span></div>
     </div>
+    <div class="panel" id="storyProgress"></div>
     <div class="panel" id="masteredPanel"></div>
   </section>
 
@@ -297,8 +432,21 @@ code{background:var(--panel2);border:1px solid var(--border);padding:1px 5px;bor
       <div class="status-line" id="syncStatus"></div>
     </div>
     <div class="panel">
+      <h2>📖 Stories</h2>
+      <p class="small muted"><b>One link does both.</b> Stories load from the <b>Stories</b> tab of the same Google Sheet as your sync link above — nothing else to paste. Publish the sheet with <b>File → Share → Publish to web → Entire document → CSV</b> so every tab is reachable. A story with the same <code>story_id</code> replaces the built-in one, new ids are added, and your reading progress is kept. If the Stories tab can’t be reached, the 16 built-in stories are used.</p>
+      <label class="check"><input type="checkbox" id="sUnlockStories"> Unlock all stories (skip stage-by-stage unlocking)</label>
+      <div class="status-line" id="storiesStatus"></div>
+      <div class="row" style="margin-top:8px"><button class="btn" data-action="stories-load">↻ Reload stories</button></div>
+      <details class="adv" id="storiesAdv">
+        <summary>Advanced: Stories CSV URL override</summary>
+        <p class="small muted">Only if your stories live somewhere else (another sheet, a GitHub raw CSV/JSON…). When set, this is used instead of the Stories tab of your sync sheet.</p>
+        <input type="url" id="sStoriesUrl" aria-label="Stories CSV URL override" placeholder="https://docs.google.com/spreadsheets/d/e/…/pub?gid=…&amp;single=true&amp;output=csv" style="width:100%">
+        <div class="row" style="margin-top:8px"><button class="btn primary" data-action="stories-load-override">Save &amp; Load</button><button class="btn" data-action="stories-clear">Clear override</button></div>
+      </details>
+    </div>
+    <div class="panel">
       <h2>💾 Backup</h2>
-      <p class="small muted">Your words and progress live in this browser (localStorage). Export a backup now and then, and to move to another device.</p>
+      <p class="small muted">Your words, progress and stories read live in this browser (localStorage). Export a backup now and then, and to move to another device.</p>
       <div class="row">
         <button class="btn primary" data-action="export">⬇ Export backup (JSON)</button>
         <button class="btn" data-action="export-csv">⬇ Export words (CSV)</button>
@@ -326,14 +474,56 @@ code{background:var(--panel2);border:1px solid var(--border);padding:1px 5px;bor
         <li><span class="kbd">1</span> Again · <span class="kbd">2</span> Hard · <span class="kbd">3</span> Good · <span class="kbd">4</span> Easy</li>
         <li><span class="kbd">P</span> pronounce the word · <span class="kbd">E</span> pronounce the example</li>
         <li>Multiple-choice quiz: <span class="kbd">1</span>–<span class="kbd">4</span> pick an answer</li>
+        <li>Stories: <span class="kbd">E</span> show / hide English · <span class="kbd">Esc</span> close the word popup, then back to the story list</li>
+        <li>Story Quiz: <span class="kbd">1</span>–<span class="kbd">4</span> pick an answer · <span class="kbd">H</span> 힌트 EN · <span class="kbd">Enter</span> next question</li>
       </ul>
+    </div>
+    <div class="panel">
+      <h2>📖 Stories</h2>
+      <p>Short graded reading in four stages, from simple dialogues to diary entries. A stage unlocks once you’ve read every story in the stages before it (or turn on <b>Settings → Unlock all stories</b>).</p>
+      <ul>
+        <li><b>Korean first.</b> Read the whole story in Korean. Tap a line or speech bubble to peek at just that line’s English, or press <b>Show English</b> (<span class="kbd">E</span>) to show it under every line.</li>
+        <li><b>Dotted words</b> are this story’s key vocabulary — tap one for its meaning. <span class="tagchip badge-deck">✓ In your deck</span> means it’s already in your flashcards; otherwise <b>＋ Add to my deck</b> puts it in your study queue.</li>
+        <li><b>🔊</b> reads one line; <b>▶ Read whole story</b> reads it all (dialogue speakers get different voices or pitch where your device allows).</li>
+        <li>Answer the <b>Comprehension check</b>; when every question is answered the story is marked as read (or press <b>Mark as read</b>).</li>
+        <li><b>Story Quiz</b> (Quiz tab → <b>📖 Stories</b>): rounds of 10 questions, Korean only, drawn <i>only from stories you’ve marked as read</i>. <b>힌트 EN</b> shows that question’s English; <b>이야기 다시 보기</b> reopens the story. After each answer you see the correct answer and the line it comes from (tap <b>EN</b> for its English). A missed question comes back next round; answer it correctly twice in a row and it’s retired.</li>
+        <li><b>이해도</b> (comprehension score) on each story card = your % correct on that story’s questions, from the reader and the quiz. The Progress tab lists it per story.</li>
+      </ul>
+      <h3>Question types</h3>
+      <ul class="small">
+        <li><code>tf</code> <b>O/X</b> — a statement about the story; answer 맞아요 or 틀려요.</li>
+        <li><code>mcq</code> <b>선택</b> — pick the right answer from 2–4 options.</li>
+        <li><code>who</code> <b>누가</b> — a quoted line: who said it? (dialogues)</li>
+        <li><code>order</code> <b>순서</b> — tap 3–4 events in the order they happened.</li>
+        <li><code>blank</code> <b>빈칸</b> — a sentence from the story with ___; pick the missing word (choices come from the story’s word list and your deck).</li>
+        <li><code>short</code> <b>대답</b> — answer in your head or out loud, press 답 보기, compare with the model answer, then mark yourself 맞았어요 / 틀렸어요.</li>
+      </ul>
+      <h3>Adding a story in the Google Sheet</h3>
+      <p class="small">Use the <b>Stories</b> tab, one row per element, with columns <code>story_id, stage, order, theme, format, title_ko, title_en, type, speaker, ko, en, word_ref, notes, qtype</code>. Give the new story a new id (e.g. <code>st-17</code>), its stage, and number <code>order</code> 1, 2, 3… The <code>type</code> column says what each row is:</p>
+      <ul class="small">
+        <li><code>meta</code> — one per story: <code>stage</code>, <code>theme</code>, <code>format</code> (dialogue / prose / mixed), <code>title_ko</code>, <code>title_en</code>; <code>en</code> = a one-line summary.</li>
+        <li><code>line</code> — one dialogue line (<code>speaker</code> = name) or one prose sentence (<code>speaker</code> blank); <code>ko</code> + <code>en</code>. Put <code>¶</code> in <code>notes</code> to start a new paragraph.</li>
+        <li><code>vocab</code> — <code>ko</code> = dictionary form, <code>en</code> = meaning, <code>word_ref</code> = the Vocab tab id if the word is in your bank, <code>notes</code> = <code>in story: form1, form2 — usage note</code> (the forms listed are what gets underlined).</li>
+        <li><code>grammar</code> — <code>ko</code> = pattern, <code>en</code> = explanation plus the example from the story.</li>
+        <li><code>question</code> — <code>ko</code> = the question in Korean, <code>en</code> = its English (hidden until asked for), <code>notes</code> = <code>answer in Korean | answer in English</code>, <code>qtype</code> = one of the types above, <code>word_ref</code> = optional <code>L5</code> = the story line the answer comes from (shown after answering; the app guesses if blank). By type:
+          <ul>
+            <li><code>tf</code>: <code>ko</code> = the statement; notes <code>맞아요 | True</code> or <code>틀려요 | False — why</code>.</li>
+            <li><code>mcq</code>: options in <code>speaker</code> separated by <code> / </code>; the Korean answer must match one option exactly.</li>
+            <li><code>who</code>: <code>ko</code> = <code>“quoted line” 누가 말했어요?</code>; <code>speaker</code> = the names separated by <code> / </code> (blank = the story’s speakers); answer = the name.</li>
+            <li><code>order</code>: <code>speaker</code> = 3–4 events separated by <code> / </code> <i>in the correct order</i> (the app shuffles them).</li>
+            <li><code>blank</code>: <code>ko</code> = a story sentence with <code>___</code> where a word from the story’s vocab list was; answer = that word, exactly as it fits the blank.</li>
+            <li><code>short</code>: answer = a model answer.</li>
+          </ul>
+          A row with no <code>qtype</code> is treated as <code>mcq</code> if it has options, otherwise <code>short</code>. Aim for 4–6 questions per story.</li>
+      </ul>
+      <p class="small"><b>Publishing:</b> nothing extra to paste — the sync link in <b>Settings</b> does both. Publish the sheet with <b>File → Share → Publish to web → Entire document → Comma-separated values (.csv)</b>; the app fetches the Vocab tab from your link and the Stories tab (gid <code>1019870171</code>) from the same sheet. Edits show up next time the app opens (Google can take a few minutes to refresh). If you ever keep stories elsewhere, use <b>Settings → Stories → Advanced: Stories CSV URL override</b>.</p>
     </div>
     <div class="panel">
       <h2>Three ways to add words</h2>
       <ol>
         <li><b>Manual form</b> — Words tab → <b>＋ Add word</b>. Edit or delete any word from the table.</li>
         <li><b>Import a file or paste</b> — Words tab → <b>Import / paste</b>. Upload a <code>.csv</code>, <code>.tsv</code> or <code>.json</code> file, or copy cells straight out of Google Sheets / Excel (include the header row) and paste them. Download the template there to see the format.</li>
-        <li><b>Sync URL (self-updating)</b> — keep your list in a Google Sheet. In Sheets: <b>File → Share → Publish to web</b> → choose the sheet → <b>Comma-separated values (.csv)</b> → Publish, and copy the link. Paste it in <b>Settings → Sync</b>. Every time you open the app, new rows are added automatically. A GitHub “raw” CSV/JSON link works too (normal github.com/…/blob/… links are converted automatically).</li>
+        <li><b>Sync URL (self-updating)</b> — keep your list in a Google Sheet. In Sheets: <b>File → Share → Publish to web</b> → <b>Entire document</b> → <b>Comma-separated values (.csv)</b> → Publish, and copy the link (a link to just the Vocab tab, <code>…pub?gid=…&amp;single=true&amp;output=csv</code>, works too). Paste it in <b>Settings → Sync</b>. The same link also loads your Stories tab. Every time you open the app, new rows are added automatically. A GitHub “raw” CSV/JSON link works too (normal github.com/…/blob/… links are converted automatically).</li>
       </ol>
       <h3>Column format</h3>
       <p class="small"><code>id, korean, hanja, pos, meaning_en, example_ko, example_en, notes, related, unit, tags, date_added</code></p>
@@ -366,7 +556,7 @@ code{background:var(--panel2);border:1px solid var(--border);padding:1px 5px;bor
     <label class="field" for="fmNotes">Notes (grammar / conjugation tips)</label><textarea id="fmNotes"></textarea>
     <label class="field" for="fmRelated">Synonyms / antonyms / related</label><input type="text" id="fmRelated" style="width:100%">
     <div class="grid2">
-      <div><label class="field" for="fmUnit">Unit</label><input type="text" id="fmUnit" list="unitList" placeholder="e.g. Sogang 4A Unit 2"></div>
+      <div><label class="field" for="fmUnit">Unit</label><input type="text" id="fmUnit" list="unitList" placeholder="e.g. Unit 3 – Travel"></div>
       <div><label class="field" for="fmTags">Tags (separate with ;)</label><input type="text" id="fmTags"></div>
     </div>
     <datalist id="unitList"></datalist>
@@ -404,14 +594,18 @@ const SEED_CARDS = [
 
 const FIELDS = ['id','korean','hanja','pos','meaning_en','example_ko','example_en','notes','related','unit','tags','date_added'];
 const TEMPLATE_ROWS = [
- {id:'',korean:'이사하다',hanja:'移徙',pos:'verb',meaning_en:'to move (house)',example_ko:'다음 달에 학교 근처로 이사할 거예요.',example_en:"I'm going to move near the school next month.",notes:'하다 verb: 이사해요 / 이사했어요. Noun: 이사.',related:'이삿짐 (moving boxes)',unit:'Example (replace with your unit, e.g. Sogang 4A Unit 1)',tags:'daily life;home',date_added:'2026-10-21'},
- {id:'',korean:'어울리다',hanja:'',pos:'verb',meaning_en:'to suit, to look good on; to get along',example_ko:'그 색깔이 정말 잘 어울려요.',example_en:'That colour really suits you.',notes:'N이/가 N에게 어울리다. 잘 어울려요 is a common compliment.',related:'맞다 (to fit)',unit:'Example (replace with your unit, e.g. Sogang 4A Unit 1)',tags:'shopping;compliments',date_added:'2026-10-21'},
- {id:'',korean:'취소하다',hanja:'取消',pos:'verb',meaning_en:'to cancel',example_ko:'비 때문에 여행을 취소했어요.',example_en:'We cancelled the trip because of the rain.',notes:'하다 verb: 취소해요 / 취소했어요. Passive: 취소되다.',related:'↔ 예약하다 (to book)',unit:'Example (replace with your unit, e.g. Sogang 4A Unit 1)',tags:'travel;verbs',date_added:'2026-10-21'}
+ {id:'',korean:'이사하다',hanja:'移徙',pos:'verb',meaning_en:'to move (house)',example_ko:'다음 달에 학교 근처로 이사할 거예요.',example_en:"I'm going to move near the school next month.",notes:'하다 verb: 이사해요 / 이사했어요. Noun: 이사.',related:'이삿짐 (moving boxes)',unit:'Example (replace with your unit, e.g. Unit 1 – Daily life)',tags:'daily life;home',date_added:'2026-10-21'},
+ {id:'',korean:'어울리다',hanja:'',pos:'verb',meaning_en:'to suit, to look good on; to get along',example_ko:'그 색깔이 정말 잘 어울려요.',example_en:'That colour really suits you.',notes:'N이/가 N에게 어울리다. 잘 어울려요 is a common compliment.',related:'맞다 (to fit)',unit:'Example (replace with your unit, e.g. Unit 1 – Daily life)',tags:'shopping;compliments',date_added:'2026-10-21'},
+ {id:'',korean:'취소하다',hanja:'取消',pos:'verb',meaning_en:'to cancel',example_ko:'비 때문에 여행을 취소했어요.',example_en:'We cancelled the trip because of the rain.',notes:'하다 verb: 취소해요 / 취소했어요. Passive: 취소되다.',related:'↔ 예약하다 (to book)',unit:'Example (replace with your unit, e.g. Unit 1 – Daily life)',tags:'travel;verbs',date_added:'2026-10-21'}
 ];
 
+/* Starter graded stories (same rows/columns as the 'Stories' sheet tab) */
+const STORY_SEED_COLS=["story_id", "stage", "order", "theme", "format", "title_ko", "title_en", "type", "speaker", "ko", "en", "word_ref", "notes", "qtype"];
+const STORY_SEED_ROWS=[["st-01","1","1","Food & cooking","dialogue","카페에서 주문하기","Ordering at a Café","meta","","","Ian orders a drink and a snack at a café, but the cheesecake is sold out.","","Grammar focus: -지만, -아서/어서 (reason), -고, -아/어 주세요"],["st-01","1","2","","","","","line","직원","어서 오세요. 주문하시겠어요?","Hi, welcome. Are you ready to order?"],["st-01","1","3","","","","","line","이안","아이스 아메리카노 한 잔하고 치즈케이크 하나 주세요.","One iced americano and one cheesecake, please."],["st-01","1","4","","","","","line","직원","죄송하지만 치즈케이크는 지금 품절이에요.","I'm sorry, but the cheesecake is sold out right now."],["st-01","1","5","","","","","line","이안","아, 그래요? 그럼 초콜릿 쿠키 하나 주세요.","Oh, really? Then I’ll have a chocolate cookie."],["st-01","1","6","","","","","line","직원","네. 매장에서 드시고 가세요?","Sure. Will you be having it here?"],["st-01","1","7","","","","","line","이안","아니요, 포장해 주세요. 바빠서 회사에 빨리 가야 돼요.","No, to go, please. I’m busy, so I have to get to work quickly."],["st-01","1","8","","","","","line","직원","모두 6,800원입니다. 카드로 계산하시겠어요?","That’s 6,800 won altogether. Will you pay by card?"],["st-01","1","9","","","","","line","이안","네, 여기요. 아, 영수증은 버려 주세요.","Yes, here you go. Oh, you can throw away the receipt."],["st-01","1","10","","","","","line","직원","네. 음료가 나오면 진동벨이 울려요. 잠깐만 기다려 주세요.","Okay. The buzzer will go off when your drink is ready. Please wait a moment."],["st-01","1","11","","","","","vocab","","주문하다","to order","kr-0051","in story: 주문하시겠어요 — 주문하시겠어요? = polite \"Would you like to order?\""],["st-01","1","12","","","","","vocab","","품절","sold out (product)","kr-0074","in story: 품절이에요 — N이/가 품절이에요 = N is sold out"],["st-01","1","13","","","","","vocab","","포장","takeout; wrapping","kr-0054","in story: 포장해 — 포장해 주세요 = (make it) to go, please"],["st-01","1","14","","","","","vocab","","바쁘다","to be busy","kr-0028","in story: 바빠서 — ㅡ irregular: 바쁘다 → 바빠요 → 바빠서"],["st-01","1","15","","","","","vocab","","계산하다","to pay (the bill)","kr-0060","in story: 계산하시겠어요 — Polite question form used by staff"],["st-01","1","16","","","","","vocab","","영수증","receipt","kr-0066","in story: 영수증 — 영수증은 버려 주세요 is a common thing to say at the till"],["st-01","1","17","","","","","vocab","","버리다","to throw away","kr-0015","in story: 버려 — 버리다 → 버려 주세요"],["st-01","1","18","","","","","vocab","","매장","store; inside the shop","","in story: 매장 — 매장에서 드시고 가세요? = Eating in? (lit. eat in the store and go)"],["st-01","1","19","","","","","vocab","","진동벨","vibrating pager/buzzer","","in story: 진동벨 — Cafés give you one; it buzzes when your order is ready"],["st-01","1","20","","","","","vocab","","울리다","to ring, to go off","","in story: 울려요 — 알람이 울리다 / 전화가 울리다"],["st-01","1","21","","","","","grammar","","-지만","\"but\": joins two contrasting clauses. e.g. 죄송하지만 치즈케이크는 지금 품절이에요. — I’m sorry, but the cheesecake is sold out."],["st-01","1","22","","","","","grammar","","-아서/어서 (reason)","\"so / because\": the first clause is the reason. Can’t be used with commands or suggestions. e.g. 바빠서 회사에 빨리 가야 돼요. — I’m busy, so I have to get to work quickly."],["st-01","1","23","","","","","grammar","","-고","\"and (then)\": links actions or states. e.g. 매장에서 드시고 가세요? — Will you eat here and then go? (= for here?)"],["st-01","1","24","","","","","grammar","","-아/어 주세요","Polite request, \"please do (it for me)\". e.g. 포장해 주세요. / 영수증은 버려 주세요."],["st-01","1","25","","","","","question","직원 / 이안","“죄송하지만 치즈케이크는 지금 품절이에요.” 누가 말했어요?","Who said, “I’m sorry, but the cheesecake is sold out right now”?","L3","직원 | The staff member","who"],["st-01","1","26","","","","","question","아이스 아메리카노하고 치즈케이크 / 아이스 아메리카노하고 초콜릿 쿠키 / 따뜻한 커피하고 초콜릿 쿠키","이안 씨는 무엇을 샀어요?","What did Ian buy?","L4","아이스 아메리카노하고 초콜릿 쿠키 | An iced americano and a chocolate cookie","mcq"],["st-01","1","27","","","","","question","","이안 씨는 카페에서 커피를 마시고 갔어요.","Ian drank his coffee in the café before leaving.","L6","틀려요 | False — he got it to go.","tf"],["st-01","1","28","","","","","question","","네, 여기요. 아, ___은 버려 주세요.","Here you go. Oh, you can throw away the ___.","L8","영수증 | receipt","blank"],["st-01","1","29","","","","","question","","이안 씨는 왜 포장했어요?","Why did Ian get it to go?","L6","바빠서 회사에 빨리 가야 돼서요. | Because he’s busy and has to get to work quickly.","short"],["st-02","1","1","Daily life","dialogue","늦잠을 잤어요","I Overslept","meta","","","Minho is late for work because his phone died overnight, and his colleague Sujin helps him out.","","Grammar focus: -아서/어서 (reason), -고, 못 + verb, -네요"],["st-02","1","2","","","","","line","수진","민호 씨, 오늘 왜 늦었어요?","Minho, why were you late today?"],["st-02","1","3","","","","","line","민호","죄송해요. 늦잠을 자서 지각했어요.","Sorry. I overslept, so I was late."],["st-02","1","4","","","","","line","수진","알람 못 들었어요?","Didn’t you hear your alarm?"],["st-02","1","5","","","","","line","민호","휴대폰 배터리가 다 돼서 알람이 안 울렸어요.","My phone battery died, so the alarm didn’t go off."],["st-02","1","6","","","","","line","수진","어제 늦게 잤어요?","Did you go to bed late last night?"],["st-02","1","7","","","","","line","민호","네, 집을 청소하고 빨래도 해서 새벽 한 시에 잤어요.","Yes, I cleaned the house and did the laundry too, so I went to bed at 1 a.m."],["st-02","1","8","","","","","line","수진","와, 부지런하네요. 그런데 많이 피곤하죠?","Wow, you’re hardworking. But you must be really tired, right?"],["st-02","1","9","","","","","line","민호","네, 피곤하고 졸려요. 아침도 못 먹었어요.","Yeah, I’m tired and sleepy. I couldn’t eat breakfast either."],["st-02","1","10","","","","","line","수진","그럼 이 빵 드세요. 그리고 오늘은 휴대폰 꼭 충전하고 자요!","Then have this bread. And make sure you charge your phone before bed tonight!"],["st-02","1","11","","","","","line","민호","하하, 고마워요. 꼭 그럴게요.","Haha, thanks. I definitely will."],["st-02","1","12","","","","","vocab","","늦잠","oversleeping","kr-0007","in story: 늦잠 — 늦잠을 자다 = to oversleep"],["st-02","1","13","","","","","vocab","","지각하다","to be late (for work/school)","kr-0008","in story: 지각했어요 — For appointments in general use 늦다"],["st-02","1","14","","","","","vocab","","알람","alarm","kr-0027","in story: 알람 — 알람을 맞추다 = to set an alarm"],["st-02","1","15","","","","","vocab","","휴대폰","mobile phone","kr-0024","in story: 휴대폰 — Also 핸드폰"],["st-02","1","16","","","","","vocab","","충전하다","to charge (a battery)","kr-0025","in story: 충전하고"],["st-02","1","17","","","","","vocab","","청소하다","to clean","kr-0009","in story: 청소하고"],["st-02","1","18","","","","","vocab","","빨래하다","to do the laundry","kr-0010","in story: 빨래도 해서 — Here split as 빨래도 하다 (\"do the laundry too\")"],["st-02","1","19","","","","","vocab","","부지런하다","to be hardworking, diligent","kr-0315","in story: 부지런하네요 — -네요 = mild surprise/realisation"],["st-02","1","20","","","","","vocab","","피곤하다","to be tired","kr-0195","in story: 피곤하죠, 피곤하고"],["st-02","1","21","","","","","vocab","","졸리다","to be sleepy","kr-0196","in story: 졸려요"],["st-02","1","22","","","","","vocab","","새벽","early morning, the small hours","","in story: 새벽 — 새벽 한 시 = 1 a.m."],["st-02","1","23","","","","","vocab","","배터리가 다 되다","(a battery) to run out, to die","","in story: 배터리가 다 돼서 — 다 되다 = to be used up; 돼서 = 되어서"],["st-02","1","24","","","","","grammar","","-아서/어서 (reason)","Gives the reason for the next clause. e.g. 늦잠을 자서 지각했어요. — I overslept, so I was late. / 배터리가 다 돼서 알람이 안 울렸어요."],["st-02","1","25","","","","","grammar","","-고","Lists actions or states: \"and\". e.g. 집을 청소하고 빨래도 했어요. — I cleaned the house and did the laundry too. / 피곤하고 졸려요."],["st-02","1","26","","","","","grammar","","못 + verb","\"can’t / couldn’t\" (not able to, despite wanting to). Compare 안 = simply not. e.g. 아침도 못 먹었어요. — I couldn’t eat breakfast either."],["st-02","1","27","","","","","grammar","","-네요","Reacting to something you’ve just noticed. e.g. 부지런하네요. — (Oh,) you’re hardworking!"],["st-02","1","28","","","","","question","수진 / 민호","“그럼 이 빵 드세요.” 누가 말했어요?","Who said, “Then have this bread”?","L9","수진 | Sujin","who"],["st-02","1","29","","","","","question","휴대폰 배터리가 다 돼서 / 알람을 안 맞춰서 / 너무 피곤해서","민호 씨는 왜 알람을 못 들었어요?","Why didn’t Minho hear his alarm?","L4","휴대폰 배터리가 다 돼서 | Because his phone battery had died","mcq"],["st-02","1","30","","","","","question","","민호 씨는 어젯밤에 일찍 잤어요.","Minho went to bed early last night.","L6","틀려요 | False — he went to bed at 1 a.m.","tf"],["st-02","1","31","","","","","question","민호 씨가 새벽 한 시에 잤어요 / 민호 씨가 회사에 늦게 왔어요 / 수진 씨가 민호 씨에게 빵을 줬어요","일어난 순서대로 놓으세요.","Put the events in the order they happened.","L6","민호 씨가 새벽 한 시에 잤어요 → 민호 씨가 회사에 늦게 왔어요 → 수진 씨가 민호 씨에게 빵을 줬어요 | He went to bed at 1 a.m. → He arrived late for work → Sujin gave him some bread","order"],["st-02","1","32","","","","","question","","죄송해요. ___을 자서 지각했어요.","Sorry. I ___, so I was late.","L2","늦잠 | oversleeping (늦잠을 자다 = to oversleep)","blank"],["st-03","1","1","Shopping","dialogue","사이즈가 안 맞아요","It Doesn’t Fit","meta","","","Jieun goes back to a clothes shop to exchange a T-shirt that is too small.","","Grammar focus: -지만, -고, -아/어 보다, -아/어도 돼요?"],["st-03","1","2","","","","","line","지은","저기요, 어제 여기에서 이 티셔츠를 샀어요.","Excuse me, I bought this T-shirt here yesterday."],["st-03","1","3","","","","","line","직원","네, 손님. 무슨 문제가 있으세요?","Yes? Is there a problem?"],["st-03","1","4","","","","","line","지은","집에서 입어 봤지만 사이즈가 안 맞아요. 너무 작아요.","I tried it on at home, but it doesn’t fit. It’s too small."],["st-03","1","5","","","","","line","직원","아, 그러세요? 영수증 있으세요?","Oh, I see. Do you have the receipt?"],["st-03","1","6","","","","","line","지은","네, 여기 있어요. 큰 사이즈로 교환할 수 있어요?","Yes, here it is. Can I exchange it for a bigger size?"],["st-03","1","7","","","","","line","직원","네, 돼요. 그런데 흰색은 큰 사이즈가 지금 없어요. 파란색은 어떠세요?","Yes, you can. But we don’t have the white in a bigger size right now. How about blue?"],["st-03","1","8","","","","","line","지은","음… 파란색 한번 입어 봐도 돼요?","Hmm… can I try the blue one on?"],["st-03","1","9","","","","","line","직원","그럼요. 탈의실은 저쪽에 있어요.","Of course. The fitting room is over there."],["st-03","1","10","","","","","line","지은","이거 마음에 들어요! 색깔도 예쁘고 사이즈도 딱 맞아요.","I like this! The colour is nice and it fits perfectly."],["st-03","1","11","","","","","line","직원","정말 잘 어울리세요. 그럼 이걸로 바꿔 드릴게요.","It really suits you. Then I’ll swap it for this one."],["st-03","1","12","","","","","vocab","","입어 보다","to try on (clothes)","kr-0067","in story: 입어 봤지만, 입어 봐도 — 입다 + -아/어 보다 (try doing)"],["st-03","1","13","","","","","vocab","","사이즈","size","kr-0069","in story: 사이즈"],["st-03","1","14","","","","","vocab","","맞다","to fit","kr-0070","in story: 맞아요 — 사이즈가 맞다 = the size fits; 딱 맞다 = fit perfectly"],["st-03","1","15","","","","","vocab","","영수증","receipt","kr-0066","in story: 영수증"],["st-03","1","16","","","","","vocab","","교환하다","to exchange","kr-0064","in story: 교환할 — N(으)로 교환하다 = exchange for N"],["st-03","1","17","","","","","vocab","","탈의실","fitting room","kr-0068","in story: 탈의실"],["st-03","1","18","","","","","vocab","","마음에 들다","to like, to be pleased with","kr-0073","in story: 마음에 들어요 — The thing liked is the subject: 이거 마음에 들어요"],["st-03","1","19","","","","","vocab","","어울리다","to suit, to look good on","kr-0071","in story: 어울리세요 — Honorific -세요 used by the shop assistant"],["st-03","1","20","","","","","vocab","","바꾸다","to change; to exchange","kr-0393","in story: 바꿔 — 바꿔 드릴게요 = I’ll change it for you (humble)"],["st-03","1","21","","","","","vocab","","손님","customer, guest","","in story: 손님 — Staff address customers as 손님"],["st-03","1","22","","","","","vocab","","딱","exactly, perfectly","","in story: 딱 — 딱 맞다 = fit perfectly"],["st-03","1","23","","","","","grammar","","-지만","\"but\". e.g. 집에서 입어 봤지만 사이즈가 안 맞아요. — I tried it on at home, but it doesn’t fit."],["st-03","1","24","","","","","grammar","","-고","\"and\" between two descriptions. e.g. 색깔도 예쁘고 사이즈도 딱 맞아요. — The colour is nice and it fits perfectly."],["st-03","1","25","","","","","grammar","","-아/어 보다","\"try doing\". e.g. 입어 봤어요 — I tried it on."],["st-03","1","26","","","","","grammar","","-아/어도 돼요?","Asking permission: \"Is it okay if I…?\" e.g. 파란색 한번 입어 봐도 돼요? — Can I try the blue one on?"],["st-03","1","27","","","","","question","직원 / 지은","“영수증 있으세요?” 누가 말했어요?","Who said, “Do you have the receipt?”","L4","직원 | The shop assistant","who"],["st-03","1","28","","","","","question","티셔츠가 너무 작아서 / 티셔츠 색깔이 싫어서 / 영수증을 잃어버려서","지은 씨는 왜 가게에 다시 왔어요?","Why did Jieun come back to the shop?","L3","티셔츠가 너무 작아서 | Because the T-shirt was too small","mcq"],["st-03","1","29","","","","","question","흰색 / 파란색 / 검은색","지은 씨는 무슨 색 티셔츠로 바꿨어요?","Which colour T-shirt did she swap it for?","L6","파란색 | Blue","mcq"],["st-03","1","30","","","","","question","","지은 씨는 탈의실에서 파란색 티셔츠를 입어 봤어요.","Jieun tried on the blue T-shirt in the fitting room.","L7","맞아요 | True","tf"],["st-03","1","31","","","","","question","","이거 마음에 들어요! 색깔도 예쁘고 ___도 딱 맞아요.","I like this! The colour is nice and the ___ fits perfectly.","L9","사이즈 | size","blank"],["st-04","1","1","Hobbies & leisure","prose","한강에서 자전거를 탔어요","Cycling by the Han River","meta","","","A short account of a sunny Saturday cycling at Hangang Park, with the classic convenience-store ramyeon.","","Grammar focus: -아서/어서 (sequence), -아서/어서 (reason), -지만, -(으)ㄴ 후에"],["st-04","1","2","","","","","line","","지난 토요일에 날씨가 정말 맑았어요.","Last Saturday the weather was really clear.","","¶"],["st-04","1","3","","","","","line","","그래서 친구하고 같이 한강 공원에 갔어요.","So I went to Hangang Park with a friend."],["st-04","1","4","","","","","line","","우리는 자전거를 빌려서 한 시간 동안 탔어요.","We rented bikes and rode for an hour."],["st-04","1","5","","","","","line","","강바람이 시원하고 경치도 아주 좋았어요.","The breeze off the river was cool, and the view was great too."],["st-04","1","6","","","","","line","","자전거를 탄 후에 편의점에서 라면을 먹었어요.","After riding, we had ramyeon from the convenience store.","","¶"],["st-04","1","7","","","","","line","","한강에서 먹는 라면은 특히 맛있어요.","Ramyeon tastes especially good at the Han River."],["st-04","1","8","","","","","line","","공원에 사람이 많아서 조금 복잡했지만 분위기는 좋았어요.","There were lots of people, so the park was a bit crowded, but the atmosphere was nice."],["st-04","1","9","","","","","line","","저녁에는 집에 와서 바로 씻고 잤어요.","In the evening I came home, washed straight away and went to bed.","","¶"],["st-04","1","10","","","","","line","","조금 피곤했지만 정말 즐거운 주말이었어요.","I was a little tired, but it was a really fun weekend."],["st-04","1","11","","","","","vocab","","맑다","to be clear, sunny","kr-0148","in story: 맑았어요"],["st-04","1","12","","","","","vocab","","자전거","bicycle","kr-0227","in story: 자전거 — 자전거를 타다 = to ride a bike"],["st-04","1","13","","","","","vocab","","타다","to ride","ian-04","in story: 탔어요, 탄 후에 — 탄 후에 = after riding"],["st-04","1","14","","","","","vocab","","경치","scenery, view","kr-0115","in story: 경치"],["st-04","1","15","","","","","vocab","","특히","especially","kr-0376","in story: 특히"],["st-04","1","16","","","","","vocab","","복잡하다","to be crowded; complicated","kr-0418","in story: 복잡했지만 — For places: crowded, busy"],["st-04","1","17","","","","","vocab","","씻다","to wash (oneself)","kr-0002","in story: 씻고"],["st-04","1","18","","","","","vocab","","바로","right away","kr-0389","in story: 바로"],["st-04","1","19","","","","","vocab","","피곤하다","to be tired","kr-0195","in story: 피곤했지만"],["st-04","1","20","","","","","vocab","","빌리다","to borrow, to rent","","in story: 빌려서 — 빌려서 탔어요 = rented (them) and rode"],["st-04","1","21","","","","","vocab","","강바람","river breeze","","in story: 강바람 — 강 (river) + 바람 (wind)"],["st-04","1","22","","","","","vocab","","편의점","convenience store","","in story: 편의점"],["st-04","1","23","","","","","vocab","","분위기","atmosphere, mood","","in story: 분위기 — 분위기가 좋다 = to have a nice vibe"],["st-04","1","24","","","","","grammar","","-아서/어서 (sequence)","\"do A and then B (with/at it)\" — the two actions are closely linked. e.g. 자전거를 빌려서 탔어요. — We rented bikes and rode them. / 집에 와서 씻었어요."],["st-04","1","25","","","","","grammar","","-아서/어서 (reason)","e.g. 사람이 많아서 조금 복잡했어요. — There were lots of people, so it was a bit crowded."],["st-04","1","26","","","","","grammar","","-지만","\"but\". e.g. 조금 피곤했지만 즐거운 주말이었어요."],["st-04","1","27","","","","","grammar","","-(으)ㄴ 후에","\"after doing\". e.g. 자전거를 탄 후에 라면을 먹었어요. — After riding, we had ramyeon."],["st-04","1","28","","","","","question","지난 토요일 / 지난 일요일 / 어제 저녁","언제 한강 공원에 갔어요?","When did they go to Hangang Park?","L1","지난 토요일 | Last Saturday","mcq"],["st-04","1","29","","","","","question","","두 사람은 자기 자전거를 가지고 한강에 갔어요.","They took their own bikes to the Han River.","L3","틀려요 | False — they rented bikes there.","tf"],["st-04","1","30","","","","","question","자전거를 빌렸어요 / 편의점에서 라면을 먹었어요 / 집에 와서 씻었어요","일어난 순서대로 놓으세요.","Put the events in the order they happened.","L5","자전거를 빌렸어요 → 편의점에서 라면을 먹었어요 → 집에 와서 씻었어요 | Rented bikes → Ate ramyeon from the convenience store → Came home and washed","order"],["st-04","1","31","","","","","question","","강바람이 시원하고 ___도 아주 좋았어요.","The breeze off the river was cool, and the ___ was great too.","L4","경치 | scenery, view","blank"],["st-04","1","32","","","","","question","","공원은 어땠어요?","What was the park like?","L7","사람이 많아서 조금 복잡했지만 분위기는 좋았어요. | It was a bit crowded because there were lots of people, but the atmosphere was nice.","short"],["st-05","2","1","Travel & transport","dialogue","부산에 가려고 해요","I’m Planning a Trip to Busan","meta","","","Ian wants to go to Busan for the long weekend, but the KTX is sold out, so his colleague Jieun suggests the express bus.","","Grammar focus: -(으)려고 하다, -고 싶다, -(으)니까, -는데 / -(으)ㄴ데, -(으)ㄹ 거예요"],["st-05","2","2","","","","","line","지은","이안 씨, 이번 연휴에 뭐 할 거예요?","Ian, what are you going to do this long weekend?"],["st-05","2","3","","","","","line","이안","부산에 가려고 해요. 오랜만에 바다를 보고 싶어요.","I’m planning to go to Busan. I want to see the sea — it’s been a while."],["st-05","2","4","","","","","line","지은","좋네요! 기차표는 예매했어요? 연휴에는 표가 금방 매진되니까 빨리 예매하세요.","Nice! Have you booked your train ticket? Tickets sell out fast over holidays, so book soon."],["st-05","2","5","","","","","line","이안","사실 어제 KTX 앱을 봤는데 토요일 아침 표가 벌써 매진됐어요.","Actually, I checked the KTX app yesterday, and the Saturday morning tickets were already sold out."],["st-05","2","6","","","","","line","지은","그럼 고속버스는 어때요? 시간은 좀 더 걸리지만 훨씬 저렴해요.","Then how about the express bus? It takes a bit longer, but it’s much cheaper."],["st-05","2","7","","","","","line","이안","버스로 얼마나 걸려요?","How long does it take by bus?"],["st-05","2","8","","","","","line","지은","네 시간 반쯤 걸려요. 중간에 휴게소에서 간식도 먹을 수 있으니까 재미있을 거예요.","About four and a half hours. You can grab snacks at the rest stop on the way, so it’ll be fun."],["st-05","2","9","","","","","line","이안","좋아요. 그럼 오늘 저녁에 버스표를 예매할 거예요.","Sounds good. Then I’ll book a bus ticket this evening."],["st-05","2","10","","","","","line","지은","부산에 가면 해운대도 가 보고 자갈치 시장에서 회도 꼭 드셔 보세요.","When you’re in Busan, go to Haeundae, and make sure you try the raw fish at Jagalchi Market."],["st-05","2","11","","","","","line","이안","네, 숙소도 해운대 근처로 예약하려고 해요. 사진 많이 찍어서 보여 줄게요!","Yes, I’m planning to book a place near Haeundae too. I’ll take lots of photos and show you!"],["st-05","2","12","","","","","vocab","","예매하다","to buy (tickets) in advance","kr-0091","in story: 예매했어요, 예매하세요, 예매할 — For tickets; for rooms/tables use 예약하다"],["st-05","2","13","","","","","vocab","","매진","sold out (tickets)","kr-0075","in story: 매진되니까, 매진됐어요 — 매진되다 = to sell out"],["st-05","2","14","","","","","vocab","","금방","soon, quickly","kr-0371","in story: 금방"],["st-05","2","15","","","","","vocab","","벌써","already (sooner than expected)","kr-0353","in story: 벌써"],["st-05","2","16","","","","","vocab","","걸리다","to take (time)","kr-0175","in story: 걸리지만, 걸려요 — 시간이 걸리다"],["st-05","2","17","","","","","vocab","","저렴하다","to be inexpensive","kr-0078","in story: 저렴해요 — A politer word for 싸다"],["st-05","2","18","","","","","vocab","","간식","snack","kr-0056","in story: 간식"],["st-05","2","19","","","","","vocab","","숙소","accommodation","kr-0107","in story: 숙소"],["st-05","2","20","","","","","vocab","","예약하다","to reserve, to book","kr-0090","in story: 예약하려고"],["st-05","2","21","","","","","vocab","","사진을 찍다","to take a photo","kr-0211","in story: 사진 많이 찍어서 — 사진을 is often shortened to 사진 in speech"],["st-05","2","22","","","","","vocab","","연휴","long weekend, consecutive holidays","","in story: 연휴"],["st-05","2","23","","","","","vocab","","고속버스","express (intercity) bus","","in story: 고속버스"],["st-05","2","24","","","","","vocab","","휴게소","highway rest stop","","in story: 휴게소 — Famous for snacks like 호두과자 and 감자"],["st-05","2","25","","","","","vocab","","회","sliced raw fish","","in story: 회도 — Busan’s Jagalchi Market is famous for it"],["st-05","2","26","","","","","grammar","","-(으)려고 하다","\"plan to / intend to\". e.g. 부산에 가려고 해요. — I’m planning to go to Busan. / 숙소도 예약하려고 해요."],["st-05","2","27","","","","","grammar","","-고 싶다","\"want to\" (for yourself). e.g. 오랜만에 바다를 보고 싶어요. — I want to see the sea."],["st-05","2","28","","","","","grammar","","-(으)니까","\"because / since\", and unlike -아서 it can come before a command or suggestion. e.g. 표가 금방 매진되니까 빨리 예매하세요. — Tickets sell out fast, so book soon."],["st-05","2","29","","","","","grammar","","-는데 / -(으)ㄴ데","Sets the background before the main point. e.g. KTX 앱을 봤는데 표가 벌써 매진됐어요. — I checked the KTX app, and the tickets were already sold out."],["st-05","2","30","","","","","grammar","","-(으)ㄹ 거예요","Future plan (\"will / going to\") or a guess. e.g. 버스표를 예매할 거예요. — I’ll book a bus ticket. / 재미있을 거예요. — It’ll be fun."],["st-05","2","31","","","","","question","지은 / 이안","“그럼 고속버스는 어때요?” 누가 말했어요?","Who said, “Then how about the express bus?”","L5","지은 | Jieun","who"],["st-05","2","32","","","","","question","표가 매진돼서 / 기차가 너무 비싸서 / 기차역이 멀어서","이안 씨는 왜 기차를 못 타요?","Why can’t Ian take the train?","L4","표가 매진돼서 | Because the tickets are sold out","mcq"],["st-05","2","33","","","","","question","두 시간 반쯤 / 네 시간 반쯤 / 여섯 시간쯤","서울에서 부산까지 고속버스로 얼마나 걸려요?","How long does the express bus take from Seoul to Busan?","L7","네 시간 반쯤 | About four and a half hours","mcq"],["st-05","2","34","","","","","question","","이안 씨는 해운대 근처에 숙소를 예약하려고 해요.","Ian is planning to book accommodation near Haeundae.","L10","맞아요 | True","tf"],["st-05","2","35","","","","","question","","사실 어제 KTX 앱을 봤는데 토요일 아침 표가 ___ 매진됐어요.","Actually, I checked the KTX app yesterday, and the Saturday morning tickets were ___ sold out.","L4","벌써 | already","blank"],["st-05","2","36","","","","","question","","지은 씨가 추천한 곳은 어디예요?","Which places did Jieun recommend?","L9","해운대하고 자갈치 시장이에요. | Haeundae and Jagalchi Market.","short"],["st-06","2","1","Health","dialogue","약국에서","At the Pharmacy","meta","","","Sujin has a sore throat and a cough the day before an important meeting, and gets advice from a pharmacist.","","Grammar focus: -는데 / -(으)ㄴ데, -(으)니까, -(으)려고 하다, -(으)ㄹ 수도 있다, -지 마세요"],["st-06","2","2","","","","","line","약사","어서 오세요. 어디가 불편하세요?","Hello. What seems to be the problem?"],["st-06","2","3","","","","","line","수진","어제부터 목이 아프고 기침이 나요. 콧물도 조금 나요.","Since yesterday my throat has been sore and I’ve had a cough. My nose is a bit runny too."],["st-06","2","4","","","","","line","약사","열도 나세요?","Do you have a fever as well?"],["st-06","2","5","","","","","line","수진","아니요, 열은 안 나는데 몸이 좀 무거워요.","No, no fever, but my body feels a bit heavy."],["st-06","2","6","","","","","line","약사","가벼운 감기 증상이네요. 이 약을 하루에 세 번, 식후 30분에 드세요.","Those are mild cold symptoms. Take this medicine three times a day, 30 minutes after meals."],["st-06","2","7","","","","","line","수진","내일 중요한 회의가 있는데 이 약을 먹으면 졸려요?","I have an important meeting tomorrow. Will this medicine make me sleepy?"],["st-06","2","8","","","","","line","약사","조금 졸릴 수도 있으니까 오늘은 운전하지 마세요.","It might make you a little drowsy, so don’t drive today."],["st-06","2","9","","","","","line","수진","네, 알겠어요. 오늘은 집에 가서 일찍 쉬려고 해요.","Okay, got it. I’m going to go home and rest early today."],["st-06","2","10","","","","","line","약사","잘 생각하셨어요. 따뜻한 물을 많이 드시고 푹 쉬세요. 3일이 지나도 안 나으면 꼭 병원에 가 보세요.","Good idea. Drink lots of warm water and get plenty of rest. If you’re not better after three days, be sure to see a doctor."],["st-06","2","11","","","","","line","수진","감사합니다. 얼마예요?","Thank you. How much is it?"],["st-06","2","12","","","","","line","약사","4,500원입니다. 얼른 나으세요!","It’s 4,500 won. Get well soon!"],["st-06","2","13","","","","","vocab","","기침","cough","kr-0178","in story: 기침이 나요 — 기침이 나다 = to have a cough"],["st-06","2","14","","","","","vocab","","콧물","runny nose","kr-0179","in story: 콧물 — 콧물이 나다"],["st-06","2","15","","","","","vocab","","열","fever","kr-0177","in story: 열도, 열은 — 열이 나다 = to have a fever"],["st-06","2","16","","","","","vocab","","감기","a cold","kr-0174","in story: 감기 — 감기에 걸리다 = to catch a cold"],["st-06","2","17","","","","","vocab","","증상","symptom","kr-0185","in story: 증상이네요"],["st-06","2","18","","","","","vocab","","중요하다","to be important","kr-0420","in story: 중요한"],["st-06","2","19","","","","","vocab","","회의","meeting","kr-0265","in story: 회의"],["st-06","2","20","","","","","vocab","","졸리다","to be sleepy","kr-0196","in story: 졸려요, 졸릴"],["st-06","2","21","","","","","vocab","","운전하다","to drive","kr-0117","in story: 운전하지"],["st-06","2","22","","","","","vocab","","낫다","to get better, to recover","kr-0188","in story: 나으면, 나으세요 — ㅅ irregular: 낫다 → 나아요 → 나으면"],["st-06","2","23","","","","","vocab","","꼭","surely, without fail","kr-0364","in story: 꼭"],["st-06","2","24","","","","","vocab","","약사","pharmacist","","in story: 약사 — 약국 = pharmacy"],["st-06","2","25","","","","","vocab","","목","throat; neck","","in story: 목이 — 목이 아프다 = to have a sore throat"],["st-06","2","26","","","","","vocab","","식후","after a meal","","in story: 식후 — ↔ 식전 (before a meal)"],["st-06","2","27","","","","","vocab","","푹","deeply, soundly (rest/sleep)","","in story: 푹 — 푹 쉬다 / 푹 자다"],["st-06","2","28","","","","","grammar","","-는데 / -(으)ㄴ데","Background or contrast. e.g. 열은 안 나는데 몸이 좀 무거워요. — No fever, but my body feels heavy. / 내일 중요한 회의가 있는데 이 약을 먹으면 졸려요?"],["st-06","2","29","","","","","grammar","","-(으)니까","Reason before an instruction. e.g. 졸릴 수도 있으니까 운전하지 마세요. — It might make you drowsy, so don’t drive."],["st-06","2","30","","","","","grammar","","-(으)려고 하다","\"intend to\". e.g. 일찍 쉬려고 해요. — I’m going to rest early."],["st-06","2","31","","","","","grammar","","-(으)ㄹ 수도 있다","\"might / could\". e.g. 조금 졸릴 수도 있어요."],["st-06","2","32","","","","","grammar","","-지 마세요","\"Please don’t…\". e.g. 운전하지 마세요."],["st-06","2","33","","","","","question","약사 / 수진","“내일 중요한 회의가 있는데 이 약을 먹으면 졸려요?” 누가 말했어요?","Who said, “I have an important meeting tomorrow. Will this medicine make me sleepy?”","L6","수진 | Sujin","who"],["st-06","2","34","","","","","question","기침 / 콧물 / 열","수진 씨에게 없는 증상은 뭐예요?","Which symptom does Sujin NOT have?","L2","열 | A fever","mcq"],["st-06","2","35","","","","","question","하루에 세 번, 식후 30분 / 하루에 두 번, 식전 / 자기 전에 한 번","약은 언제 먹어야 돼요?","When should she take the medicine?","L5","하루에 세 번, 식후 30분 | Three times a day, 30 minutes after meals","mcq"],["st-06","2","36","","","","","question","","수진 씨는 오늘 집에 가서 일찍 쉬려고 해요.","Sujin is going to go home and rest early today.","L8","맞아요 | True","tf"],["st-06","2","37","","","","","question","","아니요, ___은 안 나는데 몸이 좀 무거워요.","No, no ___, but my body feels a bit heavy.","L4","열 | fever","blank"],["st-06","2","38","","","","","question","","이 약을 먹고 운전하면 왜 안 돼요?","Why shouldn’t she drive after taking this medicine?","L7","약을 먹으면 졸릴 수도 있어서요. | Because the medicine might make her drowsy.","short"],["st-07","2","1","Housing","dialogue","회사 근처 원룸 구하기","Finding a Studio Near Work","meta","","","Minho visits an estate agent to find a quiet studio within walking distance of his office.","","Grammar focus: -(으)려고 하다, -는데 / -(으)ㄴ데, -(으)니까, -고 싶다, -(으)ㄹ 거예요 (guess), -는 데 (시간이) 걸리다"],["st-07","2","2","","","","","line","중개인","어서 오세요. 어떤 집을 찾으세요?","Welcome. What kind of place are you looking for?"],["st-07","2","3","","","","","line","민호","회사 근처에 원룸을 구하려고 해요. 지금 사는 집은 출근하는 데 한 시간이나 걸려요.","I’m looking for a studio near my office. From where I live now, it takes a whole hour to get to work."],["st-07","2","4","","","","","line","중개인","보증금하고 월세는 어느 정도 생각하세요?","How much are you thinking for the deposit and the monthly rent?"],["st-07","2","5","","","","","line","민호","보증금은 천만 원, 월세는 60만 원 정도면 좋겠어요.","Around 10 million won deposit and 600,000 won a month would be good."],["st-07","2","6","","","","","line","중개인","마침 좋은 집이 하나 있는데 지금 보러 가실래요? 회사까지 걸어서 5분이에요.","As it happens, there’s a nice place available. Would you like to go and see it now? It’s a five-minute walk to your office."],["st-07","2","7","","","","","line","민호","와, 생각보다 넓고 밝네요. 그런데 관리비는 따로 내야 돼요?","Wow, it’s bigger and brighter than I expected. But do I have to pay a maintenance fee separately?"],["st-07","2","8","","","","","line","중개인","네, 관리비는 한 달에 7만 원인데 인터넷 요금이 포함돼 있어요.","Yes, the maintenance fee is 70,000 won a month, and that includes internet."],["st-07","2","9","","","","","line","민호","이 동네는 조용해요? 저는 밤에 일찍 자니까 시끄러운 곳은 싫어요.","Is this neighbourhood quiet? I go to bed early, so I don’t want anywhere noisy."],["st-07","2","10","","","","","line","중개인","네, 근처에 술집이 없어서 밤에는 아주 조용해요.","Yes, there are no bars nearby, so it’s very quiet at night."],["st-07","2","11","","","","","line","민호","마음에 들어요. 다음 달에 이사하고 싶은데 계약은 언제 할 수 있어요?","I like it. I’d like to move in next month — when can I sign the contract?"],["st-07","2","12","","","","","line","중개인","집주인한테 연락해 볼게요. 아마 내일 계약할 수 있을 거예요.","I’ll get in touch with the landlord. We can probably sign tomorrow."],["st-07","2","13","","","","","vocab","","원룸","studio apartment","kr-0126","in story: 원룸 — From English \"one room\""],["st-07","2","14","","","","","vocab","","보증금","(security) deposit","kr-0125","in story: 보증금"],["st-07","2","15","","","","","vocab","","월세","monthly rent","kr-0123","in story: 월세"],["st-07","2","16","","","","","vocab","","마침","just then, as it happens","kr-0385","in story: 마침"],["st-07","2","17","","","","","vocab","","넓다","to be spacious","kr-0146","in story: 넓고 — Pronounced [널따]"],["st-07","2","18","","","","","vocab","","관리비","maintenance fee","kr-0145","in story: 관리비"],["st-07","2","19","","","","","vocab","","동네","neighbourhood","kr-0131","in story: 동네"],["st-07","2","20","","","","","vocab","","조용하다","to be quiet","kr-0130","in story: 조용해요"],["st-07","2","21","","","","","vocab","","시끄럽다","to be noisy","kr-0129","in story: 시끄러운 — ㅂ irregular: 시끄럽다 → 시끄러운 곳"],["st-07","2","22","","","","","vocab","","이사하다","to move (house)","kr-0121","in story: 이사하고"],["st-07","2","23","","","","","vocab","","집주인","landlord","kr-0122","in story: 집주인"],["st-07","2","24","","","","","vocab","","연락하다","to contact, to get in touch","kr-0275","in story: 연락해"],["st-07","2","25","","","","","vocab","","아마","probably","kr-0351","in story: 아마 — Often paired with -(으)ㄹ 거예요"],["st-07","2","26","","","","","vocab","","구하다","to look for, to find (a home, a job)","","in story: 구하려고 — 집을 구하다 / 일을 구하다"],["st-07","2","27","","","","","vocab","","따로","separately","","in story: 따로"],["st-07","2","28","","","","","vocab","","포함되다","to be included","","in story: 포함돼 — 포함돼 있다 = is included"],["st-07","2","29","","","","","vocab","","계약","contract, lease","","in story: 계약은, 계약할 — 계약하다 = to sign a contract"],["st-07","2","30","","","","","grammar","","-(으)려고 하다","\"intend to\". e.g. 회사 근처에 원룸을 구하려고 해요. — I’m looking to find a studio near work."],["st-07","2","31","","","","","grammar","","-는데 / -(으)ㄴ데","Background info before a question or offer. e.g. 마침 좋은 집이 하나 있는데 지금 보러 가실래요? / 이사하고 싶은데 계약은 언제 할 수 있어요?"],["st-07","2","32","","","","","grammar","","-(으)니까","Reason. e.g. 저는 밤에 일찍 자니까 시끄러운 곳은 싫어요. — I go to bed early, so I don’t want anywhere noisy."],["st-07","2","33","","","","","grammar","","-고 싶다","\"want to\". e.g. 다음 달에 이사하고 싶어요."],["st-07","2","34","","","","","grammar","","-(으)ㄹ 거예요 (guess)","With 아마 it’s a prediction. e.g. 아마 내일 계약할 수 있을 거예요. — We can probably sign tomorrow."],["st-07","2","35","","","","","grammar","","-는 데 (시간이) 걸리다","\"it takes (time) to…\". e.g. 출근하는 데 한 시간이나 걸려요. — It takes a whole hour to get to work. (이나 = \"as much as\")"],["st-07","2","36","","","","","question","중개인 / 민호","“마침 좋은 집이 하나 있는데 지금 보러 가실래요?” 누가 말했어요?","Who said, “As it happens, there’s a nice place available. Would you like to see it now?”","L5","중개인 | The estate agent","who"],["st-07","2","37","","","","","question","지금 집이 회사에서 멀어서 / 지금 집이 너무 시끄러워서 / 월세가 너무 비싸서","민호 씨는 왜 이사하려고 해요?","Why does Minho want to move?","L2","지금 집이 회사에서 멀어서 | Because his current place is far from his office","mcq"],["st-07","2","38","","","","","question","인터넷 요금 / 전기 요금 / 가스 요금","관리비에 무엇이 포함돼 있어요?","What is included in the maintenance fee?","L7","인터넷 요금 | The internet bill","mcq"],["st-07","2","39","","","","","question","","그 집은 회사까지 버스로 5분 걸려요.","The flat is five minutes from the office by bus.","L5","틀려요 | False — it’s a five-minute walk.","tf"],["st-07","2","40","","","","","question","","보증금은 천만 원, ___는 60만 원 정도면 좋겠어요.","Around 10 million won deposit and 600,000 won ___ would be good.","L4","월세 | monthly rent","blank"],["st-07","2","41","","","","","question","","그 동네는 왜 밤에 조용해요?","Why is that neighbourhood quiet at night?","L9","근처에 술집이 없어서요. | Because there are no bars nearby.","short"],["st-08","2","1","Work & office","mixed","금요일 회식","The Friday Team Dinner","meta","","","The team leader announces a team dinner in the group chat; Ian has a clash and Sujin suggests a compromise.","","Grammar focus: -(으)니까, -는데 / -(으)ㄴ데 (contrast), -(으)려고 하다, -(으)ㄹ 거예요, -는 건 어때요?"],["st-08","2","2","","","","","line","","월요일 아침, 팀 단체 채팅방에 박 팀장님의 메시지가 왔어요.","On Monday morning, a message from team leader Park came through in the team group chat.","","¶"],["st-08","2","3","","","","","line","박 팀장","여러분, 이번 주 금요일 저녁 7시에 회식이 있습니다.","Everyone, we’re having a team dinner this Friday at 7 p.m."],["st-08","2","4","","","","","line","박 팀장","이번 프로젝트를 잘 끝낸 기념으로 하는 회식이니까 모두 꼭 참석해 주세요.","It’s to celebrate wrapping up the project so well, so please make sure everyone comes."],["st-08","2","5","","","","","line","박 팀장","장소는 회사 앞 한식집이고, 메뉴는 소불고기입니다.","The venue is the Korean restaurant in front of the office, and we’re having beef bulgogi."],["st-08","2","6","","","","","line","박 팀장","못 오는 분은 목요일까지 저한테 연락 주세요.","If you can’t make it, let me know by Thursday."],["st-08","2","7","","","","","line","","메시지를 읽고 수진 씨가 이안 씨 자리로 왔어요.","After reading the message, Sujin came over to Ian’s desk.","","¶"],["st-08","2","8","","","","","line","수진","이안 씨, 금요일 회식에 갈 거예요?","Ian, are you going to the dinner on Friday?"],["st-08","2","9","","","","","line","이안","가고 싶은데 그날 퇴근하고 바로 친구 생일 파티에 가야 돼요.","I want to, but that day I have to go straight to a friend’s birthday party after work."],["st-08","2","10","","","","","line","수진","그럼 회식에서 저녁만 먹고 파티에 가는 건 어때요?","Then how about just having dinner with us and then going to the party?"],["st-08","2","11","","","","","line","이안","좋은 생각이네요. 팀장님께 미리 말씀드리려고 해요.","Good idea. I’ll let the team leader know in advance."],["st-08","2","12","","","","","line","수진","팀장님은 친절하시니까 이해해 주실 거예요.","He’s kind, so I’m sure he’ll understand."],["st-08","2","13","","","","","vocab","","회식","company/team dinner","kr-0290","in story: 회식 — A big part of Korean office culture"],["st-08","2","14","","","","","vocab","","장소","place, venue","kr-0487","in story: 장소"],["st-08","2","15","","","","","vocab","","연락하다","to contact, to get in touch","kr-0275","in story: 연락 주세요 — 연락(을) 주다 = to let (someone) know"],["st-08","2","16","","","","","vocab","","퇴근하다","to leave work","kr-0263","in story: 퇴근하고 — ↔ 출근하다"],["st-08","2","17","","","","","vocab","","바로","right away, straight","kr-0389","in story: 바로"],["st-08","2","18","","","","","vocab","","미리","in advance","kr-0366","in story: 미리"],["st-08","2","19","","","","","vocab","","친절하다","to be kind","kr-0313","in story: 친절하시니까 — Honorific -시- because it’s about the boss"],["st-08","2","20","","","","","vocab","","꼭","without fail","kr-0364","in story: 꼭"],["st-08","2","21","","","","","vocab","","참석하다","to attend","","in story: 참석해 — 회의/회식/결혼식에 참석하다"],["st-08","2","22","","","","","vocab","","기념","commemoration","","in story: 기념으로 — N 기념으로 = to celebrate N"],["st-08","2","23","","","","","vocab","","한식집","Korean restaurant","","in story: 한식집 — 한식 (Korean food) + 집 (place)"],["st-08","2","24","","","","","vocab","","단체 채팅방","group chat","","in story: 단체 채팅방 — Often shortened to 단톡방"],["st-08","2","25","","","","","vocab","","말씀드리다","to tell, to say (humble)","","in story: 말씀드리려고 — Humble form of 말하다, used when telling a superior"],["st-08","2","26","","","","","grammar","","-(으)니까","Reason before a request. e.g. 기념으로 하는 회식이니까 모두 꼭 참석해 주세요. / 팀장님은 친절하시니까 이해해 주실 거예요."],["st-08","2","27","","","","","grammar","","-는데 / -(으)ㄴ데 (contrast)","\"…but\". e.g. 가고 싶은데 그날 친구 생일 파티에 가야 돼요. — I want to go, but I have to go to a friend’s party that day."],["st-08","2","28","","","","","grammar","","-(으)려고 하다","\"intend to\". e.g. 팀장님께 미리 말씀드리려고 해요."],["st-08","2","29","","","","","grammar","","-(으)ㄹ 거예요","Plan or prediction. e.g. 회식에 갈 거예요? — Are you going to the dinner? / 이해해 주실 거예요. — He’ll (surely) understand."],["st-08","2","30","","","","","grammar","","-는 건 어때요?","Suggestion: \"How about…ing?\" e.g. 저녁만 먹고 파티에 가는 건 어때요?"],["st-08","2","31","","","","","question","수진 / 이안 / 박 팀장","“그럼 회식에서 저녁만 먹고 파티에 가는 건 어때요?” 누가 말했어요?","Who said, “Then how about just having dinner with us and then going to the party?”","L9","수진 | Sujin","who"],["st-08","2","32","","","","","question","금요일 저녁 7시 / 목요일 저녁 7시 / 월요일 아침","회식은 언제예요?","When is the team dinner?","L2","금요일 저녁 7시 | Friday at 7 p.m.","mcq"],["st-08","2","33","","","","","question","소불고기 / 김치찌개 / 해물파전","회식 메뉴는 뭐예요?","What’s on the menu?","L4","소불고기 | Beef bulgogi","mcq"],["st-08","2","34","","","","","question","","회식에 못 오는 사람은 금요일까지 팀장님께 연락해야 해요.","People who can’t come must tell the team leader by Friday.","L5","틀려요 | False — by Thursday.","tf"],["st-08","2","35","","","","","question","","좋은 생각이네요. 팀장님께 ___ 말씀드리려고 해요.","Good idea. I’ll let the team leader know ___.","L10","미리 | in advance","blank"],["st-08","2","36","","","","","question","","이안 씨는 왜 회식에 오래 있을 수 없어요?","Why can’t Ian stay long at the dinner?","L8","퇴근하고 바로 친구 생일 파티에 가야 돼서요. | Because he has to go straight to a friend’s birthday party after work.","short"],["st-09","3","1","Relationships","dialogue","소개팅 어땠어?","So, How Was the Blind Date?","meta","","","Two close friends chat in casual speech about Jieun’s surprisingly good blind date.","","Grammar focus: 반말 (casual speech), -(으)ㄴ 적이 있다, -게 되다, -기 때문에, -(으)면서, -는 것 같다"],["st-09","3","2","","","","","line","하나","지은아, 어제 소개팅 어땠어?","Jieun, how was the blind date yesterday?"],["st-09","3","3","","","","","line","지은","음… 생각보다 괜찮았어. 처음에는 좀 어색했는데 금방 편해졌어.","Hmm… better than I expected. It was a bit awkward at first, but we got comfortable pretty quickly."],["st-09","3","4","","","","","line","하나","진짜? 어떤 사람이었어?","Really? What was he like?"],["st-09","3","5","","","","","line","지은","회사원인데 성격이 솔직하고 재미있었어. 나처럼 여행을 좋아하는 것 같아.","He’s an office worker — honest and funny. He seems to love travelling, like me."],["st-09","3","6","","","","","line","하나","오, 둘이 잘 맞는 것 같은데?","Ooh, sounds like you two click?"],["st-09","3","7","","","","","line","지은","응, 그래서 밥 먹으면서 여행 얘기만 두 시간 했어.","Yeah, so we talked about nothing but travel for two hours over dinner."],["st-09","3","8","","","","","line","지은","나처럼 그 사람도 제주도에서 한 달 동안 살아 본 적이 있어서 할 얘기가 정말 많았어.","Like me, he’s spent a month living in Jeju, so we had loads to talk about."],["st-09","3","9","","","","","line","하나","와, 그럼 또 만날 거야?","Wow, so are you going to see him again?"],["st-09","3","10","","","","","line","지은","응, 그 사람한테 전시회 표가 두 장 생겨서 이번 주말에 같이 가게 됐어.","Yeah, he got two tickets to an exhibition, so we’re going together this weekend."],["st-09","3","11","","","","","line","하나","잘됐다! 근데 너 원래 소개팅 싫어했잖아.","That’s great! But you always used to hate blind dates."],["st-09","3","12","","","","","line","지은","맞아. 전에 소개팅에서 실망한 적이 많았기 때문에 이번에도 별로 기대 안 했어.","True. I’d been disappointed on blind dates so many times that I didn’t expect much this time either."],["st-09","3","13","","","","","line","하나","거봐, 사람 일은 모르는 거야. 그 사람 친구 중에 괜찮은 사람 있으면 나도 소개해 줘!","See, you never know. If any of his friends are nice, set me up too!"],["st-09","3","14","","","","","line","지은","하하, 알았어. 한번 물어볼게.","Haha, okay. I’ll ask."],["st-09","3","15","","","","","vocab","","소개팅","blind date (set up by friends)","kr-0330","in story: 소개팅 — 소개 (introduction) + -ting (from \"meeting\")"],["st-09","3","16","","","","","vocab","","어색하다","to be awkward","kr-0431","in story: 어색했는데"],["st-09","3","17","","","","","vocab","","금방","quickly, soon","kr-0371","in story: 금방"],["st-09","3","18","","","","","vocab","","회사원","office worker","kr-0260","in story: 회사원인데"],["st-09","3","19","","","","","vocab","","성격","personality","kr-0311","in story: 성격이"],["st-09","3","20","","","","","vocab","","솔직하다","to be honest, frank","kr-0320","in story: 솔직하고"],["st-09","3","21","","","","","vocab","","맞다","to fit; (people) to click","kr-0070","in story: 잘 맞는 — 잘 맞다 = to get along well, to be a good match"],["st-09","3","22","","","","","vocab","","전시회","exhibition","kr-0214","in story: 전시회"],["st-09","3","23","","","","","vocab","","생기다","to get, to come by","kr-0391","in story: 생겨서 — 표가 생기다 = to come by tickets"],["st-09","3","24","","","","","vocab","","실망하다","to be disappointed","kr-0308","in story: 실망한"],["st-09","3","25","","","","","vocab","","기대하다","to expect, to look forward to","kr-0309","in story: 기대 안 했어 — 기대(를) 안 하다 = to not expect much"],["st-09","3","26","","","","","vocab","","별로","not really (with a negative)","kr-0362","in story: 별로"],["st-09","3","27","","","","","vocab","","소개하다","to introduce; to set up","kr-0329","in story: 소개해 줘"],["st-09","3","28","","","","","vocab","","편해지다","to become comfortable","","in story: 편해졌어 — 편하다 + -아/어지다 (become)"],["st-09","3","29","","","","","vocab","","얘기","talk, chat, story","","in story: 얘기 — Short for 이야기"],["st-09","3","30","","","","","vocab","","원래","originally, normally","","in story: 원래"],["st-09","3","31","","","","","grammar","","반말 (casual speech)","Between close friends the 요 is dropped: 어땠어? / 괜찮았어 / 알았어. Names take -아/-야: 지은아."],["st-09","3","32","","","","","grammar","","-(으)ㄴ 적이 있다","\"have (ever) done\". e.g. 제주도에서 한 달 동안 살아 본 적이 있어. — He has lived in Jeju for a month. / 실망한 적이 많았어 — I’d been disappointed many times."],["st-09","3","33","","","","","grammar","","-게 되다","\"end up / it turned out that\" (not fully by your own plan). e.g. 이번 주말에 같이 가게 됐어. — We ended up going together this weekend."],["st-09","3","34","","","","","grammar","","-기 때문에","\"because\" (a bit more formal/emphatic than -아서). e.g. 실망한 적이 많았기 때문에 별로 기대 안 했어."],["st-09","3","35","","","","","grammar","","-(으)면서","\"while\" (two actions at the same time, same subject). e.g. 밥 먹으면서 여행 얘기만 했어. — We talked only about travel while eating."],["st-09","3","36","","","","","grammar","","-는 것 같다","\"seems / I think\". e.g. 여행을 좋아하는 것 같아. — He seems to like travelling. / 둘이 잘 맞는 것 같은데?"],["st-09","3","37","","","","","question","하나 / 지은","“거봐, 사람 일은 모르는 거야.” 누가 말했어요?","Who said, “See, you never know”?","L12","하나 | Hana","who"],["st-09","3","38","","","","","question","회사원 / 학생 / 여행 가이드","소개팅에서 만난 사람은 무슨 일을 해요?","What does the man from the blind date do?","L4","회사원 | He’s an office worker","mcq"],["st-09","3","39","","","","","question","여행 얘기 / 회사 얘기 / 영화 얘기","두 사람은 밥 먹으면서 무슨 얘기를 했어요?","What did the two of them talk about over dinner?","L6","여행 얘기 | Travel","mcq"],["st-09","3","40","","","","","question","","지은 씨와 그 사람은 이번 주말에 영화를 보러 가요.","Jieun and the man are going to see a film this weekend.","L9","틀려요 | False — they’re going to an exhibition.","tf"],["st-09","3","41","","","","","question","처음에는 좀 어색했어요 / 밥 먹으면서 여행 얘기를 했어요 / 전시회에 같이 가게 됐어요","일어난 순서대로 놓으세요.","Put the events in the order they happened.","L2","처음에는 좀 어색했어요 → 밥 먹으면서 여행 얘기를 했어요 → 전시회에 같이 가게 됐어요 | It was awkward at first → They talked about travel over dinner → They ended up going to an exhibition together","order"],["st-09","3","42","","","","","question","","지은 씨는 왜 이번 소개팅에 별로 기대하지 않았어요?","Why didn’t Jieun expect much from this blind date?","L11","전에 소개팅에서 실망한 적이 많았기 때문이에요. | Because she had been disappointed on blind dates many times before.","short"],["st-10","3","1","Weather & nature","prose","처음 올라간 북한산","My First Climb Up Bukhansan","meta","","","The narrator joins a hiking club and climbs Bukhansan in autumn for the first time.","","Grammar focus: -(으)ㄴ 적이 있다/없다, -게 되다, -(으)면서, -기 때문에, -(으)ㄹ 것 같다, -아/어지다"],["st-10","3","2","","","","","line","","저는 한국에서 등산을 해 본 적이 없었어요.","I had never been hiking in Korea.","","¶"],["st-10","3","3","","","","","line","","그런데 지난달에 회사 동료의 소개로 등산 동호회에 가입하게 됐어요.","But last month, through a colleague, I ended up joining a hiking club."],["st-10","3","4","","","","","line","","이번 토요일에는 동호회 사람들하고 같이 북한산에 올라갔어요.","This Saturday I climbed Bukhansan with people from the club."],["st-10","3","5","","","","","line","","10월 말이라서 날씨가 선선하고 공기도 맑았어요.","Since it was late October, the weather was cool and the air was clear.","","¶"],["st-10","3","6","","","","","line","","단풍이 예쁘게 들어서 산 전체가 빨갛고 노랬어요.","The leaves had turned beautifully, so the whole mountain was red and yellow."],["st-10","3","7","","","","","line","","처음에는 쉬웠지만 정상에 가까워지면서 점점 힘들어졌어요.","At first it was easy, but as we got closer to the top, it got harder and harder."],["st-10","3","8","","","","","line","","다리가 아파서 포기하고 싶었지만 다른 사람들이 계속 응원해 줬기 때문에 끝까지 올라갈 수 있었어요.","My legs hurt and I wanted to give up, but because the others kept cheering me on, I made it all the way up."],["st-10","3","9","","","","","line","","정상에 올라가니까 서울 시내가 한눈에 보였어요.","When we reached the top, we could see all of central Seoul at a glance.","","¶"],["st-10","3","10","","","","","line","","다 같이 준비해 온 간식을 나눠 먹으면서 사진도 많이 찍었어요.","We shared the snacks we’d brought and took lots of photos."],["st-10","3","11","","","","","line","","내려올 때는 많이 피곤했지만 기분은 정말 상쾌했어요.","I was really tired on the way down, but I felt wonderfully refreshed."],["st-10","3","12","","","","","line","","등산이 왜 그렇게 인기가 많은지 이제 알 것 같아요.","I think I understand now why hiking is so popular."],["st-10","3","13","","","","","line","","다음 달에는 동호회 사람들하고 설악산에 갈 계획이에요.","Next month I’m planning to go to Seoraksan with the club."],["st-10","3","14","","","","","vocab","","등산","hiking","kr-0204","in story: 등산 — 등산(을) 하다 / 등산을 가다"],["st-10","3","15","","","","","vocab","","동료","colleague","kr-0266","in story: 동료"],["st-10","3","16","","","","","vocab","","동호회","hobby club","kr-0217","in story: 동호회"],["st-10","3","17","","","","","vocab","","가입하다","to join","kr-0218","in story: 가입하게 — N에 가입하다"],["st-10","3","18","","","","","vocab","","선선하다","to be pleasantly cool","kr-0153","in story: 선선하고 — Typical autumn word"],["st-10","3","19","","","","","vocab","","공기","air","kr-0173","in story: 공기"],["st-10","3","20","","","","","vocab","","맑다","to be clear","kr-0148","in story: 맑았어요 — 공기가 맑다 = the air is clean/clear"],["st-10","3","21","","","","","vocab","","단풍","autumn leaves","kr-0166","in story: 단풍 — 단풍이 들다 = leaves change colour"],["st-10","3","22","","","","","vocab","","점점","gradually, more and more","kr-0388","in story: 점점"],["st-10","3","23","","","","","vocab","","포기하다","to give up","kr-0411","in story: 포기하고"],["st-10","3","24","","","","","vocab","","계속","continuously","kr-0356","in story: 계속"],["st-10","3","25","","","","","vocab","","보이다","to be seen","ian-06","in story: 보였어요 — 서울 시내가 보이다 = Seoul can be seen"],["st-10","3","26","","","","","vocab","","인기","popularity","kr-0454","in story: 인기가 — 인기가 많다 = to be popular"],["st-10","3","27","","","","","vocab","","계획","plan","kr-0465","in story: 계획이에요 — -(으)ㄹ 계획이다 = to plan to"],["st-10","3","28","","","","","vocab","","정상","summit, top","","in story: 정상"],["st-10","3","29","","","","","vocab","","응원하다","to cheer on, to support","","in story: 응원해"],["st-10","3","30","","","","","vocab","","한눈에","at a glance","","in story: 한눈에"],["st-10","3","31","","","","","vocab","","상쾌하다","to feel refreshed","","in story: 상쾌했어요"],["st-10","3","32","","","","","grammar","","-(으)ㄴ 적이 있다/없다","\"have / have never done\". With -아/어 보다 it stresses trying: 등산을 해 본 적이 없었어요. — I had never been hiking."],["st-10","3","33","","","","","grammar","","-게 되다","\"ended up / came to\". e.g. 등산 동호회에 가입하게 됐어요. — I ended up joining a hiking club."],["st-10","3","34","","","","","grammar","","-(으)면서","\"as / while\": change happening together. e.g. 정상에 가까워지면서 점점 힘들어졌어요. — As we got closer to the top, it got harder. / 간식을 먹으면서 사진을 찍었어요."],["st-10","3","35","","","","","grammar","","-기 때문에","\"because\". e.g. 다른 사람들이 계속 응원해 줬기 때문에 끝까지 올라갈 수 있었어요."],["st-10","3","36","","","","","grammar","","-(으)ㄹ 것 같다","\"I think / it seems (I will)\". e.g. 왜 인기가 많은지 이제 알 것 같아요. — I think I understand now why it’s popular."],["st-10","3","37","","","","","grammar","","-아/어지다","\"become\". e.g. 힘들어졌어요 — It became hard. / 가까워지면서 — getting closer."],["st-10","3","38","","","","","question","회사 동료가 소개해 줘서 / 인터넷에서 광고를 봐서 / 친구하고 같이 가입해서","글쓴이는 어떻게 등산 동호회에 가입하게 됐어요?","How did the writer come to join the hiking club?","L2","회사 동료가 소개해 줘서 | A colleague introduced them to it","mcq"],["st-10","3","39","","","","","question","서울 시내 / 바다 / 설악산","정상에서 무엇이 보였어요?","What could they see from the top?","L8","서울 시내 | Central Seoul","mcq"],["st-10","3","40","","","","","question","","글쓴이는 정상까지 올라가지 못했어요.","The writer didn’t make it to the top.","L7","틀려요 | False — they made it all the way up.","tf"],["st-10","3","41","","","","","question","등산 동호회에 가입했어요 / 정상에서 서울 시내를 봤어요 / 내려올 때 피곤했지만 상쾌했어요","일어난 순서대로 놓으세요.","Put the events in the order they happened.","L8","등산 동호회에 가입했어요 → 정상에서 서울 시내를 봤어요 → 내려올 때 피곤했지만 상쾌했어요 | Joined the hiking club → Saw central Seoul from the top → Felt tired but refreshed on the way down","order"],["st-10","3","42","","","","","question","","___이 예쁘게 들어서 산 전체가 빨갛고 노랬어요.","The ___ had turned beautifully, so the whole mountain was red and yellow.","L5","단풍 | autumn leaves","blank"],["st-10","3","43","","","","","question","","글쓴이는 어떻게 끝까지 올라갈 수 있었어요?","How was the writer able to make it to the top?","L7","다른 사람들이 계속 응원해 줬기 때문이에요. | Because the others kept cheering them on.","short"],["st-11","3","1","School & study","prose","한국어를 배우게 된 이유","How I Came to Learn Korean","meta","","","A learner looks back on why they started Korean, what was hard, and their next goal.","","Grammar focus: -기 때문에 / N 때문에, -게 되다, -(으)면서, -았/었던 적이 있다, -(으)ㄹ 것 같다, -기 (noun form)"],["st-11","3","2","","","","","line","","저는 3년 전에 처음 한국에 여행을 왔어요.","I first came to Korea on a trip three years ago.","","¶"],["st-11","3","3","","","","","line","","그때 식당에서 메뉴판을 전혀 읽을 수 없었기 때문에 사진만 보고 주문했어요.","Back then I couldn’t read restaurant menus at all, so I ordered just by looking at the pictures."],["st-11","3","4","","","","","line","","그 경험 때문에 한국어를 배우게 됐어요.","That experience is what got me learning Korean."],["st-11","3","5","","","","","line","","처음에는 한글을 외우면서 좋아하는 노래 가사도 같이 읽어 봤어요.","At first, while memorising Hangul, I also tried reading the lyrics of songs I liked.","","¶"],["st-11","3","6","","","","","line","","그런데 문법이 생각보다 훨씬 복잡했어요.","But the grammar was much more complicated than I thought."],["st-11","3","7","","","","","line","","특히 존댓말과 반말의 차이를 이해하기가 어려웠어요.","The difference between polite and casual speech was especially hard to understand."],["st-11","3","8","","","","","line","","한번은 친구 어머니께 반말을 해서 정말 창피했던 적도 있어요.","Once I even spoke casually to a friend’s mother, which was really embarrassing."],["st-11","3","9","","","","","line","","요즘은 일주일에 두 번 한국어 스터디에 나가요.","These days I go to a Korean study group twice a week.","","¶"],["st-11","3","10","","","","","line","","스터디에서 한국 사람들하고 이야기하면서 말하기 실력이 많이 늘었어요.","Talking with Korean people there, my speaking has improved a lot."],["st-11","3","11","","","","","line","","아직 실수를 많이 하지만 이제는 한국 드라마도 자막 없이 조금씩 알아들을 수 있어요.","I still make lots of mistakes, but now I can understand a little of Korean dramas without subtitles."],["st-11","3","12","","","","","line","","제 목표는 내년에 토픽 4급에 합격하는 거예요.","My goal is to pass TOPIK Level 4 next year."],["st-11","3","13","","","","","line","","지금처럼 꾸준히 공부하면 꼭 합격할 수 있을 것 같아요.","If I keep studying steadily like this, I think I can definitely pass."],["st-11","3","14","","","","","vocab","","메뉴판","menu (physical)","kr-0059","in story: 메뉴판"],["st-11","3","15","","","","","vocab","","전혀","not at all","kr-0363","in story: 전혀 — Always with a negative"],["st-11","3","16","","","","","vocab","","외우다","to memorise","kr-0239","in story: 외우면서"],["st-11","3","17","","","","","vocab","","문법","grammar","kr-0247","in story: 문법"],["st-11","3","18","","","","","vocab","","훨씬","much (more), by far","kr-0375","in story: 훨씬"],["st-11","3","19","","","","","vocab","","존댓말","polite/honorific speech","kr-0441","in story: 존댓말"],["st-11","3","20","","","","","vocab","","반말","casual speech","kr-0442","in story: 반말 — 반말을 하다 = to speak casually"],["st-11","3","21","","","","","vocab","","차이","difference","kr-0458","in story: 차이 — A와 B의 차이"],["st-11","3","22","","","","","vocab","","창피하다","to be embarrassed","kr-0302","in story: 창피했던"],["st-11","3","23","","","","","vocab","","나가다","to attend (regularly)","ian-07","in story: 나가요 — 스터디/모임에 나가다"],["st-11","3","24","","","","","vocab","","실력","skill, ability","kr-0477","in story: 실력이 — 말하기 실력 = speaking skills"],["st-11","3","25","","","","","vocab","","늘다","to improve, to increase","kr-0394","in story: 늘었어요 — 실력이 늘다"],["st-11","3","26","","","","","vocab","","실수","mistake","kr-0476","in story: 실수 — 실수를 하다"],["st-11","3","27","","","","","vocab","","목표","goal","kr-0464","in story: 목표는"],["st-11","3","28","","","","","vocab","","합격하다","to pass (an exam)","kr-0259","in story: 합격하는, 합격할 — N에 합격하다"],["st-11","3","29","","","","","vocab","","가사","(song) lyrics","","in story: 가사"],["st-11","3","30","","","","","vocab","","자막","subtitles","","in story: 자막 — 자막 없이 = without subtitles"],["st-11","3","31","","","","","vocab","","알아듣다","to understand (what you hear)","","in story: 알아들을 — ㄷ irregular: 알아들어요 / 알아들을 수 있어요"],["st-11","3","32","","","","","vocab","","꾸준히","steadily, consistently","","in story: 꾸준히"],["st-11","3","33","","","","","grammar","","-기 때문에 / N 때문에","\"because (of)\". e.g. 메뉴판을 전혀 읽을 수 없었기 때문에 사진만 보고 주문했어요. / 그 경험 때문에 — because of that experience"],["st-11","3","34","","","","","grammar","","-게 되다","\"came to / ended up\". e.g. 한국어를 배우게 됐어요. — I came to learn Korean."],["st-11","3","35","","","","","grammar","","-(으)면서","\"while\". e.g. 한글을 외우면서 노래 가사도 읽어 봤어요. / 이야기하면서 실력이 늘었어요."],["st-11","3","36","","","","","grammar","","-았/었던 적이 있다","\"there was a time when…\". e.g. 정말 창피했던 적도 있어요. — There was even a time I was really embarrassed."],["st-11","3","37","","","","","grammar","","-(으)ㄹ 것 같다","\"I think (it will)\". e.g. 꼭 합격할 수 있을 것 같아요. — I think I can definitely pass."],["st-11","3","38","","","","","grammar","","-기 (noun form)","Turns a verb into a noun: 이해하기가 어려웠어요 — understanding (it) was hard; 말하기 실력 — speaking ability."],["st-11","3","39","","","","","question","사진을 보고 / 한국 친구가 도와줘서 / 영어 메뉴판을 보고","글쓴이는 처음 한국에 왔을 때 어떻게 주문했어요?","How did the writer order food on their first trip to Korea?","L2","사진을 보고 | By looking at the pictures","mcq"],["st-11","3","40","","","","","question","존댓말과 반말의 차이 / 한글 외우기 / 노래 가사 읽기","글쓴이에게 특히 어려웠던 것은 뭐예요?","What was especially difficult for the writer?","L6","존댓말과 반말의 차이 | The difference between polite and casual speech","mcq"],["st-11","3","41","","","","","question","","글쓴이는 요즘 한국어 스터디에 일주일에 한 번 나가요.","These days the writer goes to a Korean study group once a week.","L8","틀려요 | False — twice a week.","tf"],["st-11","3","42","","","","","question","","아직 ___를 많이 하지만 이제는 한국 드라마도 자막 없이 조금씩 알아들을 수 있어요.","I still make lots of ___s, but now I can understand a little of Korean dramas without subtitles.","L10","실수 | mistake","blank"],["st-11","3","43","","","","","question","","글쓴이의 목표는 뭐예요?","What is the writer’s goal?","L11","내년에 토픽 4급에 합격하는 거예요. | To pass TOPIK Level 4 next year.","short"],["st-12","3","1","Culture & society","dialogue","추석에 같이 갈래요?","Want to Come Home for Chuseok?","meta","","","Minho invites Ian to spend Chuseok with his family in Daegu.","","Grammar focus: -게 되다, -(으)ㄴ 적이 있다/없다, -(으)면서, -(으)ㄹ 것 같다, -기 (noun form) + 가 어렵다/힘들다, -아/어서요"],["st-12","3","2","","","","","line","이안","민호 씨, 이번 추석에 고향에 내려가요?","Minho, are you heading home for Chuseok this year?"],["st-12","3","3","","","","","line","민호","네, 부모님이 대구에 계셔서 내려가요. 이안 씨는요?","Yes, my parents live in Daegu, so I’m going down. What about you, Ian?"],["st-12","3","4","","","","","line","이안","저는 그냥 서울에 있을 것 같아요. 연휴에는 기차표 구하기가 너무 힘들어서요.","I think I’ll just stay in Seoul. It’s so hard to get train tickets over the holiday."],["st-12","3","5","","","","","line","민호","그럼 저랑 같이 대구에 갈래요? 이번에는 차로 가게 돼서 자리가 하나 남아요.","Then why not come to Daegu with me? I’m driving this time, so there’s a spare seat."],["st-12","3","6","","","","","line","이안","정말요? 그래도 가족 명절인데 제가 가도 괜찮아요?","Really? But it’s a family holiday — is it okay for me to come?"],["st-12","3","7","","","","","line","민호","그럼요. 저희 어머니는 손님이 오시는 걸 정말 좋아하세요.","Of course. My mum loves having guests."],["st-12","3","8","","","","","line","이안","사실 한국 가정집에서 추석을 보낸 적이 없어서 늘 궁금했어요.","Actually, I’ve never spent Chuseok in a Korean family home, so I’ve always been curious."],["st-12","3","9","","","","","line","민호","추석에는 가족들이 모여서 송편을 만들면서 이야기를 많이 해요.","At Chuseok the family gets together and chats a lot while making songpyeon."],["st-12","3","10","","","","","line","이안","송편이요? 드라마에서 본 적이 있어요. 반달 모양 떡 맞죠?","Songpyeon? I’ve seen it in dramas. It’s the half-moon-shaped rice cake, right?"],["st-12","3","11","","","","","line","민호","맞아요. 그런데 만들기가 생각보다 어려워요. 저는 매년 모양이 이상해서 어머니한테 혼나요.","That’s right. But it’s harder to make than you’d think. Every year mine come out weird and my mum tells me off."],["st-12","3","12","","","","","line","이안","하하, 저도 처음이니까 아마 비슷할 것 같아요. 어머님 선물로 뭐가 좋을까요?","Haha, it’s my first time, so mine will probably be the same. What would be a good gift for your mother?"],["st-12","3","13","","","","","line","민호","그냥 오셔도 되는데… 과일 정도면 충분할 것 같아요.","You really don’t need to bring anything… but some fruit would be plenty."],["st-12","3","14","","","","","line","이안","좋아요. 그럼 배 한 상자 사 갈게요. 벌써 설레요!","Great. Then I’ll bring a box of pears. I’m already excited!"],["st-12","3","15","","","","","vocab","","추석","Chuseok (harvest festival)","kr-0436","in story: 추석"],["st-12","3","16","","","","","vocab","","고향","hometown","kr-0437","in story: 고향"],["st-12","3","17","","","","","vocab","","그냥","just (without doing anything special)","kr-0390","in story: 그냥"],["st-12","3","18","","","","","vocab","","명절","traditional holiday","kr-0434","in story: 명절 — 설날 and 추석 are the two big 명절"],["st-12","3","19","","","","","vocab","","사실","actually, in fact","kr-0472","in story: 사실"],["st-12","3","20","","","","","vocab","","모이다","to gather","kr-0401","in story: 모여서"],["st-12","3","21","","","","","vocab","","드라마","TV drama","kr-0221","in story: 드라마"],["st-12","3","22","","","","","vocab","","아마","probably","kr-0351","in story: 아마"],["st-12","3","23","","","","","vocab","","비슷하다","to be similar","kr-0421","in story: 비슷할"],["st-12","3","24","","","","","vocab","","충분하다","to be enough","kr-0426","in story: 충분할"],["st-12","3","25","","","","","vocab","","설레다","to be excited (fluttery anticipation)","kr-0307","in story: 설레요 — Spelled 설레요, not 설레여요"],["st-12","3","26","","","","","vocab","","내려가다","to go down (from Seoul to the regions)","","in story: 내려가요 — Going to your hometown from Seoul is \"going down\""],["st-12","3","27","","","","","vocab","","가정집","family home, private house","","in story: 가정집"],["st-12","3","28","","","","","vocab","","송편","songpyeon (half-moon rice cake)","","in story: 송편 — Made and eaten at Chuseok"],["st-12","3","29","","","","","vocab","","혼나다","to be scolded, to get told off","","in story: 혼나요 — N한테 혼나다"],["st-12","3","30","","","","","grammar","","-게 되다","\"it turned out that / ended up\". e.g. 이번에는 차로 가게 돼서 자리가 하나 남아요. — It turns out I’m driving this time, so there’s a spare seat."],["st-12","3","31","","","","","grammar","","-(으)ㄴ 적이 있다/없다","e.g. 추석을 보낸 적이 없어서 늘 궁금했어요. — I’ve never spent Chuseok there, so I’ve always wondered. / 드라마에서 본 적이 있어요."],["st-12","3","32","","","","","grammar","","-(으)면서","\"while\". e.g. 송편을 만들면서 이야기를 많이 해요."],["st-12","3","33","","","","","grammar","","-(으)ㄹ 것 같다","Softens a statement or guess: \"I think\". e.g. 서울에 있을 것 같아요. / 아마 비슷할 것 같아요. / 과일 정도면 충분할 것 같아요."],["st-12","3","34","","","","","grammar","","-기 (noun form) + 가 어렵다/힘들다","\"doing X is hard\". e.g. 기차표 구하기가 너무 힘들어요. / 만들기가 생각보다 어려워요."],["st-12","3","35","","","","","grammar","","-아/어서요","Giving a reason as a full answer. e.g. 연휴에는 기차표 구하기가 너무 힘들어서요. — (Because) it’s so hard to get tickets."],["st-12","3","36","","","","","question","민호 / 이안","“저는 매년 모양이 이상해서 어머니한테 혼나요.” 누가 말했어요?","Who said, “Every year mine come out weird and my mum tells me off”?","L10","민호 | Minho","who"],["st-12","3","37","","","","","question","대구 / 부산 / 서울","민호 씨의 부모님은 어디에 사세요?","Where do Minho’s parents live?","L2","대구 | In Daegu","mcq"],["st-12","3","38","","","","","question","민호 씨 차를 타고 / 기차를 타고 / 고속버스를 타고","이안 씨는 어떻게 대구에 가요?","How is Ian getting to Daegu?","L4","민호 씨 차를 타고 | In Minho’s car","mcq"],["st-12","3","39","","","","","question","","이안 씨는 한국 가정집에서 추석을 보낸 적이 있어요.","Ian has spent Chuseok in a Korean family home before.","L7","틀려요 | False — he never has.","tf"],["st-12","3","40","","","","","question","","추석에는 가족들이 모여서 ___을 만들면서 이야기를 많이 해요.","At Chuseok the family gets together and chats a lot while making ___.","L8","송편 | songpyeon (half-moon rice cakes)","blank"],["st-12","3","41","","","","","question","","이안 씨는 무슨 선물을 사 갈 거예요?","What gift is Ian going to bring?","L13","배 한 상자요. | A box of pears.","short"],["st-13","4","1","Travel & transport","prose","부산 여행 일기","Busan Travel Diary","meta","","","A diary entry (written style) about the first day of a solo trip to Busan.","","Grammar focus: 한다체 (written diary style), -(으)ㄹ 수밖에 없다, -다고 하다 / -(이)라고 하다, -기로 하다, -(으)ㄹ 생각이다"],["st-13","4","2","","","","","line","","10월 3일, 맑음","October 3rd. Sunny.","","¶"],["st-13","4","3","","","","","line","","아침 일찍 고속버스를 타고 부산으로 출발했다.","I set off for Busan early in the morning on the express bus.","","¶"],["st-13","4","4","","","","","line","","기차표는 이미 매진이었기 때문에 버스를 탈 수밖에 없었다.","The train tickets were already sold out, so I had no choice but to take the bus."],["st-13","4","5","","","","","line","","네 시간 넘게 걸렸지만 생각보다 지루하지 않았다.","It took over four hours, but it was less boring than I’d expected."],["st-13","4","6","","","","","line","","휴게소에서 호두과자도 사 먹고 창밖 경치도 구경했다.","I bought walnut cakes at the rest stop and watched the scenery go by."],["st-13","4","7","","","","","line","","숙소에 짐을 놓고 바로 해운대에 갔다.","I dropped my bags at my accommodation and went straight to Haeundae.","","¶"],["st-13","4","8","","","","","line","","바닷가에는 생각보다 관광객이 많았지만 바다는 정말 넓고 파랬다.","There were more tourists on the beach than I’d expected, but the sea was so wide and blue."],["st-13","4","9","","","","","line","","저녁에는 자갈치 시장에 가서 회를 먹었다.","In the evening I went to Jagalchi Market and had raw fish."],["st-13","4","10","","","","","line","","가게 아주머니가 오늘 아침에 잡은 생선이라고 하셨는데 정말 신선하고 맛있었다.","The lady at the stall said the fish had been caught that morning, and it really was fresh and delicious."],["st-13","4","11","","","","","line","","내일은 감천문화마을에 가기로 했다.","Tomorrow I’ve decided to go to Gamcheon Culture Village.","","¶"],["st-13","4","12","","","","","line","","게스트하우스 사장님이 거기는 오후에 사람이 많다고 해서 아침 일찍 갈 생각이다.","The guesthouse owner said it gets crowded in the afternoon, so I’m thinking of going early in the morning."],["st-13","4","13","","","","","line","","혼자 하는 여행은 처음이라서 조금 걱정했는데 생각보다 훨씬 즐겁다.","It’s my first time travelling alone, so I was a bit worried, but it’s far more fun than I thought."],["st-13","4","14","","","","","vocab","","출발하다","to depart, to set off","kr-0093","in story: 출발했다"],["st-13","4","15","","","","","vocab","","이미","already","kr-0354","in story: 이미"],["st-13","4","16","","","","","vocab","","매진","sold out (tickets)","kr-0075","in story: 매진이었기"],["st-13","4","17","","","","","vocab","","지루하다","to be boring","kr-0296","in story: 지루하지"],["st-13","4","18","","","","","vocab","","경치","scenery","kr-0115","in story: 경치"],["st-13","4","19","","","","","vocab","","구경하다","to look around, to watch","kr-0110","in story: 구경했다"],["st-13","4","20","","","","","vocab","","숙소","accommodation","kr-0107","in story: 숙소"],["st-13","4","21","","","","","vocab","","짐","luggage","kr-0106","in story: 짐을 — 짐을 놓다 = to put down / drop off bags"],["st-13","4","22","","","","","vocab","","바닷가","seaside, beach","kr-0169","in story: 바닷가"],["st-13","4","23","","","","","vocab","","관광객","tourist","kr-0109","in story: 관광객"],["st-13","4","24","","","","","vocab","","걱정하다","to worry","kr-0297","in story: 걱정했는데"],["st-13","4","25","","","","","vocab","","혼자","alone","kr-0381","in story: 혼자"],["st-13","4","26","","","","","vocab","","호두과자","walnut cake (rest-stop snack)","","in story: 호두과자 — Small walnut-shaped cakes with red bean filling"],["st-13","4","27","","","","","vocab","","생선","fish (as food)","","in story: 생선 — Live fish = 물고기"],["st-13","4","28","","","","","vocab","","신선하다","to be fresh","","in story: 신선하고"],["st-13","4","29","","","","","vocab","","사장님","owner, boss","","in story: 사장님 — Polite way to address a shop/guesthouse owner"],["st-13","4","30","","","","","grammar","","한다체 (written diary style)","Plain written style used in diaries and narratives: 출발했다 (past), 즐겁다 (adjective, present), 갈 생각이다. Not used when speaking to someone."],["st-13","4","31","","","","","grammar","","-(으)ㄹ 수밖에 없다","\"have no choice but to\". e.g. 기차표는 이미 매진이었기 때문에 버스를 탈 수밖에 없었다."],["st-13","4","32","","","","","grammar","","-다고 하다 / -(이)라고 하다","Reported speech: \"(someone) says that…\". Adjective -다고, verb -ㄴ/는다고, noun -(이)라고. e.g. 오늘 아침에 잡은 생선이라고 하셨다. / 오후에 사람이 많다고 해서 아침 일찍 갈 생각이다."],["st-13","4","33","","","","","grammar","","-기로 하다","\"decide / agree to\". e.g. 내일은 감천문화마을에 가기로 했다. — I’ve decided to go to Gamcheon Culture Village tomorrow."],["st-13","4","34","","","","","grammar","","-(으)ㄹ 생각이다","\"be thinking of / plan to\". e.g. 아침 일찍 갈 생각이다."],["st-13","4","35","","","","","question","기차표가 매진이어서 / 버스가 더 빨라서 / 버스가 더 싸서","글쓴이는 왜 버스를 탔어요?","Why did the writer take the bus?","L3","기차표가 매진이어서 | Because the train tickets were sold out","mcq"],["st-13","4","36","","","","","question","자갈치 시장에서 회 / 해운대에서 어묵 / 숙소에서 라면","글쓴이는 저녁에 무엇을 먹었어요?","What did the writer eat in the evening?","L8","자갈치 시장에서 회 | Raw fish at Jagalchi Market","mcq"],["st-13","4","37","","","","","question","","글쓴이는 부산에 혼자 여행을 갔어요.","The writer went to Busan alone.","L12","맞아요 | True","tf"],["st-13","4","38","","","","","question","고속버스를 타고 출발했어요 / 해운대에 갔어요 / 자갈치 시장에서 회를 먹었어요","일어난 순서대로 놓으세요.","Put the events in the order they happened.","L6","고속버스를 타고 출발했어요 → 해운대에 갔어요 → 자갈치 시장에서 회를 먹었어요 | Set off on the express bus → Went to Haeundae → Had raw fish at Jagalchi Market","order"],["st-13","4","39","","","","","question","","___에는 생각보다 관광객이 많았지만 바다는 정말 넓고 파랬다.","There were more tourists on the ___ than I’d expected, but the sea was so wide and blue.","L7","바닷가 | beach, seaside","blank"],["st-13","4","40","","","","","question","","글쓴이는 왜 감천문화마을에 아침 일찍 가려고 해요?","Why does the writer want to go to Gamcheon Culture Village early in the morning?","L11","게스트하우스 사장님이 오후에는 사람이 많다고 했기 때문이에요. | Because the guesthouse owner said it gets crowded in the afternoon.","short"],["st-14","4","1","Work & office","prose","회사를 옮기기로 했다","I’ve Decided to Change Jobs","meta","","","A diary entry about deciding to leave a demanding job for a better work–life balance.","","Grammar focus: 한다체 (diary style), -다고 하다, -(으)ㄹ 수밖에 없다, -기로 하다, -아/어 있다"],["st-14","4","2","","","","","line","","오늘 부장님께 회사를 그만두겠다고 말씀드렸다.","Today I told my department head that I’m going to quit.","","¶"],["st-14","4","3","","","","","line","","이 회사에서 5년 동안 일하면서 많은 것을 배웠지만, 요즘은 계속되는 야근 때문에 많이 지쳐 있었다.","I’ve learned a lot in five years here, but lately I’d been worn out by the constant late nights."],["st-14","4","4","","","","","line","","주말에도 업무 연락이 자주 와서 제대로 쉴 수가 없었다.","Work messages kept coming even at weekends, so I could never properly rest."],["st-14","4","5","","","","","line","","사실 석 달 전에 다른 회사에서 면접을 봤다.","The truth is, I had an interview at another company three months ago.","","¶"],["st-14","4","6","","","","","line","","그 회사는 연봉은 조금 적지만 야근이 거의 없고 재택근무도 할 수 있다고 했다.","They said the salary is a bit lower, but there’s hardly any overtime and you can work from home too."],["st-14","4","7","","","","","line","","처음에는 고민이 많았지만, 건강을 생각하면 회사를 옮길 수밖에 없었다.","At first I went back and forth a lot, but thinking about my health, I really had no choice but to move."],["st-14","4","8","","","","","line","","부장님은 조금 놀라셨지만 내 결정을 이해한다고 하셨다.","My boss was a little surprised but said he understood my decision.","","¶"],["st-14","4","9","","","","","line","","우리는 내가 다음 달 말까지 일하면서 후배에게 업무를 넘겨 주기로 했다.","We agreed that I’ll work until the end of next month and hand my work over to a junior colleague."],["st-14","4","10","","","","","line","","퇴근하는 길에 오랜만에 마음이 가벼웠다.","On my way home from work, my heart felt light for the first time in ages."],["st-14","4","11","","","","","line","","새 직장에서는 일도 열심히 하고 나 자신도 잘 챙기기로 했다.","At my new job, I’ve decided to work hard but also look after myself properly."],["st-14","4","12","","","","","vocab","","부장님","department head","kr-0268","in story: 부장님"],["st-14","4","13","","","","","vocab","","그만두다","to quit","kr-0284","in story: 그만두겠다고 — -겠다고 = reported intention (\"that I would…\")"],["st-14","4","14","","","","","vocab","","야근","working late, overtime","kr-0264","in story: 야근"],["st-14","4","15","","","","","vocab","","업무","work, duties","kr-0273","in story: 업무"],["st-14","4","16","","","","","vocab","","면접","job interview","kr-0281","in story: 면접을 — 면접을 보다 = to have an interview"],["st-14","4","17","","","","","vocab","","연봉","annual salary","kr-0280","in story: 연봉은"],["st-14","4","18","","","","","vocab","","거의","hardly (with negative), almost","kr-0361","in story: 거의 — 거의 없다 = there’s hardly any"],["st-14","4","19","","","","","vocab","","이해하다","to understand","kr-0245","in story: 이해한다고"],["st-14","4","20","","","","","vocab","","후배","junior colleague","kr-0346","in story: 후배에게"],["st-14","4","21","","","","","vocab","","퇴근하다","to leave work","kr-0263","in story: 퇴근하는 — 퇴근하는 길에 = on the way home from work"],["st-14","4","22","","","","","vocab","","직장","workplace, job","kr-0261","in story: 직장"],["st-14","4","23","","","","","vocab","","챙기다","to look after","kr-0006","in story: 챙기기로 — 자신을 챙기다 = to take care of yourself"],["st-14","4","24","","","","","vocab","","지치다","to be exhausted, worn out","","in story: 지쳐 — 지쳐 있다 = to be (in a state of) exhaustion"],["st-14","4","25","","","","","vocab","","재택근무","working from home","","in story: 재택근무"],["st-14","4","26","","","","","vocab","","고민","worry; agonising over a decision","","in story: 고민이 — 고민이 많다 / 고민하다"],["st-14","4","27","","","","","vocab","","옮기다","to move; to change (jobs)","","in story: 옮길 — 회사를 옮기다 = to change companies"],["st-14","4","28","","","","","grammar","","한다체 (diary style)","e.g. 말씀드렸다, 지쳐 있었다, 마음이 가벼웠다. Present verbs take -ㄴ/는다 (이해한다), adjectives just -다."],["st-14","4","29","","","","","grammar","","-다고 하다","Reported speech. e.g. 재택근무도 할 수 있다고 했다. — They said you can work from home. / 내 결정을 이해한다고 하셨다. / 그만두겠다고 말씀드렸다."],["st-14","4","30","","","","","grammar","","-(으)ㄹ 수밖에 없다","\"have no choice but to\". e.g. 건강을 생각하면 회사를 옮길 수밖에 없었다."],["st-14","4","31","","","","","grammar","","-기로 하다","\"decide / agree to\". e.g. 후배에게 업무를 넘겨 주기로 했다. / 나 자신도 잘 챙기기로 했다."],["st-14","4","32","","","","","grammar","","-아/어 있다","A state that continues after a change. e.g. 많이 지쳐 있었다 — I was worn out."],["st-14","4","33","","","","","question","3년 / 5년 / 10년","글쓴이는 지금 회사에서 몇 년 동안 일했어요?","How long has the writer worked at the current company?","L2","5년 | Five years","mcq"],["st-14","4","34","","","","","question","연봉이 더 많다 / 야근이 거의 없다 / 재택근무를 할 수 있다","새 회사에 대한 설명으로 맞지 않는 것은 뭐예요?","Which of these is NOT true about the new company?","L5","연봉이 더 많다 | The salary is higher","mcq"],["st-14","4","35","","","","","question","","부장님은 글쓴이의 결정을 듣고 화를 내셨어요.","The boss got angry when he heard the writer’s decision.","L7","틀려요 | False — he said he understood.","tf"],["st-14","4","36","","","","","question","다른 회사에서 면접을 봤어요 / 부장님께 그만두겠다고 말씀드렸어요 / 후배에게 업무를 넘겨 줄 거예요","일어난 (일어날) 순서대로 놓으세요.","Put the events in order (past → future).","L4","다른 회사에서 면접을 봤어요 → 부장님께 그만두겠다고 말씀드렸어요 → 후배에게 업무를 넘겨 줄 거예요 | Had an interview at another company → Told the boss they’re quitting → Will hand over the work to a junior","order"],["st-14","4","37","","","","","question","","그 회사는 ___은 조금 적지만 야근이 거의 없고 재택근무도 할 수 있다고 했다.","They said the ___ is a bit lower, but there’s hardly any overtime and you can work from home too.","L5","연봉 | annual salary","blank"],["st-14","4","38","","","","","question","","부장님은 글쓴이의 결정에 대해 뭐라고 했어요?","What did the boss say about the writer’s decision?","L7","글쓴이의 결정을 이해한다고 했어요. | He said he understood the decision.","short"],["st-15","4","1","Weather & nature","mixed","태풍이 온대요","They Say a Typhoon’s Coming","meta","","","An apartment announcement warns of a typhoon, and Ian and Sujin rearrange their hiking plans.","","Grammar focus: -다고 하다 (-대요), -(으)ㄹ 수밖에 없다, -더라고요, -기로 하다, -(으)시기 바랍니다"],["st-15","4","2","","","","","line","","목요일 저녁, 아파트에 안내 방송이 나왔어요.","On Thursday evening, an announcement came over the apartment PA.","","¶"],["st-15","4","3","","","","","line","관리사무소","주민 여러분께 안내 말씀 드립니다.","Attention, all residents."],["st-15","4","4","","","","","line","관리사무소","내일 오후부터 태풍의 영향으로 강한 비바람이 예상됩니다.","Strong wind and rain are expected from tomorrow afternoon due to the typhoon."],["st-15","4","5","","","","","line","관리사무소","베란다 창문을 꼭 닫으시고, 화분 같은 물건은 안으로 들여놓으시기 바랍니다.","Please make sure to close your balcony windows and bring things like plant pots inside."],["st-15","4","6","","","","","line","","방송이 끝나고 바로 수진 씨한테서 전화가 왔어요.","Right after the announcement ended, Sujin called.","","¶"],["st-15","4","7","","","","","line","수진","이안 씨, 뉴스 봤어요? 태풍이 내일 서울을 지나간다고 해요.","Ian, did you see the news? They say the typhoon is passing over Seoul tomorrow."],["st-15","4","8","","","","","line","이안","네, 방금 아파트에서도 안내 방송이 나왔어요. 그럼 내일 등산 약속은 어떡하죠?","Yeah, there was just an announcement in my building too. So what do we do about tomorrow’s hike?"],["st-15","4","9","","","","","line","수진","아쉽지만 취소할 수밖에 없어요. 비 오는 날 산은 정말 위험하니까요.","It’s a shame, but we’ll have to cancel. Mountains are really dangerous in the rain."],["st-15","4","10","","","","","line","이안","맞아요. 작년 태풍 때 잠깐 밖에 나갔는데 우산이 바로 망가지더라고요.","True. During last year’s typhoon I popped outside for a minute, and my umbrella broke instantly."],["st-15","4","11","","","","","line","수진","하하, 그럼 내일은 집에 있고 다음 주 토요일에 가기로 해요.","Haha, then let’s stay home tomorrow and go next Saturday instead."],["st-15","4","12","","","","","line","이안","좋아요. 일기 예보를 보니까 다음 주는 맑고 선선하다고 하더라고요.","Sounds good. I checked the forecast, and it says next week will be clear and cool."],["st-15","4","13","","","","","line","수진","다행이네요. 그럼 내일 창문 잘 닫고 조심하세요!","That’s a relief. Make sure you shut your windows tomorrow, and be careful!"],["st-15","4","14","","","","","line","이안","수진 씨도요. 내일 저녁에 다시 연락할게요.","You too. I’ll call you again tomorrow evening."],["st-15","4","15","","","","","vocab","","태풍","typhoon","kr-0159","in story: 태풍"],["st-15","4","16","","","","","vocab","","베란다","balcony, veranda","kr-0135","in story: 베란다"],["st-15","4","17","","","","","vocab","","뉴스","news","kr-0444","in story: 뉴스"],["st-15","4","18","","","","","vocab","","방금","just now","kr-0370","in story: 방금"],["st-15","4","19","","","","","vocab","","약속","plans, appointment","kr-0341","in story: 약속은 — 등산 약속 = plans to go hiking"],["st-15","4","20","","","","","vocab","","취소하다","to cancel","kr-0092","in story: 취소할"],["st-15","4","21","","","","","vocab","","위험하다","to be dangerous","kr-0424","in story: 위험하니까요"],["st-15","4","22","","","","","vocab","","일기 예보","weather forecast","kr-0155","in story: 일기 예보"],["st-15","4","23","","","","","vocab","","선선하다","to be pleasantly cool","kr-0153","in story: 선선하다고"],["st-15","4","24","","","","","vocab","","조심하다","to be careful","kr-0489","in story: 조심하세요"],["st-15","4","25","","","","","vocab","","관리사무소","(apartment) management office","","in story: 관리사무소"],["st-15","4","26","","","","","vocab","","주민","resident","","in story: 주민"],["st-15","4","27","","","","","vocab","","아쉽다","to be a pity; to feel it’s a shame","","in story: 아쉽지만"],["st-15","4","28","","","","","vocab","","망가지다","to break, to be ruined","","in story: 망가지더라고요"],["st-15","4","29","","","","","grammar","","-다고 하다 (-대요)","Reported speech: \"they say…\". e.g. 태풍이 내일 서울을 지나간다고 해요. In speech it’s often shortened: 지나간대요 (as in the title 태풍이 온대요)."],["st-15","4","30","","","","","grammar","","-(으)ㄹ 수밖에 없다","\"have no choice but to\". e.g. 아쉽지만 취소할 수밖에 없어요."],["st-15","4","31","","","","","grammar","","-더라고요","Reporting something you saw or experienced yourself, with a sense of discovery. e.g. 우산이 바로 망가지더라고요. — My umbrella broke right away (I tell you). / 맑고 선선하다고 하더라고요."],["st-15","4","32","","","","","grammar","","-기로 하다","\"decide / agree to\"; -기로 해요 = \"let’s agree to\". e.g. 다음 주 토요일에 가기로 해요."],["st-15","4","33","","","","","grammar","","-(으)시기 바랍니다","Very formal request used in announcements. e.g. 안으로 들여놓으시기 바랍니다. — Please bring them inside. (바랍니다, not 바래요)"],["st-15","4","34","","","","","question","수진 / 이안 / 관리사무소","“아쉽지만 취소할 수밖에 없어요.” 누가 말했어요?","Who said, “It’s a shame, but we’ll have to cancel”?","L8","수진 | Sujin","who"],["st-15","4","35","","","","","question","창문을 닫고 화분을 안으로 들여놓기 / 집 밖으로 나가기 / 엘리베이터를 쓰지 않기","관리사무소는 주민들에게 무엇을 하라고 했어요?","What did the management office tell residents to do?","L4","창문을 닫고 화분을 안으로 들여놓기 | Close the windows and bring plant pots inside","mcq"],["st-15","4","36","","","","","question","내일 / 다음 주 토요일 / 다음 주 일요일","두 사람은 언제 등산을 가기로 했어요?","When did they decide to go hiking?","L10","다음 주 토요일 | Next Saturday","mcq"],["st-15","4","37","","","","","question","","작년 태풍 때 이안 씨의 우산이 망가졌어요.","Ian’s umbrella broke during last year’s typhoon.","L9","맞아요 | True","tf"],["st-15","4","38","","","","","question","","내일 오후부터 ___의 영향으로 강한 비바람이 예상됩니다.","Strong wind and rain are expected from tomorrow afternoon due to the ___.","L3","태풍 | typhoon","blank"],["st-15","4","39","","","","","question","","다음 주 날씨는 어떻다고 해요?","What is next week’s weather supposed to be like?","L11","맑고 선선하다고 해요. | It’s supposed to be clear and cool.","short"],["st-16","4","1","Food & cooking","prose","잡채 만들기 수업","My Japchae Cooking Class","meta","","","A blog-style review of a Korean cooking class where the writer learns to make japchae.","","Grammar focus: -다고 하다, -더라고요, -(으)ㄹ 수밖에 없다, -기로 하다, -(으)ㄴ/는 줄 알았다, -아/어서 그런지"],["st-16","4","2","","","","","line","","지난 주말에 친구의 추천으로 한국 요리 교실에 다녀왔어요.","Last weekend I went to a Korean cooking class on a friend’s recommendation.","","¶"],["st-16","4","3","","","","","line","","친구가 초보자도 쉽게 따라 할 수 있다고 해서 용기를 내서 신청했어요.","My friend said even beginners can easily follow along, so I plucked up the courage and signed up."],["st-16","4","4","","","","","line","","이날 만든 요리는 잡채였어요.","The dish we made that day was japchae."],["st-16","4","5","","","","","line","","잡채는 당면만 볶으면 되는 줄 알았는데 생각보다 손이 많이 가더라고요.","I thought japchae was just stir-fried glass noodles, but it turned out to be a lot more work than I expected.","","¶"],["st-16","4","6","","","","","line","","채소를 하나하나 썰어서 따로 볶고, 소고기도 양념해서 따로 볶아야 했어요.","We had to slice each vegetable and stir-fry them separately, and marinate the beef and fry that separately too."],["st-16","4","7","","","","","line","","그래서 재료를 준비하는 데만 한 시간이 걸릴 수밖에 없었어요.","So just preparing the ingredients inevitably took an hour."],["st-16","4","8","","","","","line","","선생님은 잡채가 원래 잔치 때 먹는 음식이라서 정성이 많이 들어간다고 설명해 주셨어요.","The teacher explained that japchae is traditionally a feast dish, so a lot of care goes into it."],["st-16","4","9","","","","","line","","마지막에 볶은 재료를 모두 넣고 간장과 참기름을 넣어서 섞으니까 맛있는 잡채가 완성됐어요.","Finally, we put all the fried ingredients together, added soy sauce and sesame oil, mixed it all up, and our japchae was done.","","¶"],["st-16","4","10","","","","","line","","직접 만들어서 그런지 식당에서 먹은 잡채보다 훨씬 맛있더라고요.","Maybe because I made it myself, it tasted far better than any japchae I’ve had in a restaurant."],["st-16","4","11","","","","","line","","남은 잡채는 포장해서 집에 가져왔어요.","I packed up the leftovers and brought them home."],["st-16","4","12","","","","","line","","다음 달에는 친구하고 같이 된장찌개 수업을 듣기로 했어요.","Next month my friend and I have decided to take a doenjang-jjigae class together."],["st-16","4","13","","","","","vocab","","볶다","to stir-fry","kr-0043","in story: 볶으면, 볶고, 볶아야, 볶은"],["st-16","4","14","","","","","vocab","","썰다","to slice, to chop","kr-0042","in story: 썰어서"],["st-16","4","15","","","","","vocab","","양념","seasoning, marinade","kr-0041","in story: 양념해서 — 양념하다 = to season / marinate"],["st-16","4","16","","","","","vocab","","재료","ingredient","kr-0040","in story: 재료"],["st-16","4","17","","","","","vocab","","걸리다","to take (time)","kr-0175","in story: 걸릴"],["st-16","4","18","","","","","vocab","","설명하다","to explain","kr-0244","in story: 설명해"],["st-16","4","19","","","","","vocab","","넣다","to put in, to add","kr-0049","in story: 넣고, 넣어서"],["st-16","4","20","","","","","vocab","","섞다","to mix","kr-0048","in story: 섞으니까"],["st-16","4","21","","","","","vocab","","직접","oneself, in person","kr-0380","in story: 직접"],["st-16","4","22","","","","","vocab","","훨씬","much (more)","kr-0375","in story: 훨씬"],["st-16","4","23","","","","","vocab","","포장","packing (to take away)","kr-0054","in story: 포장해서 — 포장하다 = to pack / wrap to go"],["st-16","4","24","","","","","vocab","","당면","glass noodles (sweet-potato starch)","","in story: 당면 — The main ingredient of 잡채"],["st-16","4","25","","","","","vocab","","손이 많이 가다","to take a lot of work/effort","","in story: 손이 많이 가더라고요 — Idiom: lit. \"a lot of hands go into it\""],["st-16","4","26","","","","","vocab","","잔치","feast, party","","in story: 잔치"],["st-16","4","27","","","","","vocab","","정성","care, devotion","","in story: 정성이 — 정성이 들어가다 = care goes into it"],["st-16","4","28","","","","","grammar","","-다고 하다","Reported speech. e.g. 친구가 초보자도 쉽게 따라 할 수 있다고 해서 신청했어요. / 정성이 많이 들어간다고 설명해 주셨어요."],["st-16","4","29","","","","","grammar","","-더라고요","Sharing something you found out first-hand. e.g. 생각보다 손이 많이 가더라고요. — It turned out to be a lot of work. / 훨씬 맛있더라고요."],["st-16","4","30","","","","","grammar","","-(으)ㄹ 수밖에 없다","\"inevitably / had no choice but to\". e.g. 재료를 준비하는 데만 한 시간이 걸릴 수밖에 없었어요."],["st-16","4","31","","","","","grammar","","-기로 하다","\"decide / agree to\". e.g. 된장찌개 수업을 듣기로 했어요."],["st-16","4","32","","","","","grammar","","-(으)ㄴ/는 줄 알았다","\"I thought (wrongly) that…\". e.g. 당면만 볶으면 되는 줄 알았는데… — I thought you just had to fry the noodles, but…"],["st-16","4","33","","","","","grammar","","-아/어서 그런지","\"maybe because…\". e.g. 직접 만들어서 그런지 훨씬 맛있더라고요."],["st-16","4","34","","","","","question","잡채 / 된장찌개 / 김치전","요리 교실에서 무슨 음식을 만들었어요?","What dish did they make at the cooking class?","L3","잡채 | Japchae","mcq"],["st-16","4","35","","","","","question","30분 / 한 시간 / 두 시간","재료를 준비하는 데 얼마나 걸렸어요?","How long did it take to prepare the ingredients?","L6","한 시간 | An hour","mcq"],["st-16","4","36","","","","","question","","글쓴이는 남은 잡채를 요리 교실에 두고 왔어요.","The writer left the leftover japchae at the cooking class.","L10","틀려요 | False — they took it home.","tf"],["st-16","4","37","","","","","question","요리 교실에 신청했어요 / 채소와 소고기를 따로 볶았어요 / 간장과 참기름을 넣고 섞었어요 / 남은 잡채를 집에 가져왔어요","일어난 순서대로 놓으세요.","Put the steps in the order they happened.","L8","요리 교실에 신청했어요 → 채소와 소고기를 따로 볶았어요 → 간장과 참기름을 넣고 섞었어요 → 남은 잡채를 집에 가져왔어요 | Signed up for the class → Fried the vegetables and beef separately → Added soy sauce and sesame oil and mixed → Took the leftovers home","order"],["st-16","4","38","","","","","question","","채소를 하나하나 썰어서 따로 볶고, 소고기도 ___해서 따로 볶아야 했어요.","We had to slice each vegetable and fry them separately, and ___ the beef and fry that separately too.","L5","양념 | seasoning, marinade (양념하다 = to marinate)","blank"],["st-16","4","39","","","","","question","","선생님은 잡채에 왜 정성이 많이 들어간다고 했어요?","Why did the teacher say a lot of care goes into japchae?","L7","원래 잔치 때 먹는 음식이라서요. | Because it is traditionally a dish eaten at feasts.","short"]];
+
 /* ============================ Storage ============================ */
-const K = {cards:'kvf.cards.v1',srs:'kvf.srs.v1',settings:'kvf.settings.v1',log:'kvf.log.v1'};
-const DEFAULTS = {newPerDay:10,direction:'ko2en',theme:'auto',showRoman:false,autoSpeak:false,rate:0.9,syncUrl:'',autoSync:true,lastSync:null,migrated:false};
+const K = {cards:'kvf.cards.v1',srs:'kvf.srs.v1',settings:'kvf.settings.v1',log:'kvf.log.v1',storyProg:'kvf.storyprog.v1',stories:'kvf.stories.v1'};
+const DEFAULTS = {newPerDay:10,direction:'ko2en',theme:'auto',showRoman:false,autoSpeak:false,rate:0.9,syncUrl:'',autoSync:true,lastSync:null,migrated:false,storiesUrl:'',unlockAllStories:false,lastStorySync:null};
 let storageOK = true;
 const mem = {};
 function lsGet(k){try{return localStorage.getItem(k)}catch(e){storageOK=false;return mem[k]===undefined?null:mem[k]}}
@@ -420,7 +614,7 @@ function lsDel(k){try{localStorage.removeItem(k)}catch(e){delete mem[k]}}
 function readJSON(k,def){const s=lsGet(k);if(s==null)return def;try{return JSON.parse(s)}catch(e){return def}}
 
 let cards=[], srs={}, settings={}, log={};
-function save(){lsSet(K.cards,JSON.stringify(cards));lsSet(K.srs,JSON.stringify(srs));lsSet(K.settings,JSON.stringify(settings));lsSet(K.log,JSON.stringify(log));}
+function save(){lsSet(K.cards,JSON.stringify(cards));lsSet(K.srs,JSON.stringify(srs));lsSet(K.settings,JSON.stringify(settings));lsSet(K.log,JSON.stringify(log));lsSet(K.storyProg,JSON.stringify(storyProg));}
 function load(){
   settings=Object.assign({},DEFAULTS,readJSON(K.settings,{}));
   srs=readJSON(K.srs,{})||{};
@@ -619,7 +813,7 @@ function renderControls(){
 function confetti(){const box=$('#confetti');const cols=['#4f46e5','#7c3aed','#22a06b','#f59e0b','#e5484d','#3b82f6'];let h='';for(let i=0;i<40;i++){h+='<i style="left:'+(Math.random()*100)+'%;background:'+cols[i%cols.length]+';animation-delay:'+(Math.random()*.5)+'s;animation-duration:'+(1.2+Math.random())+'s"></i>'}box.innerHTML=h;setTimeout(()=>box.innerHTML='',2600)}
 
 /* ============================ Quiz ============================ */
-const quiz={mode:'mc',source:'studied',n:10,items:[],i:0,score:0,answered:false,options:[],running:false};
+const quiz={kind:'words',mode:'mc',source:'studied',n:10,items:[],i:0,score:0,answered:false,options:[],running:false};
 function quizPool(){
   let pool=quiz.source==='all'?cards.slice():quiz.source==='hard'?cards.filter(c=>srs[c.id]&&(srs[c.id].lapses>0)):cards.filter(c=>statusOf(c)!=='new');
   if(quiz.source.startsWith('unit:')){const u=quiz.source.slice(5);pool=cards.filter(c=>c.unit===u)}
@@ -627,9 +821,10 @@ function quizPool(){
 }
 function renderQuiz(){
   const a=$('#quizArea');
+  if(quiz.kind==='stories'&&!quiz.running){renderStoryQuiz(a);return}
   if(!quiz.running){
     const units=[...new Set(cards.map(c=>c.unit).filter(Boolean))].sort();
-    a.innerHTML='<div class="quiz-card"><h2>Quiz practice</h2><p class="muted small">Practice outside the schedule — quizzes don’t change your spaced-repetition reviews.</p>'+
+    a.innerHTML='<div class="quiz-card">'+quizKindSeg()+'<h2>Quiz practice</h2><p class="muted small">Practice outside the schedule — quizzes don’t change your spaced-repetition reviews.</p>'+
       '<div class="seg" id="quizMode" style="margin:6px 0 14px"><button data-qmode="mc" class="'+(quiz.mode==='mc'?'on':'')+'">Multiple choice (한→EN)</button><button data-qmode="type" class="'+(quiz.mode==='type'?'on':'')+'">Typing (EN→한)</button></div><br>'+
       '<div class="row" style="justify-content:center"><select id="quizSource"><option value="studied">Words I’ve studied</option><option value="all">All words</option><option value="hard">Words I’ve forgotten before</option>'+units.map(u=>'<option value="unit:'+esc(u)+'">Unit: '+esc(u)+'</option>').join('')+'</select>'+
       '<select id="quizN"><option>5</option><option selected>10</option><option>20</option><option value="999">All</option></select>'+
@@ -819,10 +1014,11 @@ function mergeCards(incoming,inSrs,inLog){
 function importText(text,label){
   try{
     const obj=parseAny(text);
-    if(!obj.cards.length){toast('No words found. Make sure there is a header row with korean and meaning_en columns.',4500);return null}
+    const sp=obj.storyProgress?mergeStoryProgress(obj.storyProgress):0;
+    if(!obj.cards.length){if(obj.storyProgress){refreshAll();toast('Restored stories progress ('+sp+' newly marked read)',4000);return {added:0,updated:0,same:0}}toast('No words found. Make sure there is a header row with korean and meaning_en columns.',4500);return null}
     const r=mergeCards(obj.cards,obj.srs,obj.log);
     refreshAll();
-    toast((label||'Import')+': '+r.added+' new, '+r.updated+' updated, '+r.same+' unchanged',4000);
+    toast((label||'Import')+': '+r.added+' new, '+r.updated+' updated, '+r.same+' unchanged'+(sp?' · '+sp+' stories marked read':''),4000);
     return r;
   }catch(e){toast('Import failed: '+e.message,5000);return null}
 }
@@ -830,7 +1026,7 @@ function handleFile(file){if(!file)return;const fr=new FileReader();fr.onload=()
 function csvCell(v){v=Array.isArray(v)?v.join(';'):String(v==null?'':v);return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
 function toCSV(list){return FIELDS.join(',')+'\n'+list.map(c=>FIELDS.map(f=>csvCell(c[f])).join(',')).join('\n')+'\n'}
 function exportBackup(){
-  const data={app:'korean-vocab-flashcards',version:1,exported_at:new Date().toISOString(),cards,srs,log,settings:Object.assign({},settings,{lastSync:undefined})};
+  const data={app:'korean-vocab-flashcards',version:1,exported_at:new Date().toISOString(),cards,srs,log,storyProgress:storyProg,settings:Object.assign({},settings,{lastSync:undefined,lastStorySync:undefined})};
   download('korean-vocab-backup-'+today()+'.json',JSON.stringify(data,null,2),'application/json');
   toast('Backup downloaded');return data;
 }
@@ -901,8 +1097,493 @@ function renderProgress(){
     svg+='<text x="'+(xx+w/2)+'" y="'+(H+20)+'" font-size="12" text-anchor="middle" fill="'+(x.d===t?'var(--accent)':'var(--muted)')+'" font-weight="'+(x.d===t?'800':'600')+'">'+(x.d===t?'Today':wd)+'</text>';
   });
   $('#chart').innerHTML=svg+'</svg>';
+  renderStoryProgress();
   const m=cards.filter(c=>statusOf(c)==='mastered');
   $('#masteredPanel').innerHTML='<h2>Mastered words ('+m.length+')</h2>'+(m.length?'<div class="row">'+m.map(c=>'<span class="tagchip st-mastered" lang="ko" title="'+esc(c.meaning_en)+'">'+esc(c.korean)+'</span>').join('')+'</div>':'<p class="muted small">No words mastered yet — a word is mastered when its review interval reaches 21 days. Keep practicing!</p>');
+}
+
+/* ============================ Stories (graded reading) ============================ */
+const STAGE_INFO={1:'Everyday basics · -고 · -아서/어서 · -지만',2:'Plans & reasons · -(으)려고 · -는데 · -(으)니까',3:'Experiences & casual talk · -(으)ㄴ 적이 있다 · -게 되다 · 반말',4:'Reported speech & diaries · -다고 하다 · -더라고요 · 한다체'};
+const FMT_LABEL={dialogue:'💬 Dialogue',prose:'📄 Prose',mixed:'🔀 Mixed'};
+let STORIES=[], storyCache=null, storyProg={read:{},answers:{},scores:{},quiz:{}};
+const storyUI={open:null,showEn:false,opt:{},ord:{}};
+let storyAudio=null, storiesLoading=false;
+function numv(x){const n=parseFloat(x);return isFinite(n)?n:0}
+function seedStoryRows(){return STORY_SEED_ROWS.map(a=>{const o={};STORY_SEED_COLS.forEach((c,i)=>o[c]=a[i]==null?'':a[i]);return o})}
+function cleanNote(n){return String(n||'').replace(/^\s*in story:\s*[^—\n]*(—\s*)?/i,'').trim()}
+function vocabForms(ko,notes){
+  const out=[];const m=String(notes||'').match(/in story:\s*([^—\n]+)/i);
+  if(m)m[1].split(',').map(x=>x.trim()).filter(Boolean).forEach(f=>out.push(f));
+  out.push(ko);
+  if(/하다$/.test(ko)&&ko.length>3)out.push(ko.slice(0,-2));
+  else if(/다$/.test(ko)&&ko.length>=3)out.push(ko.slice(0,-1));
+  return [...new Set(out)].filter(f=>f.length>=1);
+}
+function storyRowsToMap(rows){
+  const by=new Map();
+  rows.forEach((r,i)=>{const id=String(r.story_id==null?'':r.story_id).trim();if(!id)return;if(!by.has(id))by.set(id,[]);by.get(id).push({r,i})});
+  const out=new Map();
+  for(const [id,list] of by){
+    list.sort((a,b)=>(numv(a.r.order)-numv(b.r.order))||(a.i-b.i));
+    const s={id,stage:0,theme:'',format:'',title_ko:'',title_en:'',summary:'',lines:[],vocab:[],grammar:[],questions:[]};
+    for(const {r} of list){
+      const v=k=>String(r[k]==null?'':r[k]).trim();
+      const t=v('type').toLowerCase();
+      if(t==='meta'){if(numv(v('stage')))s.stage=numv(v('stage'));['theme','format','title_ko','title_en'].forEach(k=>{if(v(k))s[k]=v(k)});s.summary=v('en');continue}
+      if(!s.stage&&numv(v('stage')))s.stage=numv(v('stage'));
+      ['theme','format','title_ko','title_en'].forEach(k=>{if(!s[k]&&v(k))s[k]=v(k)});
+      if(t==='line'){if(v('ko'))s.lines.push({speaker:v('speaker'),ko:v('ko'),en:v('en'),para:v('notes').includes('¶')})}
+      else if(t==='vocab'){if(v('ko'))s.vocab.push({ko:v('ko'),en:v('en'),ref:v('word_ref'),notes:v('notes'),forms:vocabForms(v('ko'),v('notes'))})}
+      else if(t==='grammar'){if(v('ko'))s.grammar.push({ko:v('ko'),en:v('en')})}
+      else if(t==='question'){if(v('ko')){const p=v('notes').split('|');const opts=v('speaker').split(/\s+\/\s+/).map(x=>x.trim()).filter(Boolean);
+        let qt=v('qtype').toLowerCase();if(!QTYPES.includes(qt))qt=opts.length>1?'mcq':'short';
+        const ans_ko=(p[0]||'').trim();
+        if((qt==='mcq'&&(opts.length<2||!opts.includes(ans_ko)))||(qt==='order'&&opts.length<2)||(qt==='blank'&&!ans_ko))qt='short';
+        const lm=v('word_ref').match(/^L?\s*(\d+)$/i);
+        s.questions.push({qtype:qt,ko:v('ko'),en:v('en'),options:opts.length>1?opts:[],ans_ko,ans_en:p.slice(1).join('|').trim(),line:lm?Number(lm[1])-1:-1})}}
+    }
+    if(!s.lines.length)continue;
+    s.stage=s.stage||1;s.format=s.format.toLowerCase();
+    if(!FMT_LABEL[s.format])s.format=s.lines.every(l=>l.speaker)?'dialogue':s.lines.some(l=>l.speaker)?'mixed':'prose';
+    if(!s.title_ko)s.title_ko=s.title_en||id;
+    out.set(id,s);
+  }
+  return out;
+}
+function rebuildStories(){
+  let map;
+  try{map=storyRowsToMap(seedStoryRows())}catch(e){console.warn('seed stories failed',e);map=new Map()}
+  if(storyCache&&Array.isArray(storyCache.rows)){try{for(const [id,s] of storyRowsToMap(storyCache.rows))map.set(id,s)}catch(e){console.warn('cached stories skipped',e)}}
+  STORIES=[...map.values()].sort((a,b)=>(a.stage-b.stage)||a.id.localeCompare(b.id,undefined,{numeric:true}));
+}
+function loadStoryState(){
+  const p=readJSON(K.storyProg,null);
+  const ob=k=>(p&&p[k]&&typeof p[k]==='object'&&!Array.isArray(p[k]))?p[k]:{};
+  storyProg={read:ob('read'),answers:ob('answers'),scores:ob('scores'),quiz:ob('quiz'),quizSessions:(p&&Number(p.quizSessions))||0};
+  const c=readJSON(K.stories,null);storyCache=(c&&Array.isArray(c.rows))?c:null;
+  rebuildStories();
+}
+function saveStoryProg(){lsSet(K.storyProg,JSON.stringify(storyProg))}
+function getStory(id){return STORIES.find(s=>s.id===id)}
+function isRead(id){return !!storyProg.read[id]}
+function storyStages(){return [...new Set(STORIES.map(s=>s.stage))].sort((a,b)=>a-b)}
+function stageUnlocked(st){if(settings.unlockAllStories)return true;return STORIES.every(s=>s.stage>=st||isRead(s.id))}
+function nextUpStory(){return STORIES.find(s=>!isRead(s.id)&&stageUnlocked(s.stage))||null}
+function vocabInDeck(v){return !!((v.ref&&cards.some(c=>c.id===v.ref))||cards.some(c=>norm(c.korean)===norm(v.ko)))}
+function storySpeakers(s){const a=[];s.lines.forEach(l=>{if(l.speaker&&!a.includes(l.speaker))a.push(l.speaker)});return a}
+
+/* ---- library ---- */
+function renderStories(){
+  const root=$('#storiesArea');if(!root)return;
+  if(storyUI.open){const s=getStory(storyUI.open);if(s){renderReader(s);return}storyUI.open=null}
+  closePop();
+  const total=STORIES.length,read=STORIES.filter(s=>isRead(s.id)).length,nx=nextUpStory();
+  let h='<div class="panel"><div class="row" style="justify-content:space-between;align-items:flex-start"><div><h2 style="margin:0">📖 Stories <span class="muted small" style="font-weight:600">· '+read+' of '+total+' read</span></h2>'+
+    '<p class="small muted" style="margin:4px 0 0">Short graded reads. Korean first — tap a line to peek at the English, or press <b>Show English</b>.</p></div>'+
+    (nx?'<button class="btn primary" data-action="story-open" data-id="'+esc(nx.id)+'">Next up: <span lang="ko">'+esc(nx.title_ko)+'</span> →</button>':'')+'</div>'+
+    '<div class="progressbar" style="margin-top:12px"><i style="width:'+(total?Math.round(100*read/total):0)+'%"></i></div></div>';
+  if(!total)h+='<div class="panel done"><div class="big">📭</div><h2>No stories yet</h2><p class="muted">Add a Stories sheet URL in Settings.</p></div>';
+  for(const st of storyStages()){
+    const list=STORIES.filter(s=>s.stage===st),unl=stageUnlocked(st),rc=list.filter(s=>isRead(s.id)).length;
+    h+='<div class="st-stage"><div class="st-stage-h"><h3>'+(unl?'':'🔒 ')+'Stage '+esc(st)+'</h3><span class="muted">'+esc(STAGE_INFO[st]||'')+(STAGE_INFO[st]?' · ':'')+rc+'/'+list.length+' read</span></div>'+
+      (unl?'':'<div class="st-lockmsg">Read every story in the earlier stages to unlock — or turn on <b>Unlock all stories</b> in Settings.</div>')+'<div class="st-grid">';
+    for(const s of list){
+      const r=isRead(s.id),isNext=nx&&nx.id===s.id;
+      h+='<button class="st-card'+(r?' read':'')+(isNext?' next':'')+(unl?'':' locked')+'" data-action="story-open" data-id="'+esc(s.id)+'"'+(unl?'':' aria-disabled="true"')+'>'+
+        '<span class="tick" aria-label="'+(r?'Read':'Not read yet')+'">✓</span><span class="tko" lang="ko">'+esc(s.title_ko)+'</span><span class="ten">'+esc(s.title_en)+'</span>'+
+        '<span class="chips">'+(isNext?'<span class="tagchip chip-next">★ Next up</span>':'')+(s.theme?'<span class="tagchip">'+esc(s.theme)+'</span>':'')+'<span class="tagchip chip-fmt">'+(FMT_LABEL[s.format]||esc(s.format))+'</span>'+scoreChip(s.id)+'</span></button>';
+    }
+    h+='</div></div>';
+  }
+  root.innerHTML=h;
+}
+
+/* ---- reader ---- */
+function highlightKo(text,s){
+  const T=String(text);const marks=[];
+  const forms=[];s.vocab.forEach((v,vi)=>v.forms.forEach(f=>forms.push({f,vi})));
+  forms.sort((a,b)=>b.f.length-a.f.length);
+  for(const {f,vi} of forms){let i=0;while(f&&(i=T.indexOf(f,i))>-1){const e=i+f.length;if(!marks.some(m=>i<m.e&&e>m.s))marks.push({s:i,e,vi});i=e}}
+  marks.sort((a,b)=>a.s-b.s);
+  let out='',p=0;
+  for(const m of marks){out+=esc(T.slice(p,m.s))+'<span class="vw" data-vi="'+m.vi+'" role="button" tabindex="0">'+esc(T.slice(m.s,m.e))+'</span>';p=m.e}
+  return out+esc(T.slice(p));
+}
+function lineSpeakBtn(i){return '<button class="speak sm" data-action="story-line-speak" data-li="'+i+'" title="Listen" aria-label="Listen to this line"'+(hasTTS?'':' disabled')+'>🔊</button>'}
+function enWrap(text,cls){return text?'<div class="en-wrap'+(cls?' '+cls:'')+'"><div><div class="en-txt">'+esc(text)+'</div></div></div>':''}
+function renderStoryText(s){
+  const sp=storySpeakers(s);const right=sp.includes('이안')?'이안':sp[1];
+  let h='',mode=null;
+  const close=()=>{if(mode==='p')h+='</p>';if(mode==='c')h+='</div>';mode=null};
+  s.lines.forEach((l,i)=>{
+    if(l.speaker){
+      if(mode!=='c'){close();h+='<div class="chat">';mode='c'}
+      h+='<div class="msg ln'+(l.speaker===right?' right':'')+'" data-li="'+i+'"><div class="who" lang="ko">'+highlightKo(l.speaker,s)+'</div><div class="bubble"><div><div class="bko" lang="ko">'+highlightKo(l.ko,s)+'</div>'+enWrap(l.en)+'</div>'+lineSpeakBtn(i)+'</div></div>';
+    }else{
+      if(mode!=='p'||l.para){close();h+='<p>';mode='p'}
+      h+='<span class="sent ln" data-li="'+i+'"><span class="sko" lang="ko">'+highlightKo(l.ko,s)+'</span> <span class="sx">'+lineSpeakBtn(i)+'<span class="en-txt">'+esc(l.en)+'</span></span></span>';
+    }
+  });
+  close();
+  return h;
+}
+/* ---- questions: shared engine for the reader's Comprehension check and the Story Quiz ---- */
+const QTYPES=['tf','mcq','who','order','blank','short'];
+const QT_LABEL={tf:'O/X',mcq:'선택',who:'누가',order:'순서',blank:'빈칸',short:'대답'};
+const QT_INST={tf:'이야기 내용과 같으면 ‘맞아요’, 다르면 ‘틀려요’를 고르세요.',mcq:'이야기를 읽고 맞는 답을 고르세요.',who:'이 말을 누가 했어요? 말한 사람을 고르세요.',order:'일어난 순서대로 하나씩 누르세요.',blank:'빈칸에 들어갈 알맞은 말을 고르세요.',short:'짧게 대답해 보세요. 그리고 답을 확인하세요.'};
+function tfNorm(x){return /^\s*(맞|o\b|t(rue)?\b|y(es)?\b|네|예|⭕)/i.test(String(x||''))?'맞아요':'틀려요'}
+function qCorrect(q){return q.qtype==='tf'?tfNorm(q.ans_ko):q.ans_ko}
+function bigrams(t){const s=String(t).replace(/[\s.,!?“”"'…·~()\-]/g,''),out=new Set();for(let i=0;i<s.length-1;i++)out.add(s.slice(i,i+2));return out}
+function guessLine(s,q){
+  const qb=bigrams(q.ko.replace('___',q.ans_ko)+' '+(q.qtype==='short'||q.qtype==='mcq'?q.ans_ko:'')+' '+(q.qtype==='order'?q.options[0]:''));let best=-1,bi=-1;
+  s.lines.forEach((l,i)=>{const lb=bigrams(l.ko);let n=0;lb.forEach(b=>{if(qb.has(b))n++});const sc=n/Math.sqrt(lb.size||1);if(sc>best){best=sc;bi=i}});
+  return best>0?bi:-1;
+}
+function storyQuestionLine(s,q){return q.line>=0&&q.line<s.lines.length?q.line:guessLine(s,q)}
+function qKey(ctx,s,qi){return ctx+'|'+s.id+'|'+qi}
+function parseQKey(k){const p=String(k).split('|');return {ctx:p[0],sid:p[1],qi:Number(p[2])}}
+function blankChoices(s,q){
+  const ans=q.ans_ko,verb=/다$/.test(ans),seen=new Set([norm(ans)]),out=[ans];
+  const ok=w=>{w=String(w||'').trim();if(!w||seen.has(norm(w))||/다$/.test(w)!==verb||w.includes(ans)||ans.includes(w)||w.length>ans.length+4)return false;return true};
+  for(const w of shuffle(s.vocab.map(v=>v.ko))){if(out.length>=4)break;if(ok(w)){seen.add(norm(w));out.push(w)}}
+  if(out.length<4)for(const c of shuffle(cards.filter(c=>c.korean&&!/[\s\/(),]/.test(c.korean)))){if(out.length>=4)break;if(ok(c.korean)){seen.add(norm(c.korean));out.push(c.korean)}}
+  return shuffle(out);
+}
+function qChoices(s,q,key){
+  if(storyUI.opt[key])return storyUI.opt[key];
+  let o;
+  if(q.qtype==='tf')o=['맞아요','틀려요'];
+  else if(q.qtype==='who'){o=(q.options.length>1?q.options:storySpeakers(s)).slice();if(!o.includes(q.ans_ko))o.push(q.ans_ko)}
+  else if(q.qtype==='blank')o=blankChoices(s,q);
+  else if(q.qtype==='order'){o=shuffle(q.options);for(let t=0;t<6&&o.join('\n')===q.options.join('\n');t++)o=shuffle(q.options)}
+  else o=shuffle(q.options);
+  return storyUI.opt[key]=o;
+}
+function getQState(key){const {ctx,sid,qi}=parseQKey(key);if(ctx==='rd')return (storyProg.answers[sid]||{})[qi];const it=sq.items[sq.i];return it&&it.sid===sid&&it.qi===qi?sq.ans:null}
+function qFeedback(q,st,ctx){
+  if(st.ok==null)return '';
+  const c=qCorrect(q);
+  let h='<div class="qfb '+(st.ok?'ok':'bad')+'" lang="ko">'+(st.ok?'✓ 정답이에요!':'✗ 아쉬워요.'+(q.qtype==='short'||q.qtype==='order'?'':' 정답: <b>'+esc(c)+'</b>'))+'</div>';
+  if(q.qtype==='order'&&!st.ok)h+='<div class="small muted" lang="ko" style="margin-top:4px">맞는 순서:</div><ol class="sq-order" lang="ko">'+q.options.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ol>';
+  if(ctx==='rd'&&q.ans_en)h+=enWrap('Answer: '+q.ans_en);
+  return h;
+}
+function renderQBody(s,qi,key,ctx){
+  const q=s.questions[qi],st=getQState(key);
+  const dk=' data-key="'+esc(key)+'"';
+  if(q.qtype==='short'){
+    if(!st||!st.shown)return '<div class="sq-short"><button class="btn sm" data-action="sq-show"'+dk+'>답 보기</button> <span class="small muted" lang="ko">먼저 머릿속으로 (또는 소리 내어) 대답해 보세요.</span></div>';
+    let h='<div class="qans" lang="ko"><span class="small muted">모범 답안 · </span>'+esc(q.ans_ko)+'</div>';
+    if(st.ok==null)h+='<div class="sq-self"><span class="small muted" lang="ko">내 대답은…</span><button class="btn sm sq-good" data-action="sq-self" data-ok="1"'+dk+'>⭕ 맞았어요</button><button class="btn sm sq-bad" data-action="sq-self" data-ok="0"'+dk+'>❌ 틀렸어요</button></div>';
+    return h+qFeedback(q,st,ctx);
+  }
+  const opts=qChoices(s,q,key);
+  if(q.qtype==='order'){
+    const picks=st?st.seq:(storyUI.ord[key]||[]);
+    let h='<div class="opts ord">'+opts.map((o,k)=>{const n=picks.indexOf(k);let cls=n>=0?'picked':'';if(st)cls=(q.options[n]===o?'right':'wrong');
+      return '<button class="'+cls+'" data-action="sq-ord" data-k="'+k+'"'+dk+(st||n>=0?' disabled':'')+'><span class="n">'+(n>=0?n+1:'')+'</span><span lang="ko">'+esc(o)+'</span></button>'}).join('')+'</div>';
+    if(!st&&picks.length)h+='<div style="margin-top:8px"><button class="btn sm" data-action="sq-ord-reset"'+dk+'>↺ 다시</button></div>';
+    return h+(st?qFeedback(q,st,ctx):'');
+  }
+  const c=qCorrect(q);
+  let h='<div class="opts'+(q.qtype==='tf'||q.qtype==='who'&&opts.length===2?' two':'')+'">'+opts.map((o,k)=>{let cls='';if(st){if(o===c)cls='right';else if(o===st.pick)cls='wrong';else cls='dim'}
+    return '<button class="'+cls+'" data-action="sq-pick" data-opt="'+esc(o)+'"'+dk+(st?' disabled':'')+'><span class="n">'+(k+1)+'</span><span lang="ko">'+(q.qtype==='tf'?(o==='맞아요'?'⭕ ':'❌ '):'')+esc(o)+'</span></button>'}).join('')+'</div>';
+  return h+(st?qFeedback(q,st,ctx):'');
+}
+function renderQuestion(s,qi){
+  const q=s.questions[qi];
+  return '<div class="qitem" id="q-'+qi+'"><div class="qko" lang="ko"><span class="qn">Q'+(qi+1)+'.</span><span class="qt" title="'+esc(q.qtype)+'">'+esc(QT_LABEL[q.qtype]||'')+'</span>'+esc(q.ko)+'</div>'+enWrap(q.en)+renderQBody(s,qi,qKey('rd',s,qi),'rd')+'</div>';
+}
+function bumpScore(sid,ok){const sc=storyProg.scores[sid]||(storyProg.scores[sid]={c:0,n:0});sc.n++;if(ok)sc.c++}
+function storyScore(sid){const sc=storyProg.scores[sid];return sc&&sc.n?Math.round(100*sc.c/sc.n):null}
+function scoreChip(sid){const p=storyScore(sid);if(p==null)return '';return '<span class="tagchip chip-score '+(p>=80?'hi':p>=50?'mid':'lo')+'" title="Comprehension score: '+storyProg.scores[sid].c+'/'+storyProg.scores[sid].n+' correct">이해도 '+p+'%</span>'}
+function quizEntryKey(s,q){return s.id+'|'+q.ko}
+/* answer handling for both contexts */
+function setQAnswer(key,val){
+  const {ctx,sid,qi}=parseQKey(key);const s=getStory(sid);if(!s||!s.questions[qi])return;
+  const prev=getQState(key);if(prev&&prev.ok!=null)return;
+  if(val.ok!=null)bumpScore(sid,val.ok);
+  if(ctx==='rd'){recordAnswer(s,qi,val);return}
+  sq.ans=val;
+  if(val.ok!=null){
+    const q=s.questions[qi],k=quizEntryKey(s,q),e=storyProg.quiz[k]||{c:0};
+    if(val.ok){sq.score++;e.c=(e.c||0)+1;e.m=false;if(e.c>=2)e.r=true}else{sq.missed++;e.c=0;e.m=true;e.r=false}
+    e.n=(e.n||0)+1;e.last=today();storyProg.quiz[k]=e;
+  }
+  saveStoryProg();renderQuiz();
+  if(val.ok!=null)setTimeout(()=>{const b=$('#sqNext');if(b)b.focus({preventScroll:true})},30);
+}
+function qPick(key,opt){const {sid,qi}=parseQKey(key);const s=getStory(sid);if(!s)return;const q=s.questions[qi];setQAnswer(key,{pick:opt,ok:opt===qCorrect(q)})}
+function qOrderTap(key,k){
+  const {sid,qi}=parseQKey(key);const s=getStory(sid);if(!s||getQState(key))return;const q=s.questions[qi];
+  const picks=storyUI.ord[key]||(storyUI.ord[key]=[]);if(picks.includes(k))return;picks.push(k);
+  const opts=qChoices(s,q,key);
+  if(picks.length>=opts.length){const seq=picks.slice();delete storyUI.ord[key];setQAnswer(key,{seq,ok:seq.every((p,i)=>opts[p]===q.options[i])});return}
+  rerenderQ(key);
+}
+function rerenderQ(key){const {ctx,sid,qi}=parseQKey(key);const s=getStory(sid);if(!s)return;if(ctx==='rd'){const el=$('#q-'+qi);if(el)el.outerHTML=renderQuestion(s,qi)}else renderQuiz()}
+
+/* ---- Story Quiz (Quiz tab → Stories) ---- */
+const sq={running:false,items:[],i:0,score:0,missed:0,ans:null,hint:false};
+function storyQuizPool(){
+  const pool=[];let retired=0,missed=0,fresh=0,total=0;
+  for(const s of STORIES){if(!isRead(s.id))continue;s.questions.forEach((q,qi)=>{total++;const e=storyProg.quiz[quizEntryKey(s,q)];if(e&&e.r){retired++;return}const pri=e?(e.m?0:2):1;if(pri===0)missed++;if(pri===1)fresh++;pool.push({sid:s.id,qi,pri})})}
+  return {pool,retired,missed,fresh,total};
+}
+function startStoryQuiz(){
+  const {pool}=storyQuizPool();if(!pool.length){renderQuiz();return}
+  const pick=[0,1,2].flatMap(p=>shuffle(pool.filter(x=>x.pri===p))).slice(0,10);
+  sq.items=shuffle(pick);sq.i=0;sq.score=0;sq.missed=0;sq.ans=null;sq.hint=false;sq.celebrated=false;sq.running=true;
+  Object.keys(storyUI.opt).forEach(k=>{if(k.startsWith('qz|'))delete storyUI.opt[k]});Object.keys(storyUI.ord).forEach(k=>{if(k.startsWith('qz|'))delete storyUI.ord[k]});
+  storyProg.quizSessions=(storyProg.quizSessions||0)+1;saveStoryProg();
+  renderQuiz();
+}
+function quizKindSeg(){return '<div class="seg" id="quizKind" style="margin:0 0 14px"><button data-qkind="words" class="'+(quiz.kind!=='stories'?'on':'')+'">🔤 Words</button><button data-qkind="stories" class="'+(quiz.kind==='stories'?'on':'')+'">📖 Stories</button></div>'}
+function renderStoryQuiz(a){
+  if(!sq.running){
+    const readN=STORIES.filter(s=>isRead(s.id)&&s.questions.length).length,P=storyQuizPool();
+    let h='<div class="quiz-card">'+quizKindSeg()+'<h2 lang="ko">📖 이야기 퀴즈</h2><p class="muted small" lang="ko">읽은 이야기에서만 문제가 나와요. 한 번에 10문제! 틀린 문제는 다음에 다시 나오고, 두 번 연속 맞히면 끝나요.</p>';
+    if(!readN)h+='<p lang="ko" style="margin:18px 0 6px">아직 읽은 이야기가 없어요. 먼저 이야기를 읽어 보세요.</p><button class="btn primary" data-action="goto" data-tab="stories">이야기 읽으러 가기 →</button>';
+    else{
+      h+='<div class="sq-stats" lang="ko"><span class="tagchip">읽은 이야기 '+readN+'개</span><span class="tagchip">남은 문제 '+P.pool.length+'개</span>'+(P.missed?'<span class="tagchip chip-score lo">다시 볼 문제 '+P.missed+'개</span>':'')+'<span class="tagchip chip-score hi">끝낸 문제 '+P.retired+'개</span></div>';
+      if(!P.pool.length)h+='<p lang="ko">🎉 읽은 이야기의 문제를 모두 끝냈어요! 새 이야기를 읽거나 처음부터 다시 풀어 보세요.</p><div class="row" style="justify-content:center"><button class="btn primary" data-action="goto" data-tab="stories">새 이야기 읽기 →</button><button class="btn" data-action="sq-reset">↺ 처음부터 다시 풀기</button></div>';
+      else h+='<button class="btn primary" data-action="sq-start" lang="ko">시작하기 →</button>';
+    }
+    a.innerHTML=h+'</div>';return;
+  }
+  if(sq.i>=sq.items.length){
+    const n=sq.items.length,pct=n?Math.round(100*sq.score/n):0;
+    a.innerHTML='<div class="quiz-card done"><div class="big">'+(pct>=80?'🏆':pct>=50?'👏':'💪')+'</div><h2 lang="ko">'+n+'문제 중 '+sq.score+'개 맞았어요</h2><p class="muted" lang="ko">'+(pct>=80?'훌륭해요!':pct>=50?'잘했어요!':'괜찮아요. 다시 해 봐요!')+(sq.missed?' 틀린 '+sq.missed+'문제는 다음 퀴즈에 다시 나와요.':'')+'</p>'+
+      '<div class="row" style="justify-content:center"><button class="btn primary" data-action="sq-start">한 번 더</button><button class="btn" data-action="sq-quit">그만하기</button><button class="btn" data-action="goto" data-tab="stories">이야기 목록</button></div></div>';
+    if(pct>=80&&!sq.celebrated){sq.celebrated=true;confetti()}return;
+  }
+  const it=sq.items[sq.i],s=getStory(it.sid),q=s&&s.questions[it.qi];
+  if(!q){sq.i++;sq.ans=null;return renderStoryQuiz(a)}
+  const key=qKey('qz',s,it.qi),st=sq.ans,done=st&&st.ok!=null,li=storyQuestionLine(s,q),L=li>=0?s.lines[li]:null;
+  let h='<div class="quiz-card sq-card"><div class="row" style="justify-content:space-between"><span class="muted small" lang="ko">문제 '+(sq.i+1)+' / '+sq.items.length+'</span><span class="row"><span class="muted small" lang="ko">점수 '+sq.score+'</span><button class="btn sm" data-action="sq-quit" lang="ko">✕ 그만하기</button></span></div>'+
+    '<div class="progressbar" style="margin:8px 0"><i style="width:'+Math.round(100*sq.i/sq.items.length)+'%"></i></div>'+
+    '<div class="sq-story"><span class="tagchip" lang="ko">📖 '+esc(s.title_ko)+'</span><button class="linkbtn" data-action="sq-open-story" data-id="'+esc(s.id)+'" lang="ko">이야기 다시 보기</button></div>'+
+    '<div class="sq-inst" lang="ko">'+esc(QT_INST[q.qtype]||'')+'</div>'+
+    '<div class="sq-q'+(sq.hint?' peek':'')+'" id="sqQ"><div class="sq-qrow"><div class="qko" lang="ko"><span class="qt">'+esc(QT_LABEL[q.qtype]||'')+'</span>'+esc(q.ko)+'</div>'+(q.en?'<button class="btn sm sq-hint" data-action="sq-hint" aria-pressed="'+sq.hint+'">힌트 EN</button>':'')+'</div>'+enWrap(q.en)+'</div>'+
+    '<div id="sqBody">'+renderQBody(s,it.qi,key,'qz')+'</div>';
+  if(done){
+    if(L)h+='<div class="sq-ctx" id="sqCtx"><div class="h" lang="ko">📖 이야기에서</div><div class="sq-line">'+(L.speaker?'<span class="who" lang="ko">'+esc(L.speaker)+':</span>':'')+'<span lang="ko">'+esc(L.ko)+'</span>'+speakBtn(L.ko,1)+'<button class="btn sm" data-action="sq-line-en">EN</button></div>'+enWrap(L.en+(q.ans_en?'  ·  Answer: '+q.ans_en:''))+'</div>';
+    else if(q.ans_en)h+='<div class="sq-ctx" id="sqCtx"><button class="btn sm" data-action="sq-line-en">EN</button>'+enWrap('Answer: '+q.ans_en)+'</div>';
+    h+='<div class="row" style="justify-content:center;margin-top:14px"><button class="btn primary" id="sqNext" data-action="sq-next" lang="ko">'+(sq.i+1>=sq.items.length?'결과 보기 →':'다음 문제 →')+'</button></div>';
+  }
+  a.innerHTML=h+'</div>';
+}
+function renderVocabRow(s,vi){
+  const v=s.vocab[vi],inDeck=vocabInDeck(v),note=cleanNote(v.notes);
+  return '<div class="vrow" id="v-'+vi+'">'+speakBtn(v.ko,1)+'<div><div><span class="vk" lang="ko">'+esc(v.ko)+'</span> <span class="vm">'+esc(v.en)+'</span></div>'+(note?'<div class="vn">'+esc(note)+'</div>':'')+'</div><div class="vact">'+deckBadge(s,vi,inDeck)+'</div></div>';
+}
+function deckBadge(s,vi,inDeck){return inDeck?'<span class="tagchip badge-deck">✓ In your deck</span>':'<button class="btn sm" data-action="story-add-word" data-vi="'+vi+'">＋ Add to my deck</button>'}
+function renderReadBar(s){
+  const r=isRead(s.id),nx=nextUpStory();
+  return (r?'<button class="btn" data-action="story-mark">✓ Read · mark unread</button>':'<button class="btn primary" data-action="story-mark">✓ Mark as read</button>')+
+    (nx&&nx.id!==s.id?'<button class="btn" data-action="story-open" data-id="'+esc(nx.id)+'">Next: <span lang="ko">'+esc(nx.title_ko)+'</span> →</button>':'')+
+    '<button class="btn" data-action="story-back">← All stories</button>';
+}
+function renderReader(s){
+  const root=$('#storiesArea');closePop();
+  const answered=gradedCount(s);
+  root.innerHTML='<div id="reader" class="'+(storyUI.showEn?'show-en':'')+'" data-sid="'+esc(s.id)+'">'+
+    '<div class="panel"><div class="rd-top"><button class="btn sm" data-action="story-back">← Stories</button>'+(sq.running&&quiz.kind==='stories'?'<button class="btn sm primary" data-action="goto" data-tab="quiz" lang="ko">← 퀴즈로 돌아가기</button>':'')+'<span class="spacer"></span><span class="tagchip">Stage '+esc(s.stage)+'</span>'+(s.theme?'<span class="tagchip">'+esc(s.theme)+'</span>':'')+'<span class="tagchip chip-fmt">'+(FMT_LABEL[s.format]||'')+'</span>'+(isRead(s.id)?'<span class="tagchip chip-read">✓ Read</span>':'')+scoreChip(s.id)+'</div>'+
+    '<div class="rd-title" lang="ko">'+esc(s.title_ko)+'</div>'+enWrap((s.title_en||'')+(s.summary?' — '+s.summary:''))+
+    '<div class="rd-bar"><button class="btn en-toggle" data-action="story-en" aria-pressed="'+storyUI.showEn+'">'+(storyUI.showEn?'🙈 Hide English':'👀 Show English')+'</button>'+
+    '<button class="btn" data-action="story-read-all" id="readAllBtn"'+(hasTTS?'':' disabled')+'>'+(storyAudio?'■ Stop':'▶ Read whole story')+'</button><span class="rd-hint">Tap a line to peek · <span class="kbd">E</span> English</span></div>'+
+    '<div class="rd-text">'+renderStoryText(s)+'</div></div>'+
+    (s.questions.length?'<div class="panel rd-sec" id="qsec"><h2>✅ Comprehension check <span class="muted small" id="qcount" style="font-weight:600">'+answered+'/'+s.questions.length+'</span>'+(answered?'<button class="btn sm" id="qretry" data-action="story-retry" style="margin-left:auto">↺ Try again</button>':'')+'</h2>'+s.questions.map((q,qi)=>renderQuestion(s,qi)).join('')+'</div>':'')+
+    (s.vocab.length?'<div class="panel rd-sec"><h2>🆕 New words in this story</h2><div id="vlist">'+s.vocab.map((v,vi)=>renderVocabRow(s,vi)).join('')+'</div></div>':'')+
+    (s.grammar.length?'<div class="panel rd-sec"><h2>🧩 Grammar in this story</h2>'+s.grammar.map(g=>'<div class="grow"><div class="gp" lang="ko">'+esc(g.ko)+'</div><div class="ge">'+esc(g.en)+'</div></div>').join('')+'</div>':'')+
+    '<div class="readbar" id="readBar">'+renderReadBar(s)+'</div></div>';
+}
+function curStory(){return storyUI.open?getStory(storyUI.open):null}
+function openStory(id){
+  const s=getStory(id);if(!s)return;
+  if(!stageUnlocked(s.stage)&&!isRead(id)){toast('🔒 Finish the earlier stages first (or Settings → Unlock all stories)',3200);return}
+  stopStoryAudio();storyUI.open=id;storyUI.showEn=false;
+  if(tab!=='stories')showTab('stories');else renderStories();
+  window.scrollTo({top:0,behavior:'auto'});
+}
+function closeStory(){stopStoryAudio();closePop();storyUI.open=null;renderStories();window.scrollTo({top:0,behavior:'auto'})}
+function toggleEnglish(){
+  const rd=$('#reader');if(!rd)return;
+  const bar=$('.rd-bar');const lim=(bar?bar.getBoundingClientRect().bottom:0)+4;
+  const anchor=$$('#reader .ln, #reader .qitem, #reader .rd-sec').find(el=>el.getBoundingClientRect().bottom>lim);
+  const before=anchor?anchor.getBoundingClientRect().top:0;
+  storyUI.showEn=!storyUI.showEn;rd.classList.toggle('show-en',storyUI.showEn);
+  const b=$('.en-toggle');if(b){b.setAttribute('aria-pressed',String(storyUI.showEn));b.textContent=storyUI.showEn?'🙈 Hide English':'👀 Show English'}
+  if(anchor&&window.scrollY>0){const t0=performance.now();const fix=()=>{const d=anchor.getBoundingClientRect().top-before;if(Math.abs(d)>1)window.scrollBy(0,d);if(performance.now()-t0<380)requestAnimationFrame(fix)};requestAnimationFrame(fix)}
+}
+function togglePeek(ln){ln.classList.toggle('peek')}
+/* vocab popover */
+function closePop(){const p=$('#vpop');if(p)p.remove();$$('.vw.on').forEach(x=>x.classList.remove('on'))}
+function openVocabPop(el){
+  const s=curStory();if(!s)return;const vi=Number(el.dataset.vi),v=s.vocab[vi];if(!v)return;
+  const was=el.classList.contains('on');closePop();if(was)return;
+  const note=cleanNote(v.notes),inDeck=vocabInDeck(v);
+  const pop=document.createElement('div');pop.className='vpop';pop.id='vpop';pop.setAttribute('role','dialog');pop.setAttribute('aria-label',v.ko);pop.dataset.vi=vi;
+  pop.innerHTML='<div class="row" style="justify-content:space-between;flex-wrap:nowrap"><span class="w" lang="ko">'+esc(v.ko)+'</span>'+speakBtn(v.ko,1)+'</div><div class="m">'+esc(v.en)+'</div>'+(note?'<div class="nt">'+esc(note)+'</div>':'')+'<div style="margin-top:9px" class="pbadge">'+deckBadge(s,vi,inDeck)+'</div>';
+  document.body.appendChild(pop);el.classList.add('on');
+  const r=el.getBoundingClientRect(),pw=pop.offsetWidth,ph=pop.offsetHeight;
+  let left=r.left+window.scrollX+r.width/2-pw/2;left=Math.max(window.scrollX+12,Math.min(left,window.scrollX+document.documentElement.clientWidth-pw-12));
+  let top=r.bottom+window.scrollY+8;if(r.bottom+ph+90>window.innerHeight&&r.top-ph-10>0)top=r.top+window.scrollY-ph-8;
+  pop.style.left=left+'px';pop.style.top=top+'px';
+}
+function addStoryWord(vi){
+  const s=curStory();if(!s)return;const v=s.vocab[vi];if(!v)return;
+  if(vocabInDeck(v)){toast('Already in your deck');return}
+  const ex=s.lines.find(l=>v.forms.some(f=>l.ko.includes(f)));
+  const n=normCard({id:(v.ref&&!cards.some(c=>c.id===v.ref))?v.ref:'',korean:v.ko,meaning_en:v.en,pos:'',example_ko:ex?ex.ko:'',example_en:ex?ex.en:'',notes:cleanNote(v.notes),unit:'Stories',tags:['stories',s.id],date_added:today()});
+  cards.push(n);save();
+  if(sess.built){sess.queue.push(n.id);sess.total++}
+  toast('Added '+v.ko+' to your study queue');
+  const row=$('#v-'+vi);if(row)row.outerHTML=renderVocabRow(s,vi);
+  const pb=$('#vpop .pbadge');if(pb)pb.innerHTML=deckBadge(s,vi,true);
+}
+/* questions */
+function gradedCount(s){const a=storyProg.answers[s.id]||{};return s.questions.filter((q,qi)=>a[qi]&&a[qi].ok!=null).length}
+function recordAnswer(s,qi,val){
+  if(!storyProg.answers[s.id])storyProg.answers[s.id]={};
+  storyProg.answers[s.id][qi]=val;saveStoryProg();
+  const el=$('#q-'+qi);if(el)el.outerHTML=renderQuestion(s,qi);
+  const n=gradedCount(s);const c=$('#qcount');if(c)c.textContent=n+'/'+s.questions.length;
+  if(!$('#qretry')&&n){const h=$('#qsec h2');if(h)h.insertAdjacentHTML('beforeend','<button class="btn sm" id="qretry" data-action="story-retry" style="margin-left:auto">↺ Try again</button>')}
+  if(n>=s.questions.length&&!isRead(s.id)){setTimeout(()=>{markRead(s,true)},500)}
+}
+function markRead(s,auto){
+  const wasUnl=storyStages().filter(stageUnlocked).length;
+  storyProg.read[s.id]=today();saveStoryProg();
+  const nowUnl=storyStages().filter(stageUnlocked).length;
+  toast(nowUnl>wasUnl?'🎉 Stage unlocked! '+s.title_ko+' marked as read':(auto?'All questions answered — marked as read ✓':'Marked as read ✓'),3000);
+  if(nowUnl>wasUnl)confetti();
+  if(storyUI.open===s.id){const rb=$('#readBar');if(rb)rb.innerHTML=renderReadBar(s)}
+}
+/* audio */
+function koVoices(){try{return (speechSynthesis.getVoices()||[]).filter(v=>/^ko([-_]|$)/i.test(v.lang))}catch(e){return []}}
+function lineUtter(s,i){
+  const l=s.lines[i];const u=new SpeechSynthesisUtterance(l.ko);u.lang='ko-KR';u.rate=Number(settings.rate)||0.9;
+  if(!koVoice)pickVoice();
+  const idx=l.speaker?storySpeakers(s).indexOf(l.speaker):-1;const vs=koVoices();
+  if(idx>=0){u.pitch=[1,1.3,0.8,1.15][idx%4];if(vs.length>1)u.voice=vs[idx%vs.length];else if(koVoice)u.voice=koVoice}
+  else if(koVoice)u.voice=koVoice;
+  return u;
+}
+function markSpeaking(i){$$('#reader .ln.speaking').forEach(x=>x.classList.remove('speaking'));if(i==null)return;const el=document.querySelector('#reader .ln[data-li="'+i+'"]');if(el){el.classList.add('speaking');const r=el.getBoundingClientRect();if(r.top<80||r.bottom>window.innerHeight-90)el.scrollIntoView({behavior:'smooth',block:'center'})}}
+function stopStoryAudio(){if(storyAudio){storyAudio=null;try{speechSynthesis.cancel()}catch(e){}}markSpeaking(null);const b=$('#readAllBtn');if(b)b.textContent='▶ Read whole story'}
+function speakStoryLine(i){
+  const s=curStory();if(!s||!hasTTS){if(!hasTTS)toast('Speech is not supported in this browser');return}
+  stopStoryAudio();
+  try{speechSynthesis.cancel();const u=lineUtter(s,i);if(!koVoice&&!warnedVoice){warnedVoice=true;toast('No Korean voice installed — trying the default voice')}
+    const btn=document.querySelector('#reader .ln[data-li="'+i+'"] .speak');if(btn){btn.classList.add('playing');u.onend=u.onerror=()=>btn.classList.remove('playing')}
+    speechSynthesis.speak(u)}catch(e){toast('Could not play audio')}
+}
+function readWholeStory(){
+  const s=curStory();if(!s)return;
+  if(storyAudio){stopStoryAudio();return}
+  if(!hasTTS){toast('Speech is not supported in this browser');return}
+  try{speechSynthesis.cancel()}catch(e){}
+  const q={sid:s.id,pos:0};storyAudio=q;
+  const b=$('#readAllBtn');if(b)b.textContent='■ Stop';
+  const next=()=>{
+    if(storyAudio!==q)return;
+    if(q.pos>=s.lines.length||storyUI.open!==s.id){stopStoryAudio();return}
+    const i=q.pos++;markSpeaking(i);
+    let u;try{u=lineUtter(s,i)}catch(e){stopStoryAudio();return}
+    u.onend=u.onerror=()=>{if(storyAudio===q)setTimeout(next,s.lines[i].speaker?250:120)};
+    speechSynthesis.speak(u);
+  };
+  next();
+}
+/* sheet loading */
+function parseStoryText(text){
+  const t=String(text).replace(/^\uFEFF/,'').trim();
+  if(!t)throw new Error('The file is empty');
+  if(/^<(!doctype|html)/i.test(t))throw new Error('Got a web page instead of CSV. Use File → Share → Publish to web → (Stories tab) → CSV.');
+  if(t[0]==='['||t[0]==='{'){
+    const o=JSON.parse(t);const arr=Array.isArray(o)?o:(Array.isArray(o.rows)?o.rows:[]);const cols=(o&&o.columns)||STORY_SEED_COLS;
+    return arr.map(r=>{if(!Array.isArray(r))return r;const x={};cols.forEach((c,i)=>x[c]=r[i]==null?'':r[i]);return x});
+  }
+  const rows=parseDelimited(t);if(rows.length<2)throw new Error('No story rows found');
+  const hdr=rows[0].map(h=>String(h).trim().toLowerCase().replace(/[\s\-]+/g,'_'));
+  if(!hdr.includes('story_id')||!hdr.includes('type'))throw new Error('Missing story_id / type columns — is this the Stories tab? (The Vocab tab link goes in the Sync box above.)');
+  return rows.slice(1).map(r=>{const o={};hdr.forEach((h,i)=>{o[h]=r[i]==null?'':r[i]});return o});
+}
+function setStoriesStatus(t,cls){const el=$('#storiesStatus');if(el){el.textContent=t;el.className='status-line '+(cls||'')}}
+function renderStoriesStatus(){
+  if(storiesLoading){setStoriesStatus('Loading stories…','');return}
+  const src=storiesSource(),l=settings.lastStorySync,from=src.how==='override'?'the override URL':'the Stories tab of your sync sheet';
+  if(!src.url){setStoriesStatus(src.how==='nogid'?'ⓘ Your sync link isn’t a Google Sheets link, so stories can’t be found automatically — using the '+STORIES.length+' built-in stories. (Use the advanced override below.)':'ⓘ Using the '+STORIES.length+' built-in stories. Add your Google Sheet link above and the Stories tab loads with it.','note');return}
+  if(!l){setStoriesStatus('Stories load from '+from+' when the app opens.','note');return}
+  if(l.ok)setStoriesStatus('✓ '+fmtTime(l.at)+' — loaded from '+from+': '+l.msg,'ok');
+  else setStoriesStatus('ⓘ Couldn’t load '+from+' ('+l.msg+'). Using '+(storyCache?'the last loaded copy':'the '+STORIES.length+' built-in stories')+'. If you just published the sheet, make sure it’s published as “Entire document”.','note');
+}
+/* One sync link does both: the Stories tab of the same published Google Sheet (tab gid below). */
+const STORIES_GID='1019870171';
+function storiesUrlFrom(u){
+  u=String(u||'').trim();if(!u)return '';
+  let m=u.match(/^https?:\/\/docs\.google\.com\/spreadsheets\/d\/e\/([\w-]+)\/pub(html)?\b/);
+  if(m)return 'https://docs.google.com/spreadsheets/d/e/'+m[1]+'/pub?gid='+STORIES_GID+'&single=true&output=csv';
+  m=u.match(/^https?:\/\/docs\.google\.com\/spreadsheets\/d\/([\w-]{20,})/);
+  if(m)return 'https://docs.google.com/spreadsheets/d/'+m[1]+'/export?format=csv&gid='+STORIES_GID;
+  try{const x=new URL(u);if(x.searchParams.has('gid')){x.searchParams.set('gid',STORIES_GID);return x.toString()}}catch(e){}
+  return '';
+}
+function storiesSource(){const o=String(settings.storiesUrl||'').trim();if(o)return {url:fixUrl(o),how:'override'};const d=storiesUrlFrom(settings.syncUrl);return d?{url:d,how:'sync'}:{url:'',how:settings.syncUrl?'nogid':'none'}}
+async function loadStoriesFromUrl(manual){
+  const src=storiesSource(),url=src.url;
+  if(!url){if(manual)toast(src.how==='nogid'?'Your sync link isn’t a Google Sheets link — add a Stories override URL':'Add your Google Sheet sync link first');renderStoriesStatus();return}
+  if(storiesLoading)return;storiesLoading=true;setStoriesStatus('Loading stories…','');
+  let ctl=null,timer=null;
+  try{
+    if(typeof AbortController!=='undefined'){ctl=new AbortController();timer=setTimeout(()=>ctl.abort(),20000)}
+    const res=await fetch(/docs\.google\.com|googleusercontent/.test(url)?url:url+(url.includes('?')?'&':'?')+'_ts='+Date.now(),{cache:'no-store',redirect:'follow',signal:ctl?ctl.signal:undefined});
+    if(!res.ok)throw new Error('HTTP '+res.status+(res.status===404?' (not found — check the link)':res.status===401||res.status===403?' (not public — publish the Stories tab to the web)':''));
+    const rows=parseStoryText(await res.text());
+    const map=storyRowsToMap(rows);
+    if(!map.size)throw new Error('No stories found (each story needs story_id, type=line rows and Korean text in ko)');
+    const before=new Set(STORIES.map(s=>s.id));
+    storyCache={url,at:new Date().toISOString(),rows};lsSet(K.stories,JSON.stringify(storyCache));
+    rebuildStories();
+    const added=[...map.keys()].filter(id=>!before.has(id)).length;
+    settings.lastStorySync={at:storyCache.at,ok:true,how:src.how,msg:map.size+' stories from the sheet ('+added+' new) · '+STORIES.length+' total'};save();
+    renderStoriesStatus();
+    if(manual||added)toast('Stories: '+map.size+' loaded'+(added?', '+added+' new':''));
+    if(tab==='stories'&&!storyUI.open)renderStories();if(tab==='progress')renderProgress();
+  }catch(e){
+    let msg=e&&e.name==='AbortError'?'Timed out':(e&&e.message)||'Network error';
+    if(/Failed to fetch|NetworkError|Load failed/i.test(msg))msg='Could not reach the URL (offline, wrong link, or the server blocks cross-origin requests).';
+    settings.lastStorySync={at:new Date().toISOString(),ok:false,how:src.how,msg};save();
+    renderStoriesStatus();
+    if(manual)toast('Couldn’t load stories — using '+(storyCache?'the last loaded copy':'the built-in stories'),3500);
+  }finally{if(timer)clearTimeout(timer);storiesLoading=false;renderStoriesStatus()}
+}
+function mergeStoryProgress(p){
+  if(!p||typeof p!=='object')return 0;let n=0;
+  if(p.read&&typeof p.read==='object')for(const [id,d] of Object.entries(p.read)){if(d&&!storyProg.read[id]){storyProg.read[id]=d;n++}}
+  if(p.answers&&typeof p.answers==='object')for(const [id,a] of Object.entries(p.answers)){if(a&&typeof a==='object'&&!storyProg.answers[id]){storyProg.answers[id]=a}}
+  if(p.scores&&typeof p.scores==='object')for(const [id,sc] of Object.entries(p.scores)){const cur=storyProg.scores[id];if(sc&&Number(sc.n)>0&&(!cur||Number(sc.n)>cur.n))storyProg.scores[id]={c:Number(sc.c)||0,n:Number(sc.n)}}
+  if(p.quiz&&typeof p.quiz==='object')for(const [k,e] of Object.entries(p.quiz)){const cur=storyProg.quiz[k];if(e&&typeof e==='object'&&(!cur||(Number(e.n)||0)>(Number(cur.n)||0)))storyProg.quiz[k]=e}
+  saveStoryProg();return n;
+}
+function renderStoryProgress(){
+  const el=$('#storyProgress');if(!el)return;
+  const read=STORIES.filter(s=>isRead(s.id)).length;
+  el.innerHTML='<h2>📖 Stories read <span class="muted small" style="font-weight:600">· '+read+' of '+STORIES.length+'</span></h2>'+
+    storyStages().map(st=>{const list=STORIES.filter(s=>s.stage===st),r=list.filter(s=>isRead(s.id)).length;
+      return '<div class="sp-row"><span>'+(stageUnlocked(st)?'':'🔒 ')+'Stage '+esc(st)+'</span><div class="progressbar"><i style="width:'+(list.length?Math.round(100*r/list.length):0)+'%"></i></div><b>'+r+' / '+list.length+'</b></div>'}).join('')+
+    storyScoresHtml()+
+    '<div class="row" style="margin-top:10px"><button class="btn sm" data-action="goto" data-tab="stories">Open Stories →</button><button class="btn sm" data-action="quiz-stories">📖 Story Quiz →</button></div>';
+}
+function storyScoresHtml(){
+  const list=STORIES.filter(s=>storyScore(s.id)!=null);
+  const P=storyQuizPool();
+  let h='<h3 style="margin:16px 0 4px">Comprehension score <span class="muted small" style="font-weight:600">· reader checks + Story Quiz</span></h3>';
+  if(!list.length)return h+'<p class="small muted">No questions answered yet. Answer a story’s Comprehension check or play the Story Quiz.</p>';
+  h+=list.map(s=>{const p=storyScore(s.id),sc=storyProg.scores[s.id];return '<div class="sp-row"><span lang="ko" class="sp-t" title="'+esc(s.title_en)+'">'+esc(s.title_ko)+'</span><div class="progressbar sc-'+(p>=80?'hi':p>=50?'mid':'lo')+'"><i style="width:'+p+'%"></i></div><b title="'+sc.c+' of '+sc.n+' correct">'+p+'%</b></div>'}).join('');
+  if(P.total)h+='<p class="small muted" style="margin:8px 0 0">Story Quiz: '+P.retired+' of '+P.total+' questions from read stories retired (correct twice in a row)'+(P.missed?' · '+P.missed+' missed, coming back next round':'')+'.</p>';
+  return h;
 }
 
 /* ============================ Settings ============================ */
@@ -911,6 +1592,9 @@ function renderSettings(){
   $('#sRoman').checked=!!settings.showRoman;$('#sAutoSpeak').checked=!!settings.autoSpeak;$('#sRate').value=settings.rate;$('#rateVal').textContent=Number(settings.rate).toFixed(2)+'×';
   $('#sSyncUrl').value=settings.syncUrl||'';$('#sAutoSync').checked=!!settings.autoSync;
   const ls=settings.lastSync;if(ls&&!syncing)setSyncStatus((ls.ok?'✓ Last sync ':'✗ Last sync failed ')+fmtTime(ls.at)+': '+ls.msg,ls.ok?'ok':'err');else if(!ls)setSyncStatus('','');
+  $('#sStoriesUrl').value=settings.storiesUrl||'';$('#sUnlockStories').checked=!!settings.unlockAllStories;
+  if(settings.storiesUrl)$('#storiesAdv').open=true;
+  renderStoriesStatus();
   updateVoiceStatus();
 }
 function bindSettings(){
@@ -922,6 +1606,8 @@ function bindSettings(){
   $('#sRate').addEventListener('input',e=>{settings.rate=Number(e.target.value);$('#rateVal').textContent=settings.rate.toFixed(2)+'×';save()});
   $('#sAutoSync').addEventListener('change',e=>{settings.autoSync=e.target.checked;save()});
   $('#sSyncUrl').addEventListener('change',e=>{settings.syncUrl=e.target.value.trim();save()});
+  $('#sStoriesUrl').addEventListener('change',e=>{settings.storiesUrl=e.target.value.trim();save();renderStoriesStatus()});
+  $('#sUnlockStories').addEventListener('change',e=>{settings.unlockAllStories=e.target.checked;save();toast(settings.unlockAllStories?'All stories unlocked':'Stories unlock stage by stage')});
 }
 function setDirection(d){settings.direction=d;save();const c=getCard(sess.cur);sess.dir=d==='mixed'?(Math.random()<.5?'ko2en':'en2ko'):d;sess.flipped=false;renderStudy();$('#sDir').value=d}
 
@@ -929,10 +1615,12 @@ function setDirection(d){settings.direction=d;save();const c=getCard(sess.cur);s
 let tab='study';
 function showTab(t){
   if(!document.getElementById('view-'+t))t='study';
+  if(tab==='stories'&&t!=='stories'){stopStoryAudio();closePop()}
   tab=t;
   $$('#tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));
   $$('section.view').forEach(s=>s.classList.toggle('active',s.id==='view-'+t));
   if(t==='study'){if(!sess.built||sess.date!==today())buildQueue();else renderStudy()}
+  if(t==='stories')renderStories();
   if(t==='quiz')renderQuiz();if(t==='words')renderWords();if(t==='progress')renderProgress();if(t==='settings')renderSettings();
   if(location.hash!=='#'+t)history.replaceState(null,'','#'+t);
 }
@@ -940,7 +1628,8 @@ function refreshAll(){
   updateHeader();
   if(tab==='words')renderWords();if(tab==='progress')renderProgress();if(tab==='settings')renderSettings();
   if(tab==='study'){if(!sess.cur)buildQueue();else renderStudy()}
-  if(tab==='quiz'&&!quiz.running)renderQuiz();
+  if(tab==='quiz'&&!quiz.running&&!(quiz.kind==='stories'&&sq.running&&sq.ans&&sq.ans.ok==null))renderQuiz();
+  if(tab==='stories'&&!storyUI.open)renderStories();
 }
 
 /* ============================ Events ============================ */
@@ -948,9 +1637,13 @@ document.addEventListener('click',e=>{
   const tb=e.target.closest('#tabs button');if(tb){showTab(tb.dataset.tab);return}
   const ds=e.target.closest('#dirSeg button');if(ds){setDirection(ds.dataset.dir);return}
   const qm=e.target.closest('[data-qmode]');if(qm){quiz.mode=qm.dataset.qmode;renderQuiz();return}
+  const qk=e.target.closest('[data-qkind]');if(qk){quiz.kind=qk.dataset.qkind;settings.quizKind=quiz.kind;save();renderQuiz();return}
+  const vw=e.target.closest('#reader .vw');if(vw){openVocabPop(vw);return}
+  if(!e.target.closest('#vpop'))closePop();
+  if(!e.target.closest('[data-action]')){const ln=e.target.closest('#reader .ln');if(ln&&!String(window.getSelection?window.getSelection():'')){togglePeek(ln)}return}
   const el=e.target.closest('[data-action]');if(!el)return;
   const a=el.dataset.action;
-  if(a==='speak'){e.stopPropagation();speak(el.dataset.text,el);return}
+  if(a==='speak'){e.stopPropagation();stopStoryAudio();speak(el.dataset.text,el);return}
   switch(a){
     case 'flip':flip();break;
     case 'grade':grade(Number(el.dataset.g));break;
@@ -965,16 +1658,40 @@ document.addEventListener('click',e=>{
     case 'download-template-json':download('vocab-template.json',JSON.stringify({cards:TEMPLATE_ROWS.map(r=>Object.assign({},r,{tags:parseTags(r.tags)}))},null,2),'application/json');break;
     case 'export':exportBackup();break;
     case 'export-csv':download('korean-vocab-'+today()+'.csv','\uFEFF'+toCSV(cards),'text/csv');break;
-    case 'sync-now':settings.syncUrl=$('#sSyncUrl').value.trim();save();syncNow(true);break;
-    case 'clear-sync':settings.syncUrl='';settings.lastSync=null;save();renderSettings();toast('Sync URL cleared');break;
+    case 'sync-now':settings.syncUrl=$('#sSyncUrl').value.trim();save();syncNow(true);if(!settings.storiesUrl)loadStoriesFromUrl(false);break;
+    case 'clear-sync':settings.syncUrl='';settings.lastSync=null;if(!settings.storiesUrl){settings.lastStorySync=null;storyCache=null;lsDel(K.stories);rebuildStories()}save();renderSettings();toast('Sync URL cleared');break;
     case 'reset-progress':if(confirm('Reset all review progress? Your words are kept.')){srs={};log={};save();sess.built=false;refreshAll();toast('Progress reset')}break;
-    case 'reset-all':if(confirm('Delete ALL words and progress from this browser? Export a backup first if unsure.')){cards=[];srs={};log={};save();sess.built=false;refreshAll();toast('Everything deleted')}break;
+    case 'reset-all':if(confirm('Delete ALL words and progress from this browser? Export a backup first if unsure.')){cards=[];srs={};log={};storyProg={read:{},answers:{},scores:{},quiz:{}};save();sess.built=false;refreshAll();toast('Everything deleted')}break;
     case 'quiz-start':startQuiz();break;
+    case 'quiz-stories':quiz.kind='stories';settings.quizKind='stories';save();showTab('quiz');break;
     case 'quiz-exit':quiz.running=false;renderQuiz();break;
     case 'mc-pick':mcPick(el.dataset.id);break;
     case 'type-check':typeCheck(false);break;
     case 'type-skip':typeCheck(true);break;
     case 'type-hint':{const c=getCard(quiz.items[quiz.i]);const i=$('#quizInput');if(c&&i&&!quiz.answered){const ch=[...c.korean];const fb=$('#quizFb');fb.className='quiz-fb';fb.innerHTML='Hint: <span lang="ko">'+esc(ch[0])+'</span>'+' _'.repeat(Math.max(0,ch.length-1))+' <span class="muted small">('+ch.length+' characters)</span>';i.focus()}break}
+    case 'story-open':openStory(el.dataset.id);break;
+    case 'story-back':closeStory();break;
+    case 'story-en':toggleEnglish();break;
+    case 'story-read-all':readWholeStory();break;
+    case 'story-line-speak':speakStoryLine(Number(el.dataset.li));break;
+    case 'sq-pick':qPick(el.dataset.key,el.dataset.opt);break;
+    case 'sq-show':{const k=el.dataset.key;if(!getQState(k)){const {ctx,sid,qi}=parseQKey(k);if(ctx==='rd'){const s=getStory(sid);if(s)recordAnswer(s,qi,{shown:true})}else{sq.ans={shown:true};renderQuiz()}}break}
+    case 'sq-self':{const st=getQState(el.dataset.key);if(st&&st.shown&&st.ok==null)setQAnswer(el.dataset.key,{shown:true,ok:el.dataset.ok==='1'});break}
+    case 'sq-ord':qOrderTap(el.dataset.key,Number(el.dataset.k));break;
+    case 'sq-ord-reset':delete storyUI.ord[el.dataset.key];rerenderQ(el.dataset.key);break;
+    case 'sq-start':startStoryQuiz();break;
+    case 'sq-quit':sq.running=false;sq.ans=null;renderQuiz();break;
+    case 'sq-next':sq.i++;sq.ans=null;sq.hint=false;renderQuiz();window.scrollTo({top:0,behavior:'auto'});break;
+    case 'sq-hint':{sq.hint=!sq.hint;const q=$('#sqQ');if(q)q.classList.toggle('peek',sq.hint);el.setAttribute('aria-pressed',String(sq.hint));break}
+    case 'sq-line-en':{const c=$('#sqCtx');if(c)c.classList.toggle('peek');break}
+    case 'sq-open-story':openStory(el.dataset.id);break;
+    case 'sq-reset':if(confirm('이야기 퀴즈 기록을 지우고 처음부터 다시 풀까요? (Reset Story Quiz review history — reading progress is kept)')){storyProg.quiz={};saveStoryProg();renderQuiz()}break;
+    case 'story-retry':{const s=curStory();if(!s)break;delete storyProg.answers[s.id];Object.keys(storyUI.opt).forEach(k=>{if(k.startsWith('rd|'+s.id+'|'))delete storyUI.opt[k]});Object.keys(storyUI.ord).forEach(k=>{if(k.startsWith('rd|'+s.id+'|'))delete storyUI.ord[k]});saveStoryProg();const y=window.scrollY;renderReader(s);window.scrollTo(0,y);break}
+    case 'story-mark':{const s=curStory();if(!s)break;if(isRead(s.id)){delete storyProg.read[s.id];saveStoryProg();toast('Marked as unread');const rb=$('#readBar');if(rb)rb.innerHTML=renderReadBar(s)}else markRead(s,false);break}
+    case 'story-add-word':addStoryWord(Number(el.dataset.vi));break;
+    case 'stories-load':loadStoriesFromUrl(true);break;
+    case 'stories-load-override':settings.storiesUrl=$('#sStoriesUrl').value.trim();save();loadStoriesFromUrl(true);break;
+    case 'stories-clear':settings.storiesUrl='';settings.lastStorySync=null;save();$('#sStoriesUrl').value='';if(storiesSource().url)loadStoriesFromUrl(true);else{storyCache=null;lsDel(K.stories);rebuildStories();renderStoriesStatus()}toast('Override cleared');break;
     case 'type-override':quiz.score++;el.parentNode.innerHTML='<span class="small">Counted ✓</span>';break;
   }
 });
@@ -991,12 +1708,22 @@ document.addEventListener('keydown',e=>{
   const tag=(e.target.tagName||'').toLowerCase();
   if(tab==='quiz'&&quiz.running&&quiz.mode==='type'&&e.key==='Enter'&&(e.target.id==='quizInput'||quiz.answered)){e.preventDefault();typeCheck(false);return}
   if(tag==='input'||tag==='textarea'||tag==='select'||e.ctrlKey||e.metaKey||e.altKey)return;
+  if(tab==='stories'){
+    if(e.key==='Escape'){if($('#vpop'))closePop();else if(storyUI.open)closeStory();return}
+    if(storyUI.open&&(e.key==='e'||e.key==='E')){e.preventDefault();toggleEnglish();return}
+    if(e.key==='Enter'&&e.target.classList&&e.target.classList.contains('vw')){e.preventDefault();openVocabPop(e.target);return}
+    return;
+  }
   if(tab==='study'){
     if(e.key===' '||e.key==='Enter'){e.preventDefault();flip();return}
     if(['1','2','3','4'].includes(e.key)){if(sess.flipped){e.preventDefault();grade(Number(e.key))}return}
     const c=getCard(sess.cur);
     if(c&&(e.key==='p'||e.key==='P')){speak(c.korean,$('.face.'+(sess.flipped?'back':'front')+' .speak'))}
     if(c&&(e.key==='e'||e.key==='E')&&c.example_ko){speak(c.example_ko)}
+  }else if(tab==='quiz'&&quiz.kind==='stories'&&!quiz.running&&sq.running){
+    if(/^[1-9]$/.test(e.key)){const b=$$('#sqBody .opts button')[Number(e.key)-1];if(b&&!b.disabled){e.preventDefault();b.click()}return}
+    if(e.key==='h'||e.key==='H'){const b=$('#sqQ .sq-hint');if(b)b.click();return}
+    if(e.key==='Enter'){const b=$('#sqNext');if(b&&e.target!==b){e.preventDefault();b.click()}return}
   }else if(tab==='quiz'&&quiz.running&&quiz.mode==='mc'&&['1','2','3','4'].includes(e.key)){
     const b=$$('#mc button')[Number(e.key)-1];if(b)b.click();
   }
@@ -1005,16 +1732,19 @@ window.addEventListener('hashchange',()=>{const t=location.hash.slice(1);if(t&&t
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&sess.date&&sess.date!==today()&&tab==='study'&&!sess.flipped)buildQueue()});
 
 /* ============================ Boot ============================ */
+loadStoryState(); /* before load(): load() calls save(), which also writes story progress */
 load();
+if(settings.quizKind==='stories')quiz.kind='stories';
 applyTheme();
 bindSettings();
 if(!storageOK)$('#storageBanner').style.display='block';
 showTab((location.hash||'#study').slice(1));
 updateHeader();
 if(settings.autoSync&&settings.syncUrl)setTimeout(()=>syncNow(false),400);
+if(settings.storiesUrl||(settings.autoSync&&settings.syncUrl&&storiesSource().url))setTimeout(()=>loadStoriesFromUrl(false),700);
 
 /* Small hook for testing / power users in the console */
-window.KVF={get cards(){return cards},get srs(){return srs},get settings(){return settings},get log(){return log},get session(){return sess},parseAny,mergeCards,importText,exportBackup,syncNow,schedule,toCSV,romanize};
+window.KVF={get cards(){return cards},get srs(){return srs},get settings(){return settings},get log(){return log},get session(){return sess},parseAny,mergeCards,importText,exportBackup,syncNow,schedule,toCSV,romanize,get stories(){return STORIES},get storyProgress(){return storyProg},storyRowsToMap,parseStoryText,loadStoriesFromUrl,storiesUrlFrom,STORIES_GID,get storyQuiz(){return sq}};
 })();
 </script>
 </body>
