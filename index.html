@@ -1414,7 +1414,7 @@ function qResultHTML(s){
   let done=0,ok=0;for(let qi=0;qi<N;qi++){const st=a[qi];if(st&&st.ok!=null){done++;if(st.ok)ok++}}
   if(done<N)return '';
   if(ok===N)return celebrationHTML();
-  return '<div class="qscore">You got '+ok+' / '+N+' right. Try again to aim for a perfect score.</div>';
+  return '<div class="qscore">You got '+ok+' / '+N+' right. Try again to aim for a perfect score.</div><div style="text-align:center;margin-top:10px"><button class="btn primary" data-action="story-retry">↺ Try again</button></div>';
 }
 function curStory(){return storyUI.open?getStory(storyUI.open):null}
 function openStory(id){
@@ -1711,7 +1711,7 @@ document.addEventListener('click',e=>{
     case 'sq-ord-reset':delete storyUI.ord[el.dataset.key];rerenderQ(el.dataset.key);break;
     case 'gif-save':saveGifUrl();break;
     case 'gif-reset':resetGifUrl();break;
-    case 'story-retry':{const s=curStory();if(!s)break;delete storyProg.answers[s.id];Object.keys(storyUI.opt).forEach(k=>{if(k.startsWith('rd|'+s.id+'|'))delete storyUI.opt[k]});Object.keys(storyUI.ord).forEach(k=>{if(k.startsWith('rd|'+s.id+'|'))delete storyUI.ord[k]});saveStoryProg();const y=window.scrollY;renderReader(s);window.scrollTo(0,y);break}
+    case 'story-retry':{const s=curStory();if(!s)break;delete storyProg.answers[s.id];Object.keys(storyUI.opt).forEach(k=>{if(k.startsWith('rd|'+s.id+'|'))delete storyUI.opt[k]});Object.keys(storyUI.ord).forEach(k=>{if(k.startsWith('rd|'+s.id+'|'))delete storyUI.ord[k]});saveStoryProg();renderReader(s);const qs=$('#qsec');if(qs)qs.scrollIntoView({behavior:'smooth',block:'start'});break}
     case 'story-mark':{const s=curStory();if(!s)break;if(isRead(s.id)){delete storyProg.read[s.id];saveStoryProg();toast('Marked as unread');const rb=$('#readBar');if(rb)rb.innerHTML=renderReadBar(s)}else markRead(s,false);break}
     case 'stories-load':loadStoriesFromUrl(true);break;
     case 'stories-load-override':settings.storiesUrl=$('#sStoriesUrl').value.trim();save();loadStoriesFromUrl(true);break;
