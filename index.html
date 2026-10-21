@@ -347,6 +347,15 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
 .gif-tile .thumb.ph{display:grid;place-items:center;font-size:12px;color:var(--muted);background:repeating-linear-gradient(45deg,var(--panel2),var(--panel2) 6px,var(--border) 6px,var(--border) 12px)}
 .gif-tile[aria-checked=true]{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);color:var(--accent)}
 .gif-tiles.off .thumb{opacity:.4;filter:grayscale(1)}
+.gif-cell{position:relative;display:flex;flex-direction:column;min-width:0}
+.gif-cell>.gif-tile{flex:1 1 auto}
+.gif-cell[hidden],.gif-restore[hidden]{display:none}
+.gif-x{position:absolute;top:8px;right:8px;z-index:1;width:20px;height:20px;padding:0;border:0;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;font:600 14px/1 system-ui,sans-serif;display:grid;place-items:center;cursor:pointer;opacity:.7;transition:opacity .15s,background .15s}
+.gif-x::before{content:'';position:absolute;inset:-7px}
+.gif-x:hover,.gif-x:focus-visible{opacity:1;background:var(--again)}
+.gif-x:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.gif-restore{background:none;border:0;padding:4px 0;margin-top:8px;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.gif-restore:hover{opacity:.8}
 #sCelebrateGifUrl.invalid{border-color:var(--again);box-shadow:0 0 0 3px rgba(229,72,77,.15)}
 @media (max-width:420px){.celebrate{max-width:100%}.celebrate-gif{max-width:260px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -484,6 +493,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
       <label class="check"><input type="checkbox" id="sCelebrateGif"> Show a GIF when you get every question right in a story (when off, only the message is shown)</label>
       <label class="field" id="gifChoiceLabel">Choose a GIF</label>
       <div class="gif-tiles" id="gifTiles" role="radiogroup" aria-labelledby="gifChoiceLabel"></div>
+      <button type="button" class="gif-restore" id="gifRestore" data-action="gif-restore" hidden>Restore removed presets</button>
       <div id="gifCustom" hidden>
         <label class="field" for="sCelebrateGifUrl">Custom GIF link</label>
         <input type="url" id="sCelebrateGifUrl" placeholder="https://media.giphy.com/media/…/giphy.gif" autocomplete="off" spellcheck="false" style="width:100%">
@@ -662,7 +672,7 @@ const STORY_SEED_ROWS=[["st-01","1","1","Food & cooking","dialogue","카페에�
 
 /* ============================ Storage ============================ */
 const K = {cards:'kvf.cards.v1',srs:'kvf.srs.v1',settings:'kvf.settings.v1',log:'kvf.log.v1',storyProg:'kvf.storyprog.v1',stories:'kvf.stories.v1',storyReview:'kvf.storyReview.v1'};
-const DEFAULTS = {newPerDay:10,direction:'ko2en',theme:'auto',showRoman:false,autoSpeak:false,rate:0.9,syncUrl:'',autoSync:true,lastSync:null,migrated:false,storiesUrl:'',unlockAllStories:false,lastStorySync:null,celebrateGif:true,celebrateGifUrl:''};
+const DEFAULTS = {newPerDay:10,direction:'ko2en',theme:'auto',showRoman:false,autoSpeak:false,rate:0.9,syncUrl:'',autoSync:true,lastSync:null,migrated:false,storiesUrl:'',unlockAllStories:false,lastStorySync:null,celebrateGif:true,celebrateGifUrl:'',hiddenPresets:[]};
 let storageOK = true;
 const mem = {};
 function lsGet(k){try{return localStorage.getItem(k)}catch(e){storageOK=false;return mem[k]===undefined?null:mem[k]}}
@@ -884,28 +894,36 @@ function validGifUrl(u){
   try{const x=new URL(u);return (x.protocol==='http:'||x.protocol==='https:')&&x.hostname?x.href:''}catch(e){return ''}
 }
 function presetGif(id){return PRESET_GIFS.find(p=>p.id===id)||null}
+/* presets the user removed in Settings (ids in settings.hiddenPresets) */
+function hiddenPresets(){const h=settings.hiddenPresets;return Array.isArray(h)?h.filter(id=>presetGif(id)):[]}
+function visiblePresets(){const h=hiddenPresets();return PRESET_GIFS.filter(p=>!h.includes(p.id))}
+function visiblePreset(id){return visiblePresets().find(p=>p.id===id)||null}
+/* first preset not removed, or null when all are removed */
+function defaultPreset(){return visiblePresets()[0]||null}
+function defaultGifUrl(){const p=defaultPreset();return p?p.url:''}
 /* current choice: a preset id or 'custom'. Old settings (before presets): a saved custom link means 'custom', otherwise preset 1. */
 function gifChoice(){
   const c=settings.celebrateGifChoice;
-  if(c==='custom'||presetGif(c))return c;
-  return validGifUrl(settings.celebrateGifUrl)?'custom':PRESET_GIFS[0].id;
+  if(c==='custom'||visiblePreset(c))return c;
+  if(validGifUrl(settings.celebrateGifUrl))return 'custom';
+  const d=defaultPreset();return d?d.id:'custom'; /* all presets removed → only the custom option is left */
 }
 function celebrateGifSrc(){
   const c=gifChoice();
-  if(c==='custom')return validGifUrl(settings.celebrateGifUrl)||DEFAULT_CELEBRATE_GIF; /* invalid or empty custom link → preset 1 */
-  return presetGif(c).url;
+  if(c==='custom')return validGifUrl(settings.celebrateGifUrl)||defaultGifUrl(); /* invalid or empty custom link → first remaining preset, or '' (no GIF) */
+  const p=visiblePreset(c);return p?p.url:defaultGifUrl();
 }
 /* onerror handler: hide the broken image, keep the text */
 function gifFailed(img){if(!img)return;img.classList.add('gif-failed');img.removeAttribute('src');img.setAttribute('aria-hidden','true');
   if(img.id==='gifPrevImg'){const n=$('#gifPrevNote');if(n)n.textContent='Couldn’t load this GIF — the message will still show.'}}
 function celebrationHTML(){
-  const gif=settings.celebrateGif!==false;
+  const gif=settings.celebrateGif!==false&&!!celebrateGifSrc(); /* no GIF available (all presets removed, no custom link) → message only */
   return '<div class="celebrate" id="celebrate" role="status">'+
     (gif?'<img class="celebrate-gif" id="celebrateGif" alt="Celebration GIF" referrerpolicy="no-referrer">':'')+
     '<div class="celebrate-ko" lang="ko">수고했어요!</div><div class="celebrate-en">Good work!</div></div>';
 }
 /* attach the onerror handler before setting src, so a failed load always hides the image */
-function wireCelebration(root){const img=root&&root.querySelector('#celebrateGif');if(!img)return;img.onerror=()=>gifFailed(img);img.src=celebrateGifSrc()}
+function wireCelebration(root){const img=root&&root.querySelector('#celebrateGif');if(!img)return;const src=celebrateGifSrc();if(!src){img.remove();return}img.onerror=()=>gifFailed(img);img.src=src}
 
 /* ============================ Quiz ============================ */
 const quiz={mode:'mc',source:'studied',n:10,items:[],i:0,score:0,answered:false,options:[],running:false};
@@ -1672,7 +1690,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installProm
 window.addEventListener('appinstalled',()=>{installPrompt=null;renderInstallHint()});
 function buildGifTiles(){
   const box=$('#gifTiles');if(!box||box.childElementCount)return; /* built once, on first visit to Settings; thumbnails load lazily */
-  box.innerHTML=PRESET_GIFS.map(p=>'<button type="button" class="gif-tile" role="radio" aria-checked="false" data-action="gif-pick" data-choice="'+esc(p.id)+'"><span class="thumb"><img loading="lazy" decoding="async" referrerpolicy="no-referrer" alt="" src="'+esc(p.url)+'"></span><span>'+esc(p.label)+'</span></button>').join('')+
+  box.innerHTML=PRESET_GIFS.map(p=>'<div class="gif-cell" data-preset="'+esc(p.id)+'"><button type="button" class="gif-tile" role="radio" aria-checked="false" data-action="gif-pick" data-choice="'+esc(p.id)+'"><span class="thumb"><img loading="lazy" decoding="async" referrerpolicy="no-referrer" alt="" src="'+esc(p.url)+'"></span><span>'+esc(p.label)+'</span></button><button type="button" class="gif-x" data-action="gif-remove" data-id="'+esc(p.id)+'" aria-label="Remove preset: '+esc(p.label)+'" title="Remove preset">×</button></div>').join('')+
     '<button type="button" class="gif-tile" role="radio" aria-checked="false" data-action="gif-pick" data-choice="custom"><span class="thumb ph">Your link</span><span>Custom link</span></button>';
   box.querySelectorAll('img').forEach(img=>{img.onerror=()=>img.classList.add('gif-failed')});
 }
@@ -1681,6 +1699,9 @@ function renderGifSettings(){
   buildGifTiles();
   const choice=gifChoice();
   cb.checked=on;$('#gifTiles').classList.toggle('off',!on);
+  const hid=hiddenPresets();
+  $$('#gifTiles .gif-cell').forEach(c=>{c.hidden=hid.includes(c.dataset.preset)});
+  const rb=$('#gifRestore');rb.hidden=!hid.length;rb.textContent='Restore removed presets ('+hid.length+')';
   $$('#gifTiles .gif-tile').forEach(t=>{const sel=t.dataset.choice===choice;t.setAttribute('aria-checked',String(sel));t.tabIndex=sel?0:-1});
   $('#gifCustom').hidden=choice!=='custom';
   if(document.activeElement!==inp){inp.value=settings.celebrateGifUrl||'';inp.classList.remove('invalid')}
@@ -1690,23 +1711,34 @@ function renderGifSettings(){
     img.hidden=false;img.classList.remove('gif-failed');img.removeAttribute('aria-hidden');img.onerror=()=>gifFailed(img);
     if(img.getAttribute('src')!==u)img.setAttribute('src',u);
     note.textContent='Preview · your custom GIF'+(on?'':' (GIFs are off)');
-  }else{img.hidden=true;img.removeAttribute('src');note.textContent=choice==='custom'?'No custom link saved yet. Until you save one, Preset 1 is used.':''}
+  }else{img.hidden=true;img.removeAttribute('src');const d=defaultPreset();note.textContent=choice==='custom'?(d?'No custom link saved yet. Until you save one, '+d.label+' is used.':'No custom link saved yet. All presets are removed, so only the message will show.'):''}
 }
 function pickGif(choice){
-  if(choice!=='custom'&&!presetGif(choice))return;
+  if(choice!=='custom'&&!visiblePreset(choice))return;
   settings.celebrateGifChoice=choice;save();setGifStatus('','');renderGifSettings();
   if(choice==='custom'){const i=$('#sCelebrateGifUrl');if(i&&!settings.celebrateGifUrl)i.focus()}
   else toast('Celebration GIF: '+presetGif(choice).label);
 }
+function removePreset(id){
+  const p=presetGif(id);if(!p)return;
+  const wasSel=gifChoice()===id; /* check before hiding: afterwards gifChoice() already falls back */
+  const h=hiddenPresets();if(!h.includes(id))h.push(id);settings.hiddenPresets=h;
+  if(wasSel){const d=defaultPreset();settings.celebrateGifChoice=d?d.id:'custom'}
+  save();setGifStatus('','');renderGifSettings();
+  const d=defaultPreset();
+  toast(p.label+' removed'+(wasSel?(d?' · now using '+d.label:' · no GIF will show until you add a custom link'):''));
+  const f=$('#gifTiles .gif-tile[tabindex="0"]')||$('#gifRestore');if(f&&!f.hidden)f.focus();
+}
+function restorePresets(){const n=hiddenPresets().length;settings.hiddenPresets=[];save();renderGifSettings();toast(n===1?'1 preset restored':n+' presets restored')}
 function setGifStatus(msg,cls){const el=$('#gifStatus');if(el){el.textContent=msg;el.className='status-line'+(cls?' '+cls:'')}}
 function saveGifUrl(){
   const inp=$('#sCelebrateGifUrl'),raw=inp.value.trim();
-  if(!raw){settings.celebrateGifUrl='';settings.celebrateGifChoice=PRESET_GIFS[0].id;save();inp.classList.remove('invalid');setGifStatus('No link entered. Using '+PRESET_GIFS[0].label+'.','ok');renderGifSettings();return true}
+  if(!raw){const d=defaultPreset();settings.celebrateGifUrl='';settings.celebrateGifChoice=d?d.id:'custom';save();inp.classList.remove('invalid');setGifStatus(d?'No link entered. Using '+d.label+'.':'No link entered. All presets are removed, so only the message will show.','ok');renderGifSettings();return true}
   const u=validGifUrl(raw);
   if(!u){inp.classList.add('invalid');setGifStatus('✗ Please enter a valid http:// or https:// link.','err');return false}
   settings.celebrateGifUrl=u;settings.celebrateGifChoice='custom';save();inp.value=u;inp.classList.remove('invalid');setGifStatus('✓ Custom GIF saved.','ok');renderGifSettings();return true;
 }
-function resetGifUrl(){settings.celebrateGifChoice=PRESET_GIFS[0].id;save();const inp=$('#sCelebrateGifUrl');inp.classList.remove('invalid');setGifStatus('Reset to the default GIF ('+PRESET_GIFS[0].label+').','ok');renderGifSettings()}
+function resetGifUrl(){const d=defaultPreset();settings.celebrateGifChoice=d?d.id:'custom';save();const inp=$('#sCelebrateGifUrl');inp.classList.remove('invalid');setGifStatus(d?'Reset to the default GIF ('+d.label+').':'All presets are removed. Restore them, or save a custom link.','ok');renderGifSettings()}
 function bindSettings(){
   $('#sNew').addEventListener('change',e=>{settings.newPerDay=Math.max(0,Math.min(100,parseInt(e.target.value,10)||0));save();if(!sess.flipped)buildQueue();toast('New words per day: '+settings.newPerDay)});
   $('#sDir').addEventListener('change',e=>setDirection(e.target.value));
@@ -1720,7 +1752,7 @@ function bindSettings(){
   $('#sUnlockStories').addEventListener('change',e=>{settings.unlockAllStories=e.target.checked;save();toast(settings.unlockAllStories?'All stories unlocked':'Stories unlock stage by stage')});
   $('#sCelebrateGif').addEventListener('change',e=>{settings.celebrateGif=e.target.checked;save();renderGifSettings();toast(settings.celebrateGif?'Celebration GIF on':'Celebration GIF off')});
   $('#sCelebrateGifUrl').addEventListener('change',()=>saveGifUrl());
-  $('#gifTiles').addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;const t=[...$$('#gifTiles .gif-tile')],i=t.indexOf(document.activeElement);if(i<0)return;e.preventDefault();e.stopPropagation();const n=t[(i+(e.key==='ArrowLeft'||e.key==='ArrowUp'?-1:1)+t.length)%t.length];n.focus();n.click()});
+  $('#gifTiles').addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;const t=[...$$('#gifTiles .gif-tile')].filter(x=>!x.closest('[hidden]')),i=t.indexOf(document.activeElement);if(i<0)return;e.preventDefault();e.stopPropagation();const n=t[(i+(e.key==='ArrowLeft'||e.key==='ArrowUp'?-1:1)+t.length)%t.length];n.focus();n.click()});
   $('#sCelebrateGifUrl').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveGifUrl()}});
   $('#sCelebrateGifUrl').addEventListener('input',e=>{if(!e.target.value.trim()||validGifUrl(e.target.value)){e.target.classList.remove('invalid');setGifStatus('','')}});
 }
@@ -1794,6 +1826,8 @@ document.addEventListener('click',e=>{
     case 'sq-ord-reset':delete storyUI.ord[el.dataset.key];rerenderQ(el.dataset.key);break;
     case 'gif-save':saveGifUrl();break;
     case 'gif-pick':pickGif(el.dataset.choice);break;
+    case 'gif-remove':removePreset(el.dataset.id);break;
+    case 'gif-restore':restorePresets();break;
     case 'install-hint-hide':settings.hideInstallHint=true;save();renderInstallHint();toast('Install instructions hidden');break;
     case 'install-app':if(installPrompt){const ip=installPrompt;installPrompt=null;ip.prompt();(ip.userChoice||Promise.resolve()).then(()=>renderInstallHint()).catch(()=>{})}break;
     case 'gif-reset':resetGifUrl();break;
@@ -1841,7 +1875,8 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&sess.date
 loadStoryState(); /* before load(): load() calls save(), which also writes story progress */
 load();
 if('quizKind' in settings){delete settings.quizKind;save()}
-if(!settings.celebrateGifChoice||(settings.celebrateGifChoice!=='custom'&&!presetGif(settings.celebrateGifChoice))){settings.celebrateGifChoice=gifChoice();save()} /* migrate pre-preset settings */ /* leftover from the removed Story Quiz */
+if(!Array.isArray(settings.hiddenPresets)||settings.hiddenPresets.length!==hiddenPresets().length){settings.hiddenPresets=hiddenPresets();save()} /* older settings/backups lack the field */
+if(!settings.celebrateGifChoice||(settings.celebrateGifChoice!=='custom'&&!visiblePreset(settings.celebrateGifChoice))){settings.celebrateGifChoice=gifChoice();save()} /* migrate pre-preset settings */ /* leftover from the removed Story Quiz */
 applyTheme();
 bindSettings();
 if(!storageOK)$('#storageBanner').style.display='block';
