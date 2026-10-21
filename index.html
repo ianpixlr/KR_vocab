@@ -55,11 +55,11 @@ nav.tabs button{flex:1;min-width:max-content;border:0;background:transparent;pad
 nav.tabs button.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 12px rgba(79,70,229,.3)}
 nav.tabs button:not(.active):hover{background:var(--accent-soft);color:var(--text)}
 @media (max-width:640px){
-  nav.tabs{position:fixed;left:calc(10px + env(safe-area-inset-left));right:calc(10px + env(safe-area-inset-right));bottom:calc(10px + env(safe-area-inset-bottom));z-index:50;margin:0}
+  nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:50;margin:0;border-radius:0;border:0;border-top:1px solid var(--border);box-shadow:none;background:var(--panel);padding:6px calc(8px + env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) calc(8px + env(safe-area-inset-left))}
   nav.tabs button{padding:9px 8px;font-size:12.5px}
   .brand small{display:none}
 }
-@media (max-width:420px){nav.tabs{gap:1px;padding:4px}nav.tabs button{padding:9px 4px;font-size:11.5px;letter-spacing:-.01em}}
+@media (max-width:420px){nav.tabs{gap:1px;padding:5px calc(4px + env(safe-area-inset-right)) calc(5px + env(safe-area-inset-bottom)) calc(4px + env(safe-area-inset-left))}nav.tabs button{padding:9px 4px;font-size:11.5px;letter-spacing:-.01em}}
 section.view{display:none;animation:fadeUp .35s ease}
 section.view.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
