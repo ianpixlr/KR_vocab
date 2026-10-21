@@ -486,8 +486,8 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
         <li><b>Dotted words</b> are this story’s key vocabulary — tap one for its meaning. <span class="tagchip badge-deck">✓ In your deck</span> means it’s already in your flashcards; otherwise <b>＋ Add to my deck</b> puts it in your study queue.</li>
         <li><b>🔊</b> reads one line; <b>▶ Read whole story</b> reads it all (dialogue speakers get different voices or pitch where your device allows).</li>
         <li>Answer the <b>Comprehension check</b>; when every question is answered the story is marked as read (or press <b>Mark as read</b>).</li>
-        <li><b>Story Quiz</b> (Quiz tab → <b>📖 Stories</b>): rounds of 10 questions, Korean only, drawn <i>only from stories you’ve marked as read</i>. <b>힌트 EN</b> shows that question’s English; <b>이야기 다시 보기</b> reopens the story. After each answer you see the correct answer and the line it comes from (tap <b>EN</b> for its English). A missed question comes back next round; answer it correctly twice in a row and it’s retired.</li>
-        <li><b>이해도</b> (comprehension score) on each story card = your % correct on that story’s questions, from the reader and the quiz. The Progress tab lists it per story.</li>
+        <li><b>Story Quiz</b> (Quiz tab → <b>📖 Stories</b>): rounds of 10 questions (the questions themselves are in Korean), drawn <i>only from stories you’ve marked as read</i>. <b>힌트 EN</b> shows that question’s English; <b>이야기 다시 보기</b> reopens the story. After each answer you see the correct answer and the line it comes from (tap <b>EN</b> for its English). A missed question comes back next round; answer it correctly twice in a row and it’s retired.</li>
+        <li><b>Comprehension N%</b> on each story card = your % correct on that story’s questions, from the reader and the quiz. The Progress tab lists it per story.</li>
       </ul>
       <h3>Question types</h3>
       <ul class="small">
@@ -496,7 +496,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
         <li><code>who</code> <b>누가</b> — a quoted line: who said it? (dialogues)</li>
         <li><code>order</code> <b>순서</b> — tap 3–4 events in the order they happened.</li>
         <li><code>blank</code> <b>빈칸</b> — a sentence from the story with ___; pick the missing word (choices come from the story’s word list and your deck).</li>
-        <li><code>short</code> <b>대답</b> — answer in your head or out loud, press 답 보기, compare with the model answer, then mark yourself 맞았어요 / 틀렸어요.</li>
+        <li><code>short</code> <b>대답</b> — answer in your head or out loud, press <b>Show answer</b> (답 보기 in the quiz), compare with the model answer, then mark yourself right or wrong.</li>
       </ul>
       <h3>Adding a story in the Google Sheet</h3>
       <p class="small">Use the <b>Stories</b> tab, one row per element, with columns <code>story_id, stage, order, theme, format, title_ko, title_en, type, speaker, ko, en, word_ref, notes, qtype</code>. Give the new story a new id (e.g. <code>st-17</code>), its stage, and number <code>order</code> 1, 2, 3… The <code>type</code> column says what each row is:</p>
@@ -1230,6 +1230,7 @@ function renderStoryText(s){
 /* ---- questions: shared engine for the reader's Comprehension check and the Story Quiz ---- */
 const QTYPES=['tf','mcq','who','order','blank','short'];
 const QT_LABEL={tf:'O/X',mcq:'선택',who:'누가',order:'순서',blank:'빈칸',short:'대답'};
+const QT_LABEL_EN={tf:'True/False',mcq:'Choice',who:'Who said it',order:'Order',blank:'Blank',short:'Answer'};
 const QT_INST={tf:'이야기 내용과 같으면 ‘맞아요’, 다르면 ‘틀려요’를 고르세요.',mcq:'이야기를 읽고 맞는 답을 고르세요.',who:'이 말을 누가 했어요? 말한 사람을 고르세요.',order:'일어난 순서대로 하나씩 누르세요.',blank:'빈칸에 들어갈 알맞은 말을 고르세요.',short:'짧게 대답해 보세요. 그리고 답을 확인하세요.'};
 function tfNorm(x){return /^\s*(맞|o\b|t(rue)?\b|y(es)?\b|네|예|⭕)/i.test(String(x||''))?'맞아요':'틀려요'}
 function qCorrect(q){return q.qtype==='tf'?tfNorm(q.ans_ko):q.ans_ko}
@@ -1263,18 +1264,23 @@ function getQState(key){const {ctx,sid,qi}=parseQKey(key);if(ctx==='rd')return (
 function qFeedback(q,st,ctx){
   if(st.ok==null)return '';
   const c=qCorrect(q);
-  let h='<div class="qfb '+(st.ok?'ok':'bad')+'" lang="ko">'+(st.ok?'✓ 정답이에요!':'✗ 아쉬워요.'+(q.qtype==='short'||q.qtype==='order'?'':' 정답: <b>'+esc(c)+'</b>'))+'</div>';
-  if(q.qtype==='order'&&!st.ok)h+='<div class="small muted" lang="ko" style="margin-top:4px">맞는 순서:</div><ol class="sq-order" lang="ko">'+q.options.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ol>';
+  const en=ctx==='rd',noAns=q.qtype==='short'||q.qtype==='order';
+  let h=en?'<div class="qfb '+(st.ok?'ok':'bad')+'">'+(st.ok?'✓ Correct!':'✗ Not quite.'+(noAns?'':' Answer: <b lang="ko">'+esc(c)+'</b>'))+'</div>'
+    :'<div class="qfb '+(st.ok?'ok':'bad')+'" lang="ko">'+(st.ok?'✓ 정답이에요!':'✗ 아쉬워요.'+(noAns?'':' 정답: <b>'+esc(c)+'</b>'))+'</div>';
+  if(q.qtype==='order'&&!st.ok)h+=(en?'<div class="small muted" style="margin-top:4px">Correct order:</div>':'<div class="small muted" lang="ko" style="margin-top:4px">맞는 순서:</div>')+'<ol class="sq-order" lang="ko">'+q.options.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ol>';
   if(ctx==='rd'&&q.ans_en)h+=enWrap('Answer: '+q.ans_en);
   return h;
 }
 function renderQBody(s,qi,key,ctx){
   const q=s.questions[qi],st=getQState(key);
   const dk=' data-key="'+esc(key)+'"';
+  const en=ctx==='rd';
   if(q.qtype==='short'){
-    if(!st||!st.shown)return '<div class="sq-short"><button class="btn sm" data-action="sq-show"'+dk+'>답 보기</button> <span class="small muted" lang="ko">먼저 머릿속으로 (또는 소리 내어) 대답해 보세요.</span></div>';
-    let h='<div class="qans" lang="ko"><span class="small muted">모범 답안 · </span>'+esc(q.ans_ko)+'</div>';
-    if(st.ok==null)h+='<div class="sq-self"><span class="small muted" lang="ko">내 대답은…</span><button class="btn sm sq-good" data-action="sq-self" data-ok="1"'+dk+'>⭕ 맞았어요</button><button class="btn sm sq-bad" data-action="sq-self" data-ok="0"'+dk+'>❌ 틀렸어요</button></div>';
+    if(!st||!st.shown)return en?'<div class="sq-short"><button class="btn sm" data-action="sq-show"'+dk+'>Show answer</button> <span class="small muted">Answer in your head (or out loud) first.</span></div>'
+      :'<div class="sq-short"><button class="btn sm" data-action="sq-show"'+dk+'>답 보기</button> <span class="small muted" lang="ko">먼저 머릿속으로 (또는 소리 내어) 대답해 보세요.</span></div>';
+    let h=en?'<div class="qans"><span class="small muted">Model answer · </span><span lang="ko">'+esc(q.ans_ko)+'</span></div>':'<div class="qans" lang="ko"><span class="small muted">모범 답안 · </span>'+esc(q.ans_ko)+'</div>';
+    if(st.ok==null)h+=en?'<div class="sq-self"><span class="small muted">How did you do?</span><button class="btn sm sq-good" data-action="sq-self" data-ok="1"'+dk+'>⭕ Got it</button><button class="btn sm sq-bad" data-action="sq-self" data-ok="0"'+dk+'>❌ Missed it</button></div>'
+      :'<div class="sq-self"><span class="small muted" lang="ko">내 대답은…</span><button class="btn sm sq-good" data-action="sq-self" data-ok="1"'+dk+'>⭕ 맞았어요</button><button class="btn sm sq-bad" data-action="sq-self" data-ok="0"'+dk+'>❌ 틀렸어요</button></div>';
     return h+qFeedback(q,st,ctx);
   }
   const opts=qChoices(s,q,key);
@@ -1282,7 +1288,7 @@ function renderQBody(s,qi,key,ctx){
     const picks=st?st.seq:(storyUI.ord[key]||[]);
     let h='<div class="opts ord">'+opts.map((o,k)=>{const n=picks.indexOf(k);let cls=n>=0?'picked':'';if(st)cls=(q.options[n]===o?'right':'wrong');
       return '<button class="'+cls+'" data-action="sq-ord" data-k="'+k+'"'+dk+(st||n>=0?' disabled':'')+'><span class="n">'+(n>=0?n+1:'')+'</span><span lang="ko">'+esc(o)+'</span></button>'}).join('')+'</div>';
-    if(!st&&picks.length)h+='<div style="margin-top:8px"><button class="btn sm" data-action="sq-ord-reset"'+dk+'>↺ 다시</button></div>';
+    if(!st&&picks.length)h+='<div style="margin-top:8px"><button class="btn sm" data-action="sq-ord-reset"'+dk+'>'+(en?'↺ Reset':'↺ 다시')+'</button></div>';
     return h+(st?qFeedback(q,st,ctx):'');
   }
   const c=qCorrect(q);
@@ -1292,11 +1298,11 @@ function renderQBody(s,qi,key,ctx){
 }
 function renderQuestion(s,qi){
   const q=s.questions[qi];
-  return '<div class="qitem" id="q-'+qi+'"><div class="qko" lang="ko"><span class="qn">Q'+(qi+1)+'.</span><span class="qt" title="'+esc(q.qtype)+'">'+esc(QT_LABEL[q.qtype]||'')+'</span>'+esc(q.ko)+'</div>'+enWrap(q.en)+renderQBody(s,qi,qKey('rd',s,qi),'rd')+'</div>';
+  return '<div class="qitem" id="q-'+qi+'"><div class="qko" lang="ko"><span class="qn">Q'+(qi+1)+'.</span><span class="qt" title="'+esc(q.qtype)+'" lang="en">'+esc(QT_LABEL_EN[q.qtype]||'')+'</span>'+esc(q.ko)+'</div>'+enWrap(q.en)+renderQBody(s,qi,qKey('rd',s,qi),'rd')+'</div>';
 }
 function bumpScore(sid,ok){const sc=storyProg.scores[sid]||(storyProg.scores[sid]={c:0,n:0});sc.n++;if(ok)sc.c++}
 function storyScore(sid){const sc=storyProg.scores[sid];return sc&&sc.n?Math.round(100*sc.c/sc.n):null}
-function scoreChip(sid){const p=storyScore(sid);if(p==null)return '';return '<span class="tagchip chip-score '+(p>=80?'hi':p>=50?'mid':'lo')+'" title="Comprehension score: '+storyProg.scores[sid].c+'/'+storyProg.scores[sid].n+' correct">이해도 '+p+'%</span>'}
+function scoreChip(sid){const p=storyScore(sid);if(p==null)return '';return '<span class="tagchip chip-score '+(p>=80?'hi':p>=50?'mid':'lo')+'" title="Comprehension score: '+storyProg.scores[sid].c+'/'+storyProg.scores[sid].n+' correct">Comprehension '+p+'%</span>'}
 function quizEntryKey(s,q){return s.id+'|'+q.ko}
 /* answer handling for both contexts */
 function setQAnswer(key,val){
@@ -1342,25 +1348,25 @@ function quizKindSeg(){return '<div class="seg" id="quizKind" style="margin:0 0 
 function renderStoryQuiz(a){
   if(!sq.running){
     const readN=STORIES.filter(s=>isRead(s.id)&&s.questions.length).length,P=storyQuizPool();
-    let h='<div class="quiz-card">'+quizKindSeg()+'<h2 lang="ko">📖 이야기 퀴즈</h2><p class="muted small" lang="ko">읽은 이야기에서만 문제가 나와요. 한 번에 10문제! 틀린 문제는 다음에 다시 나오고, 두 번 연속 맞히면 끝나요.</p>';
-    if(!readN)h+='<p lang="ko" style="margin:18px 0 6px">아직 읽은 이야기가 없어요. 먼저 이야기를 읽어 보세요.</p><button class="btn primary" data-action="goto" data-tab="stories">이야기 읽으러 가기 →</button>';
+    let h='<div class="quiz-card">'+quizKindSeg()+'<h2>📖 Story Quiz</h2><p class="muted small">Questions come only from stories you’ve read. 10 per round. Missed questions come back next time; get one right twice and it’s retired.</p>';
+    if(!readN)h+='<p style="margin:18px 0 6px">You haven’t read any stories yet. Read one first.</p><button class="btn primary" data-action="goto" data-tab="stories">Go to Stories →</button>';
     else{
-      h+='<div class="sq-stats" lang="ko"><span class="tagchip">읽은 이야기 '+readN+'개</span><span class="tagchip">남은 문제 '+P.pool.length+'개</span>'+(P.missed?'<span class="tagchip chip-score lo">다시 볼 문제 '+P.missed+'개</span>':'')+'<span class="tagchip chip-score hi">끝낸 문제 '+P.retired+'개</span></div>';
-      if(!P.pool.length)h+='<p lang="ko">🎉 읽은 이야기의 문제를 모두 끝냈어요! 새 이야기를 읽거나 처음부터 다시 풀어 보세요.</p><div class="row" style="justify-content:center"><button class="btn primary" data-action="goto" data-tab="stories">새 이야기 읽기 →</button><button class="btn" data-action="sq-reset">↺ 처음부터 다시 풀기</button></div>';
-      else h+='<button class="btn primary" data-action="sq-start" lang="ko">시작하기 →</button>';
+      h+='<div class="sq-stats"><span class="tagchip">'+readN+' read '+(readN===1?'story':'stories')+'</span><span class="tagchip">'+P.pool.length+' to go</span>'+(P.missed?'<span class="tagchip chip-score lo">'+P.missed+' to review</span>':'')+'<span class="tagchip chip-score hi">'+P.retired+' retired</span></div>';
+      if(!P.pool.length)h+='<p>🎉 You’ve retired every question from the stories you’ve read! Read a new story, or start the quiz over.</p><div class="row" style="justify-content:center"><button class="btn primary" data-action="goto" data-tab="stories">Read a new story →</button><button class="btn" data-action="sq-reset">↺ Start over</button></div>';
+      else h+='<button class="btn primary" data-action="sq-start">Start →</button>';
     }
     a.innerHTML=h+'</div>';return;
   }
   if(sq.i>=sq.items.length){
     const n=sq.items.length,pct=n?Math.round(100*sq.score/n):0;
-    a.innerHTML='<div class="quiz-card done"><div class="big">'+(pct>=80?'🏆':pct>=50?'👏':'💪')+'</div><h2 lang="ko">'+n+'문제 중 '+sq.score+'개 맞았어요</h2><p class="muted" lang="ko">'+(pct>=80?'훌륭해요!':pct>=50?'잘했어요!':'괜찮아요. 다시 해 봐요!')+(sq.missed?' 틀린 '+sq.missed+'문제는 다음 퀴즈에 다시 나와요.':'')+'</p>'+
-      '<div class="row" style="justify-content:center"><button class="btn primary" data-action="sq-start">한 번 더</button><button class="btn" data-action="sq-quit">그만하기</button><button class="btn" data-action="goto" data-tab="stories">이야기 목록</button></div></div>';
+    a.innerHTML='<div class="quiz-card done"><div class="big">'+(pct>=80?'🏆':pct>=50?'👏':'💪')+'</div><h2>'+sq.score+' / '+n+' correct</h2><p class="muted">'+(pct>=80?'Excellent!':pct>=50?'Nice work!':'Keep going!')+(sq.missed?' The '+sq.missed+' you missed will come back next round.':'')+'</p>'+
+      '<div class="row" style="justify-content:center"><button class="btn primary" data-action="sq-start">Next round</button><button class="btn" data-action="sq-quit">Done</button><button class="btn" data-action="goto" data-tab="stories">All stories</button></div></div>';
     if(pct>=80&&!sq.celebrated){sq.celebrated=true;confetti()}return;
   }
   const it=sq.items[sq.i],s=getStory(it.sid),q=s&&s.questions[it.qi];
   if(!q){sq.i++;sq.ans=null;return renderStoryQuiz(a)}
   const key=qKey('qz',s,it.qi),st=sq.ans,done=st&&st.ok!=null,li=storyQuestionLine(s,q),L=li>=0?s.lines[li]:null;
-  let h='<div class="quiz-card sq-card"><div class="row" style="justify-content:space-between"><span class="muted small" lang="ko">문제 '+(sq.i+1)+' / '+sq.items.length+'</span><span class="row"><span class="muted small" lang="ko">점수 '+sq.score+'</span><button class="btn sm" data-action="sq-quit" lang="ko">✕ 그만하기</button></span></div>'+
+  let h='<div class="quiz-card sq-card"><div class="row" style="justify-content:space-between"><span class="muted small">Question '+(sq.i+1)+' / '+sq.items.length+'</span><span class="row"><span class="muted small">Score '+sq.score+'</span><button class="btn sm" data-action="sq-quit">✕ Quit</button></span></div>'+
     '<div class="progressbar" style="margin:8px 0"><i style="width:'+Math.round(100*sq.i/sq.items.length)+'%"></i></div>'+
     '<div class="sq-story"><span class="tagchip" lang="ko">📖 '+esc(s.title_ko)+'</span><button class="linkbtn" data-action="sq-open-story" data-id="'+esc(s.id)+'" lang="ko">이야기 다시 보기</button></div>'+
     '<div class="sq-inst" lang="ko">'+esc(QT_INST[q.qtype]||'')+'</div>'+
@@ -1369,7 +1375,7 @@ function renderStoryQuiz(a){
   if(done){
     if(L)h+='<div class="sq-ctx" id="sqCtx"><div class="h" lang="ko">📖 이야기에서</div><div class="sq-line">'+(L.speaker?'<span class="who" lang="ko">'+esc(L.speaker)+':</span>':'')+'<span lang="ko">'+esc(L.ko)+'</span>'+speakBtn(L.ko,1)+'<button class="btn sm" data-action="sq-line-en">EN</button></div>'+enWrap(L.en+(q.ans_en?'  ·  Answer: '+q.ans_en:''))+'</div>';
     else if(q.ans_en)h+='<div class="sq-ctx" id="sqCtx"><button class="btn sm" data-action="sq-line-en">EN</button>'+enWrap('Answer: '+q.ans_en)+'</div>';
-    h+='<div class="row" style="justify-content:center;margin-top:14px"><button class="btn primary" id="sqNext" data-action="sq-next" lang="ko">'+(sq.i+1>=sq.items.length?'결과 보기 →':'다음 문제 →')+'</button></div>';
+    h+='<div class="row" style="justify-content:center;margin-top:14px"><button class="btn primary" id="sqNext" data-action="sq-next">'+(sq.i+1>=sq.items.length?'See results →':'Next question →')+'</button></div>';
   }
   a.innerHTML=h+'</div>';
 }
@@ -1388,7 +1394,7 @@ function renderReader(s){
   const root=$('#storiesArea');closePop();
   const answered=gradedCount(s);
   root.innerHTML='<div id="reader" class="'+(storyUI.showEn?'show-en':'')+'" data-sid="'+esc(s.id)+'">'+
-    '<div class="panel"><div class="rd-top"><button class="btn sm" data-action="story-back">← Stories</button>'+(sq.running&&quiz.kind==='stories'?'<button class="btn sm primary" data-action="goto" data-tab="quiz" lang="ko">← 퀴즈로 돌아가기</button>':'')+'<span class="spacer"></span><span class="tagchip">Stage '+esc(s.stage)+'</span>'+(s.theme?'<span class="tagchip">'+esc(s.theme)+'</span>':'')+'<span class="tagchip chip-fmt">'+(FMT_LABEL[s.format]||'')+'</span>'+(isRead(s.id)?'<span class="tagchip chip-read">✓ Read</span>':'')+scoreChip(s.id)+'</div>'+
+    '<div class="panel"><div class="rd-top"><button class="btn sm" data-action="story-back">← Stories</button>'+(sq.running&&quiz.kind==='stories'?'<button class="btn sm primary" data-action="goto" data-tab="quiz">← Back to quiz</button>':'')+'<span class="spacer"></span><span class="tagchip">Stage '+esc(s.stage)+'</span>'+(s.theme?'<span class="tagchip">'+esc(s.theme)+'</span>':'')+'<span class="tagchip chip-fmt">'+(FMT_LABEL[s.format]||'')+'</span>'+(isRead(s.id)?'<span class="tagchip chip-read">✓ Read</span>':'')+scoreChip(s.id)+'</div>'+
     '<div class="rd-title" lang="ko">'+esc(s.title_ko)+'</div>'+enWrap((s.title_en||'')+(s.summary?' — '+s.summary:''))+
     '<div class="rd-bar"><button class="btn en-toggle" data-action="story-en" aria-pressed="'+storyUI.showEn+'">'+(storyUI.showEn?'🙈 Hide English':'👀 Show English')+'</button>'+
     '<button class="btn" data-action="story-read-all" id="readAllBtn"'+(hasTTS?'':' disabled')+'>'+(storyAudio?'■ Stop':'▶ Read whole story')+'</button><span class="rd-hint">Tap a line to peek · <span class="kbd">E</span> English</span></div>'+
@@ -1685,7 +1691,7 @@ document.addEventListener('click',e=>{
     case 'sq-hint':{sq.hint=!sq.hint;const q=$('#sqQ');if(q)q.classList.toggle('peek',sq.hint);el.setAttribute('aria-pressed',String(sq.hint));break}
     case 'sq-line-en':{const c=$('#sqCtx');if(c)c.classList.toggle('peek');break}
     case 'sq-open-story':openStory(el.dataset.id);break;
-    case 'sq-reset':if(confirm('이야기 퀴즈 기록을 지우고 처음부터 다시 풀까요? (Reset Story Quiz review history — reading progress is kept)')){storyProg.quiz={};saveStoryProg();renderQuiz()}break;
+    case 'sq-reset':if(confirm('Reset your Story Quiz review history and start over? Your reading progress and comprehension scores are kept.')){storyProg.quiz={};saveStoryProg();renderQuiz()}break;
     case 'story-retry':{const s=curStory();if(!s)break;delete storyProg.answers[s.id];Object.keys(storyUI.opt).forEach(k=>{if(k.startsWith('rd|'+s.id+'|'))delete storyUI.opt[k]});Object.keys(storyUI.ord).forEach(k=>{if(k.startsWith('rd|'+s.id+'|'))delete storyUI.ord[k]});saveStoryProg();const y=window.scrollY;renderReader(s);window.scrollTo(0,y);break}
     case 'story-mark':{const s=curStory();if(!s)break;if(isRead(s.id)){delete storyProg.read[s.id];saveStoryProg();toast('Marked as unread');const rb=$('#readBar');if(rb)rb.innerHTML=renderReadBar(s)}else markRead(s,false);break}
     case 'story-add-word':addStoryWord(Number(el.dataset.vi));break;
