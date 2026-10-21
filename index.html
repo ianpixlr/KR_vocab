@@ -46,10 +46,9 @@ nav.tabs button:not(.active):hover{background:var(--accent-soft);color:var(--tex
 @media (max-width:640px){
   nav.tabs{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:50;margin:0}
   nav.tabs button{padding:9px 8px;font-size:12.5px}
-  nav.tabs .lbl-long{display:none}
   .brand small{display:none}
 }
-@media (max-width:420px){nav.tabs{gap:2px;padding:4px}nav.tabs button{padding:9px 5px;font-size:12px}}
+@media (max-width:420px){nav.tabs{gap:1px;padding:4px}nav.tabs button{padding:9px 4px;font-size:11.5px;letter-spacing:-.01em}}
 section.view{display:none;animation:fadeUp .35s ease}
 section.view.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -94,6 +93,8 @@ label.check{display:flex;gap:8px;align-items:center;margin:8px 0;font-size:14px;
 .pos{font-size:13px;color:var(--muted);font-style:italic}
 .roman{font-size:14px;color:var(--muted);letter-spacing:.02em}
 .hint{font-size:12.5px;color:var(--muted);margin-top:auto;text-align:center}
+.speak .ico{display:block;width:19px;height:19px}
+.speak.sm .ico{width:15px;height:15px}
 .speak{border:0;background:var(--accent-soft);color:var(--accent);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:16px;display:inline-grid;place-items:center;transition:transform .15s;vertical-align:middle;flex:none}
 .speak:hover{transform:scale(1.08)} .speak:active{transform:scale(.92)}
 .speak.sm{width:28px;height:28px;font-size:13px}
@@ -340,16 +341,16 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
   </header>
 
   <nav class="tabs" id="tabs">
-    <button data-tab="study" class="active">📚 Study</button>
-    <button data-tab="quiz">✍️ Quiz</button>
-    <button data-tab="stories">📖 Stories</button>
-    <button data-tab="words">🗂️ Words</button>
-    <button data-tab="progress">📈 <span class="lbl-long">Progress</span><span class="lbl-short"></span></button>
-    <button data-tab="settings">⚙️ <span class="lbl-long">Settings</span></button>
-    <button data-tab="help">❓ <span class="lbl-long">Help</span></button>
+    <button data-tab="study" class="active">Study</button>
+    <button data-tab="quiz">Quiz</button>
+    <button data-tab="stories">Stories</button>
+    <button data-tab="words">Words</button>
+    <button data-tab="progress">Progress</button>
+    <button data-tab="settings">Settings</button>
+    <button data-tab="help">Help</button>
   </nav>
 
-  <div id="storageBanner" class="banner" style="display:none">⚠️ This browser is blocking local storage, so progress won't be saved. Use <b>Settings → Export backup</b> before closing.</div>
+  <div id="storageBanner" class="banner" style="display:none">This browser is blocking local storage, so progress won't be saved. Use <b>Settings → Export backup</b> before closing.</div>
 
   <!-- STUDY -->
   <section class="view active" id="view-study">
@@ -380,7 +381,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
         <h2 style="margin:0">Vocab bank <span class="muted small" id="wordCount"></span></h2>
         <div class="row">
           <button class="btn primary" data-action="add-word">＋ Add word</button>
-          <button class="btn" data-action="toggle-import">⇪ Import / paste</button>
+          <button class="btn" data-action="toggle-import">Import / paste</button>
         </div>
       </div>
       <div class="toolbar">
@@ -398,7 +399,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
       <details class="import" id="importBox">
         <summary>Import words (file, or paste CSV / TSV from Google Sheets)</summary>
         <p class="small muted">Imports <b>merge</b>: words are matched by Korean + meaning (or id). New words are added, matching words are updated, and your review progress is never wiped. A header row is recommended — see Help for the column format.</p>
-        <div class="row"><input type="file" id="importFile" accept=".csv,.tsv,.txt,.json,application/json,text/csv"> <button class="btn sm" data-action="download-template-csv">⬇ CSV template</button><button class="btn sm" data-action="download-template-json">⬇ JSON template</button></div>
+        <div class="row"><input type="file" id="importFile" accept=".csv,.tsv,.txt,.json,application/json,text/csv"> <button class="btn sm" data-action="download-template-csv">CSV template</button><button class="btn sm" data-action="download-template-json">JSON template</button></div>
         <label class="field" for="pasteBox">…or paste rows (with header row, comma- or tab-separated):</label>
         <textarea id="pasteBox" placeholder="korean,meaning_en,pos,example_ko,example_en,notes,unit,tags&#10;취소하다,to cancel,verb,비 때문에 여행을 취소했어요.,We canceled the trip because of the rain.,하다 verb,My list,travel"></textarea>
         <div class="row" style="margin-top:8px"><button class="btn primary" data-action="import-paste">Import pasted rows</button></div>
@@ -435,7 +436,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
       <div class="small muted" id="voiceStatus" style="margin-top:6px"></div>
     </div>
     <div class="panel">
-      <h2>🔄 Sync from a URL (self-updating word list)</h2>
+      <h2>Sync from a URL (self-updating word list)</h2>
       <p class="small muted">Paste a Google Sheets <b>Publish to web → CSV</b> link, or any raw CSV/JSON URL (e.g. GitHub raw). New words are merged in on every open and when you press Sync now — progress is kept and nothing is deleted.</p>
       <input type="url" id="sSyncUrl" placeholder="https://docs.google.com/spreadsheets/d/e/…/pub?output=csv" style="width:100%">
       <label class="check"><input type="checkbox" id="sAutoSync"> Sync automatically when the app opens</label>
@@ -443,7 +444,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
       <div class="status-line" id="syncStatus"></div>
     </div>
     <div class="panel">
-      <h2>📖 Stories</h2>
+      <h2>Stories</h2>
       <p class="small muted"><b>One link does both.</b> Stories load from the <b>Stories</b> tab of the same Google Sheet as your sync link above — nothing else to paste. Publish the sheet with <b>File → Share → Publish to web → Entire document → CSV</b> so every tab is reachable. A story with the same <code>story_id</code> replaces the built-in one, new ids are added, and your reading progress is kept. If the Stories tab can’t be reached, the 16 built-in stories are used.</p>
       <label class="check"><input type="checkbox" id="sUnlockStories"> Unlock all stories (skip stage-by-stage unlocking)</label>
       <div class="status-line" id="storiesStatus"></div>
@@ -456,7 +457,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
       </details>
     </div>
     <div class="panel" id="celebratePanel">
-      <h2>🎉 Celebration GIF</h2>
+      <h2>Celebration GIF</h2>
       <p class="small muted">Shown with the message when you get every question right in a story.</p>
       <label class="check"><input type="checkbox" id="sCelebrateGif"> Show a GIF when you get every question right in a story (when off, only the message is shown)</label>
       <label class="field" for="sCelebrateGifUrl">Custom GIF link (leave empty to use the default)</label>
@@ -466,12 +467,12 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
       <div class="gif-prev" id="gifPrev"><img id="gifPrevImg" alt="Celebration GIF preview" referrerpolicy="no-referrer"><span class="small muted" id="gifPrevNote"></span></div>
     </div>
     <div class="panel">
-      <h2>💾 Backup</h2>
+      <h2>Backup</h2>
       <p class="small muted">Your words, progress and stories read live in this browser (localStorage). Export a backup now and then, and to move to another device.</p>
       <div class="row">
-        <button class="btn primary" data-action="export">⬇ Export backup (JSON)</button>
-        <button class="btn" data-action="export-csv">⬇ Export words (CSV)</button>
-        <label class="btn" for="restoreFile" style="cursor:pointer">⇪ Import / restore file</label>
+        <button class="btn primary" data-action="export">Export backup (JSON)</button>
+        <button class="btn" data-action="export-csv">Export words (CSV)</button>
+        <label class="btn" for="restoreFile" style="cursor:pointer">Import / restore file</label>
         <input type="file" id="restoreFile" accept=".json,.csv,.tsv,.txt" style="display:none">
       </div>
     </div>
@@ -499,12 +500,12 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
       </ul>
     </div>
     <div class="panel">
-      <h2>📖 Stories</h2>
+      <h2>Stories</h2>
       <p>Short graded reading in four stages, from simple dialogues to diary entries. A stage unlocks once you’ve read every story in the stages before it (or turn on <b>Settings → Unlock all stories</b>).</p>
       <ul>
         <li><b>Korean first.</b> Read the whole story in Korean. Tap a line or speech bubble to peek at just that line’s English, or press <b>Show English</b> (<span class="kbd">E</span>) to show it under every line.</li>
         <li><b>Dotted words</b> are this story’s key vocabulary — tap one for its meaning. <span class="tagchip badge-deck">✓ In your deck</span> means it’s already in your flashcards. Story vocab comes into your deck through sync (the Vocab tab of your sheet).</li>
-        <li><b>🔊</b> reads one line; <b>▶ Read whole story</b> reads it all (dialogue speakers get different voices or pitch where your device allows).</li>
+        <li>The <b>speaker button</b> reads one line; <b>▶ Read whole story</b> reads it all (dialogue speakers get different voices or pitch where your device allows).</li>
         <li>Answer the <b>Comprehension check</b>; when every question is answered the story is marked as read (or press <b>Mark as read</b>). Get every question right for a small celebration.</li>
         <li><b>Missed questions</b> are remembered: the story shows <span class="tagchip chip-review">↻ N to review</span> in the list. Open it, reread it, and the questions you missed are reset at the end (flagged <span class="qflag">Review</span>) so you can try them again. A correct answer clears it from the review list.</li>
         <li><b>Comprehension N%</b> on each story card = your % correct on that story’s questions, from the comprehension check. The Progress tab lists it per story.</li>
@@ -728,7 +729,7 @@ const hasTTS='speechSynthesis' in window && typeof SpeechSynthesisUtterance!=='u
 let koVoice=null, warnedVoice=false;
 function pickVoice(){if(!hasTTS)return;const vs=speechSynthesis.getVoices()||[];koVoice=vs.find(v=>/^ko([-_]|$)/i.test(v.lang))||null;updateVoiceStatus()}
 if(hasTTS){pickVoice();if('onvoiceschanged' in speechSynthesis)speechSynthesis.onvoiceschanged=pickVoice;}
-function updateVoiceStatus(){const el=$('#voiceStatus');if(!el)return;el.textContent=!hasTTS?'🔇 This browser has no speech support — pronunciation buttons are disabled.':koVoice?('🔊 Korean voice: '+koVoice.name):'⚠️ No Korean voice found yet. The browser will try ko-KR anyway; if you hear nothing, install a Korean voice in your OS settings (e.g. Settings → Time & Language → Speech on Windows, or Spoken Content on iOS/macOS).'}
+function updateVoiceStatus(){const el=$('#voiceStatus');if(!el)return;el.textContent=!hasTTS?'This browser has no speech support — pronunciation buttons are disabled.':koVoice?('Korean voice: '+koVoice.name):'No Korean voice found yet. The browser will try ko-KR anyway; if you hear nothing, install a Korean voice in your OS settings (e.g. Settings → Time & Language → Speech on Windows, or Spoken Content on iOS/macOS).'}
 function speak(text,btn){
   if(!text)return;
   if(!hasTTS){toast('Speech is not supported in this browser');return}
@@ -741,7 +742,7 @@ function speak(text,btn){
     speechSynthesis.speak(u);
   }catch(e){toast('Could not play audio')}
 }
-function speakBtn(text,sm){if(!text)return '';return '<button class="speak'+(sm?' sm':'')+'" data-action="speak" data-text="'+esc(text)+'" title="Listen" aria-label="Listen"'+(hasTTS?'':' disabled')+'>🔊</button>'}
+function speakBtn(text,sm){if(!text)return '';return '<button class="speak'+(sm?' sm':'')+'" data-action="speak" data-text="'+esc(text)+'" title="Listen" aria-label="Listen"'+(hasTTS?'':' disabled')+'><svg class="ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>'}
 
 /* ============================ Session ============================ */
 const sess={queue:[],cur:null,flipped:false,dir:'ko2en',date:null,extraNew:0,total:0,done:0,built:false};
@@ -781,7 +782,7 @@ function grade(g){
   sess.done++;
   save();
   const btn=$('.grade.g'+g);if(btn)btn.classList.add('flash-ok');
-  if(srs[id].interval>=21&&g>1&&(srs[id].interval-g)>=0&&statusOf(getCard(id))==='mastered'&&!srs[id].masteredDate){srs[id].masteredDate=today();save();toast('🎉 Mastered: '+getCard(id).korean)}
+  if(srs[id].interval>=21&&g>1&&(srs[id].interval-g)>=0&&statusOf(getCard(id))==='mastered'&&!srs[id].masteredDate){srs[id].masteredDate=today();save();toast('Mastered: '+getCard(id).korean)}
   nextCard();
   updateHeader();
   if(!sess.cur&&sess.done>0)confetti();
@@ -797,8 +798,8 @@ function renderStudy(){
     const remainingNew=cards.filter(c=>statusOf(c)==='new').length;
     const tomorrow=cards.filter(c=>isDue(c,addDays(today(),1))).length;
     const L=dayLog();
-    if(!cards.length){area.innerHTML='<div class="panel done"><div class="big">📭</div><h2>No words yet</h2><p class="muted">Add words in the <b>Words</b> tab, import a file, or set a sync URL in Settings.</p><button class="btn primary" data-action="goto" data-tab="words">Add words</button></div>';return}
-    area.innerHTML='<div class="panel done"><div class="big">'+(L.reviews?'🎉':'✨')+'</div><h2>'+(L.reviews?'수고했어요! All done for today':'Nothing due right now')+'</h2>'+
+    if(!cards.length){area.innerHTML='<div class="panel done"><h2>No words yet</h2><p class="muted">Add words in the <b>Words</b> tab, import a file, or set a sync URL in Settings.</p><button class="btn primary" data-action="goto" data-tab="words">Add words</button></div>';return}
+    area.innerHTML='<div class="panel done">'+(L.reviews?'<div class="big">🎉</div>':'')+'<h2>'+(L.reviews?'수고했어요! All done for today':'Nothing due right now')+'</h2>'+
       '<p class="muted">Today: <b>'+L.new+'</b> new · <b>'+L.reviews+'</b> reviews'+(L.reviews?' · '+Math.round(100*L.correct/L.reviews)+'% recalled':'')+'<br>Due tomorrow: <b>'+tomorrow+'</b> · Unseen words left: <b>'+remainingNew+'</b></p>'+
       '<div class="row" style="justify-content:center">'+(remainingNew?'<button class="btn primary" data-action="more-new">Learn 5 more new words</button>':'')+
       '<button class="btn" data-action="goto" data-tab="quiz">Practice in quiz mode</button></div></div>';
@@ -817,7 +818,7 @@ function renderStudy(){
     (c.hanja||c.pos?'<div class="hanja">'+(c.hanja?'<span lang="ko">'+esc(c.hanja)+'</span>':'')+(c.hanja&&c.pos?' · ':'')+'<i>'+esc(c.pos)+'</i></div>':'')+
     (c.example_ko?'<div class="example">'+speakBtn(c.example_ko,1)+'<div><div class="ko" lang="ko">'+esc(c.example_ko)+'</div><div class="en">'+esc(c.example_en)+'</div></div></div>':'')+
     (c.notes?'<div class="notes">'+esc(c.notes)+'</div>':'')+
-    (c.related?'<div class="related">🔗 '+esc(c.related)+'</div>':'')+
+    (c.related?'<div class="related">Related: '+esc(c.related)+'</div>':'')+
     (c.tags.length?'<div>'+c.tags.map(t=>'<span class="tagchip" style="margin-right:4px">'+esc(t)+'</span>').join('')+'</div>':'')+
     '</div>';
   area.innerHTML='<div class="scene"><div class="flip'+(sess.flipped?' flipped':'')+'" id="flip" data-action="flip" role="button" tabindex="0" aria-label="Flashcard, press space to flip">'+
@@ -841,7 +842,7 @@ function validGifUrl(u){
 function celebrateGifSrc(){return validGifUrl(settings.celebrateGifUrl)||DEFAULT_CELEBRATE_GIF}
 /* onerror handler: hide the broken image, keep the text */
 function gifFailed(img){if(!img)return;img.classList.add('gif-failed');img.removeAttribute('src');img.setAttribute('aria-hidden','true');
-  if(img.id==='gifPrevImg'){const n=$('#gifPrevNote');if(n)n.textContent='⚠️ Couldn’t load this GIF — the message will still show.'}}
+  if(img.id==='gifPrevImg'){const n=$('#gifPrevNote');if(n)n.textContent='Couldn’t load this GIF — the message will still show.'}}
 function celebrationHTML(){
   const gif=settings.celebrateGif!==false;
   return '<div class="celebrate" id="celebrate" role="status">'+
@@ -873,7 +874,7 @@ function renderQuiz(){
   }
   if(quiz.i>=quiz.items.length){
     const pct=Math.round(100*quiz.score/quiz.items.length);
-    a.innerHTML='<div class="quiz-card done"><div class="big">'+(pct>=80?'🏆':pct>=50?'👏':'💪')+'</div><h2>'+quiz.score+' / '+quiz.items.length+' correct</h2><p class="muted">'+(pct>=80?'훌륭해요!':pct>=50?'잘했어요!':'괜찮아요 — keep going!')+'</p><div class="row" style="justify-content:center"><button class="btn primary" data-action="quiz-start">Again</button><button class="btn" data-action="quiz-exit">Change settings</button></div></div>';
+    a.innerHTML='<div class="quiz-card done">'+(pct>=80?'<div class="big">🏆</div>':'')+'<h2>'+quiz.score+' / '+quiz.items.length+' correct</h2><p class="muted">'+(pct>=80?'훌륭해요!':pct>=50?'잘했어요!':'괜찮아요 — keep going!')+'</p><div class="row" style="justify-content:center"><button class="btn primary" data-action="quiz-start">Again</button><button class="btn" data-action="quiz-exit">Change settings</button></div></div>';
     if(pct>=80)confetti();return;
   }
   const c=getCard(quiz.items[quiz.i]);if(!c){quiz.i++;return renderQuiz()}
@@ -1119,7 +1120,7 @@ function renderProgress(){
   const L=dayLog(),t=today();
   const counts={new:0,learning:0,mastered:0};cards.forEach(c=>counts[statusOf(c)]++);
   const due=cards.filter(c=>isDue(c,t)).length,tom=cards.filter(c=>{const s=srs[c.id];return s&&s.introduced&&s.due===addDays(t,1)}).length;
-  const tiles=[['🔥 '+streak(),'Day streak',1],[L.new+' / '+settings.newPerDay,'New words today'],[L.reviews,'Reviews today'],[due,'Due now'],[cards.length,'Total words'],[counts.learning,'Learning'],[counts.mastered,'Mastered'],[counts.new,'Not seen yet']];
+  const tiles=[[streak(),'Day streak',1],[L.new+' / '+settings.newPerDay,'New words today'],[L.reviews,'Reviews today'],[due,'Due now'],[cards.length,'Total words'],[counts.learning,'Learning'],[counts.mastered,'Mastered'],[counts.new,'Not seen yet']];
   $('#statTiles').innerHTML=tiles.map(x=>'<div class="stat'+(x[2]?' hl':'')+'"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>').join('');
   const days=[];for(let i=6;i>=0;i--){const d=addDays(t,-i);days.push({d,l:log[d]||{new:0,reviews:0}})}
   const max=Math.max(5,...days.map(x=>x.l.reviews));
@@ -1142,7 +1143,7 @@ function renderProgress(){
 
 /* ============================ Stories (graded reading) ============================ */
 const STAGE_INFO={1:'Everyday basics · -고 · -아서/어서 · -지만',2:'Plans & reasons · -(으)려고 · -는데 · -(으)니까',3:'Experiences & casual talk · -(으)ㄴ 적이 있다 · -게 되다 · 반말',4:'Reported speech & diaries · -다고 하다 · -더라고요 · 한다체'};
-const FMT_LABEL={dialogue:'💬 Dialogue',prose:'📄 Prose',mixed:'🔀 Mixed'};
+const FMT_LABEL={dialogue:'Dialogue',prose:'Prose',mixed:'Mixed'};
 let STORIES=[], storyCache=null, storyProg={read:{},answers:{},scores:{}}, storyReview={};
 const storyUI={open:null,showEn:false,opt:{},ord:{}};
 let storyAudio=null, storiesLoading=false;
@@ -1239,12 +1240,12 @@ function renderStories(){
   if(storyUI.open){const s=getStory(storyUI.open);if(s){renderReader(s);return}storyUI.open=null}
   closePop();
   const total=STORIES.length,read=STORIES.filter(s=>isRead(s.id)).length,nx=nextUpStory();
-  let h='<div class="panel"><div class="row" style="justify-content:space-between;align-items:flex-start"><div><h2 style="margin:0">📖 Stories <span class="muted small" style="font-weight:600">· '+read+' of '+total+' read</span></h2>'+
+  let h='<div class="panel"><div class="row" style="justify-content:space-between;align-items:flex-start"><div><h2 style="margin:0">Stories <span class="muted small" style="font-weight:600">· '+read+' of '+total+' read</span></h2>'+
     '<p class="small muted" style="margin:4px 0 0">Short graded reads. Korean first — tap a line to peek at the English, or press <b>Show English</b>.</p></div>'+
     (nx?'<button class="btn primary" data-action="story-open" data-id="'+esc(nx.id)+'">Next up: <span lang="ko">'+esc(nx.title_ko)+'</span> →</button>':'')+'</div>'+
     '<div class="progressbar" style="margin-top:12px"><i style="width:'+(total?Math.round(100*read/total):0)+'%"></i></div></div>';
   h+=missedNoticeHTML();
-  if(!total)h+='<div class="panel done"><div class="big">📭</div><h2>No stories yet</h2><p class="muted">Add a Stories sheet URL in Settings.</p></div>';
+  if(!total)h+='<div class="panel done"><h2>No stories yet</h2><p class="muted">Add a Stories sheet URL in Settings.</p></div>';
   for(const st of storyStages()){
     const list=STORIES.filter(s=>s.stage===st),unl=stageUnlocked(st),rc=list.filter(s=>isRead(s.id)).length;
     h+='<div class="st-stage"><div class="st-stage-h"><h3>'+(unl?'':'🔒 ')+'Stage '+esc(st)+'</h3><span class="muted">'+esc(STAGE_INFO[st]||'')+(STAGE_INFO[st]?' · ':'')+rc+'/'+list.length+' read</span></div>'+
@@ -1253,7 +1254,7 @@ function renderStories(){
       const r=isRead(s.id),isNext=nx&&nx.id===s.id;
       h+='<button class="st-card'+(r?' read':'')+(isNext?' next':'')+(unl?'':' locked')+'" data-action="story-open" data-id="'+esc(s.id)+'"'+(unl?'':' aria-disabled="true"')+'>'+
         '<span class="tick" aria-label="'+(r?'Read':'Not read yet')+'">✓</span><span class="tko" lang="ko">'+esc(s.title_ko)+'</span><span class="ten">'+esc(s.title_en)+'</span>'+
-        '<span class="chips">'+(isNext?'<span class="tagchip chip-next">★ Next up</span>':'')+(s.theme?'<span class="tagchip">'+esc(s.theme)+'</span>':'')+'<span class="tagchip chip-fmt">'+(FMT_LABEL[s.format]||esc(s.format))+'</span>'+scoreChip(s.id)+reviewChip(s)+'</span></button>';
+        '<span class="chips">'+(isNext?'<span class="tagchip chip-next">Next up</span>':'')+(s.theme?'<span class="tagchip">'+esc(s.theme)+'</span>':'')+'<span class="tagchip chip-fmt">'+(FMT_LABEL[s.format]||esc(s.format))+'</span>'+scoreChip(s.id)+reviewChip(s)+'</span></button>';
     }
     h+='</div></div>';
   }
@@ -1271,7 +1272,7 @@ function highlightKo(text,s){
   for(const m of marks){out+=esc(T.slice(p,m.s))+'<span class="vw" data-vi="'+m.vi+'" role="button" tabindex="0">'+esc(T.slice(m.s,m.e))+'</span>';p=m.e}
   return out+esc(T.slice(p));
 }
-function lineSpeakBtn(i){return '<button class="speak sm" data-action="story-line-speak" data-li="'+i+'" title="Listen" aria-label="Listen to this line"'+(hasTTS?'':' disabled')+'>🔊</button>'}
+function lineSpeakBtn(i){return '<button class="speak sm" data-action="story-line-speak" data-li="'+i+'" title="Listen" aria-label="Listen to this line"'+(hasTTS?'':' disabled')+'><svg class="ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>'}
 function enWrap(text,cls){return text?'<div class="en-wrap'+(cls?' '+cls:'')+'"><div><div class="en-txt">'+esc(text)+'</div></div></div>':''}
 function renderStoryText(s){
   const sp=storySpeakers(s);const right=sp.includes('이안')?'이안':sp[1];
@@ -1328,7 +1329,7 @@ function renderQBody(s,qi,key){
   if(q.qtype==='short'){
     if(!st||!st.shown)return '<div class="sq-short"><button class="btn sm" data-action="sq-show"'+dk+'>Show answer</button> <span class="small muted">Answer in your head (or out loud) first.</span></div>';
     let h='<div class="qans"><span class="small muted">Model answer · </span><span lang="ko">'+esc(q.ans_ko)+'</span></div>';
-    if(st.ok==null)h+='<div class="sq-self"><span class="small muted">How did you do?</span><button class="btn sm sq-good" data-action="sq-self" data-ok="1"'+dk+'>⭕ Got it</button><button class="btn sm sq-bad" data-action="sq-self" data-ok="0"'+dk+'>❌ Missed it</button></div>';
+    if(st.ok==null)h+='<div class="sq-self"><span class="small muted">How did you do?</span><button class="btn sm sq-good" data-action="sq-self" data-ok="1"'+dk+'>✓ Got it</button><button class="btn sm sq-bad" data-action="sq-self" data-ok="0"'+dk+'>✗ Missed it</button></div>';
     return h+qFeedback(q,st);
   }
   const opts=qChoices(s,q,key);
@@ -1341,7 +1342,7 @@ function renderQBody(s,qi,key){
   }
   const c=qCorrect(q);
   let h='<div class="opts'+(q.qtype==='tf'||q.qtype==='who'&&opts.length===2?' two':'')+'">'+opts.map((o,k)=>{let cls='';if(st){if(o===c)cls='right';else if(o===st.pick)cls='wrong';else cls='dim'}
-    return '<button class="'+cls+'" data-action="sq-pick" data-opt="'+esc(o)+'"'+dk+(st?' disabled':'')+'><span class="n">'+(k+1)+'</span><span lang="ko">'+(q.qtype==='tf'?(o==='맞아요'?'⭕ ':'❌ '):'')+esc(o)+'</span></button>'}).join('')+'</div>';
+    return '<button class="'+cls+'" data-action="sq-pick" data-opt="'+esc(o)+'"'+dk+(st?' disabled':'')+'><span class="n">'+(k+1)+'</span><span lang="ko">'+(q.qtype==='tf'?(o==='맞아요'?'✓ ':'✗ '):'')+esc(o)+'</span></button>'}).join('')+'</div>';
   return h+(st?qFeedback(q,st):'');
 }
 function renderQuestion(s,qi){
@@ -1355,7 +1356,7 @@ function storyScore(sid){const sc=storyProg.scores[sid];return sc&&sc.n?Math.rou
 function missedNoticeHTML(){
   const list=STORIES.map(s=>({s,n:reviewCount(s)})).filter(x=>x.n);if(!list.length)return '';
   const total=list.reduce((a,x)=>a+x.n,0);
-  return '<div class="panel missed-notice" id="missedNotice" role="status"><div class="mn-h">📌 '+total+' missed question'+(total===1?'':'s')+' in '+list.length+' stor'+(list.length===1?'y':'ies')+'. Reread to try again.</div>'+
+  return '<div class="panel missed-notice" id="missedNotice" role="status"><div class="mn-h">'+total+' missed question'+(total===1?'':'s')+' in '+list.length+' stor'+(list.length===1?'y':'ies')+'. Reread to try again.</div>'+
     '<div class="mn-list">'+list.map(x=>'<button class="btn sm mn-item" data-action="story-open" data-id="'+esc(x.s.id)+'" title="'+esc(x.s.title_en||'')+'"><span lang="ko">'+esc(x.s.title_ko)+'</span><span class="tagchip chip-review">↻ '+x.n+'</span></button>').join('')+'</div></div>';
 }
 function reviewChip(s){const n=reviewCount(s);return n?'<span class="tagchip chip-review" title="Questions you missed — open the story to try them again">↻ '+n+' to review</span>':''}
@@ -1394,12 +1395,12 @@ function renderReader(s){
   root.innerHTML='<div id="reader" class="'+(storyUI.showEn?'show-en':'')+'" data-sid="'+esc(s.id)+'">'+
     '<div class="panel"><div class="rd-top"><button class="btn sm" data-action="story-back">← Stories</button><span class="spacer"></span><span class="tagchip">Stage '+esc(s.stage)+'</span>'+(s.theme?'<span class="tagchip">'+esc(s.theme)+'</span>':'')+'<span class="tagchip chip-fmt">'+(FMT_LABEL[s.format]||'')+'</span>'+(isRead(s.id)?'<span class="tagchip chip-read">✓ Read</span>':'')+scoreChip(s.id)+'</div>'+
     '<div class="rd-title" lang="ko">'+esc(s.title_ko)+'</div>'+enWrap((s.title_en||'')+(s.summary?' — '+s.summary:''))+
-    '<div class="rd-bar"><button class="btn en-toggle" data-action="story-en" aria-pressed="'+storyUI.showEn+'">'+(storyUI.showEn?'🙈 Hide English':'👀 Show English')+'</button>'+
+    '<div class="rd-bar"><button class="btn en-toggle" data-action="story-en" aria-pressed="'+storyUI.showEn+'">'+(storyUI.showEn?'Hide English':'Show English')+'</button>'+
     '<button class="btn" data-action="story-read-all" id="readAllBtn"'+(hasTTS?'':' disabled')+'>'+(storyAudio?'■ Stop':'▶ Read whole story')+'</button><span class="rd-hint">Tap a line to peek · <span class="kbd">E</span> English</span></div>'+
     '<div class="rd-text">'+renderStoryText(s)+'</div></div>'+
-    (s.questions.length?'<div class="panel rd-sec" id="qsec"><h2>✅ Comprehension check <span class="muted small" id="qcount" style="font-weight:600">'+answered+'/'+s.questions.length+'</span>'+(answered?'<button class="btn sm" id="qretry" data-action="story-retry" style="margin-left:auto">↺ Try again</button>':'')+'</h2>'+'<div id="qnote">'+reviewNoteHTML(s)+'</div>'+s.questions.map((q,qi)=>renderQuestion(s,qi)).join('')+'<div id="qresult" aria-live="polite">'+qResultHTML(s)+'</div></div>':'')+
-    (s.vocab.length?'<div class="panel rd-sec"><h2>🆕 New words in this story</h2><div id="vlist">'+s.vocab.map((v,vi)=>renderVocabRow(s,vi)).join('')+'</div></div>':'')+
-    (s.grammar.length?'<div class="panel rd-sec"><h2>🧩 Grammar in this story</h2>'+s.grammar.map(g=>'<div class="grow"><div class="gp" lang="ko">'+esc(g.ko)+'</div><div class="ge">'+esc(g.en)+'</div></div>').join('')+'</div>':'')+
+    (s.questions.length?'<div class="panel rd-sec" id="qsec"><h2>Comprehension check <span class="muted small" id="qcount" style="font-weight:600">'+answered+'/'+s.questions.length+'</span>'+(answered?'<button class="btn sm" id="qretry" data-action="story-retry" style="margin-left:auto">↺ Try again</button>':'')+'</h2>'+'<div id="qnote">'+reviewNoteHTML(s)+'</div>'+s.questions.map((q,qi)=>renderQuestion(s,qi)).join('')+'<div id="qresult" aria-live="polite">'+qResultHTML(s)+'</div></div>':'')+
+    (s.vocab.length?'<div class="panel rd-sec"><h2>New words in this story</h2><div id="vlist">'+s.vocab.map((v,vi)=>renderVocabRow(s,vi)).join('')+'</div></div>':'')+
+    (s.grammar.length?'<div class="panel rd-sec"><h2>Grammar in this story</h2>'+s.grammar.map(g=>'<div class="grow"><div class="gp" lang="ko">'+esc(g.ko)+'</div><div class="ge">'+esc(g.en)+'</div></div>').join('')+'</div>':'')+
     '<div class="readbar" id="readBar">'+renderReadBar(s)+'</div></div>';
   wireCelebration($('#qresult')); /* a story that is already all-correct shows the celebration statically (no confetti) */
 }
@@ -1419,7 +1420,7 @@ function qResultHTML(s){
 function curStory(){return storyUI.open?getStory(storyUI.open):null}
 function openStory(id){
   const s=getStory(id);if(!s)return;
-  if(!stageUnlocked(s.stage)&&!isRead(id)){toast('🔒 Finish the earlier stages first (or Settings → Unlock all stories)',3200);return}
+  if(!stageUnlocked(s.stage)&&!isRead(id)){toast('Finish the earlier stages first (or Settings → Unlock all stories)',3200);return}
   stopStoryAudio();storyUI.open=id;storyUI.showEn=false;
   resetMissed(s); /* missed questions come back unanswered; the story itself opens at the top as usual */
   if(tab!=='stories')showTab('stories');else renderStories();
@@ -1432,7 +1433,7 @@ function toggleEnglish(){
   const anchor=$$('#reader .ln, #reader .qitem, #reader .rd-sec').find(el=>el.getBoundingClientRect().bottom>lim);
   const before=anchor?anchor.getBoundingClientRect().top:0;
   storyUI.showEn=!storyUI.showEn;rd.classList.toggle('show-en',storyUI.showEn);
-  const b=$('.en-toggle');if(b){b.setAttribute('aria-pressed',String(storyUI.showEn));b.textContent=storyUI.showEn?'🙈 Hide English':'👀 Show English'}
+  const b=$('.en-toggle');if(b){b.setAttribute('aria-pressed',String(storyUI.showEn));b.textContent=storyUI.showEn?'Hide English':'Show English'}
   if(anchor&&window.scrollY>0){const t0=performance.now();const fix=()=>{const d=anchor.getBoundingClientRect().top-before;if(Math.abs(d)>1)window.scrollBy(0,d);if(performance.now()-t0<380)requestAnimationFrame(fix)};requestAnimationFrame(fix)}
 }
 function togglePeek(ln){ln.classList.toggle('peek')}
@@ -1468,7 +1469,7 @@ function markRead(s,auto){
   const wasUnl=storyStages().filter(stageUnlocked).length;
   storyProg.read[s.id]=today();saveStoryProg();
   const nowUnl=storyStages().filter(stageUnlocked).length;
-  toast(nowUnl>wasUnl?'🎉 Stage unlocked! '+s.title_ko+' marked as read':(auto?'All questions answered — marked as read ✓':'Marked as read ✓'),3000);
+  toast(nowUnl>wasUnl?'Stage unlocked! '+s.title_ko+' marked as read':(auto?'All questions answered — marked as read ✓':'Marked as read ✓'),3000);
   if(nowUnl>wasUnl)confetti();
   if(storyUI.open===s.id){const rb=$('#readBar');if(rb)rb.innerHTML=renderReadBar(s)}
 }
@@ -1581,7 +1582,7 @@ function mergeStoryProgress(p){
 function renderStoryProgress(){
   const el=$('#storyProgress');if(!el)return;
   const read=STORIES.filter(s=>isRead(s.id)).length;
-  el.innerHTML='<h2>📖 Stories read <span class="muted small" style="font-weight:600">· '+read+' of '+STORIES.length+'</span></h2>'+
+  el.innerHTML='<h2>Stories read <span class="muted small" style="font-weight:600">· '+read+' of '+STORIES.length+'</span></h2>'+
     storyStages().map(st=>{const list=STORIES.filter(s=>s.stage===st),r=list.filter(s=>isRead(s.id)).length;
       return '<div class="sp-row"><span>'+(stageUnlocked(st)?'':'🔒 ')+'Stage '+esc(st)+'</span><div class="progressbar"><i style="width:'+(list.length?Math.round(100*r/list.length):0)+'%"></i></div><b>'+r+' / '+list.length+'</b></div>'}).join('')+
     storyScoresHtml()+
