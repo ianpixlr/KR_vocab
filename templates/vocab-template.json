@@ -1,0 +1,55 @@
+{
+  "cards": [
+    {
+      "id": "",
+      "korean": "이사하다",
+      "hanja": "移徙",
+      "pos": "verb",
+      "meaning_en": "to move (house)",
+      "example_ko": "다음 달에 학교 근처로 이사할 거예요.",
+      "example_en": "I'm going to move near the school next month.",
+      "notes": "하다 verb: 이사해요 / 이사했어요. Noun: 이사.",
+      "related": "이삿짐 (moving boxes)",
+      "unit": "Example (replace with your unit, e.g. Sogang 4A Unit 1)",
+      "tags": [
+        "daily life",
+        "home"
+      ],
+      "date_added": "2026-10-21"
+    },
+    {
+      "id": "",
+      "korean": "어울리다",
+      "hanja": "",
+      "pos": "verb",
+      "meaning_en": "to suit, to look good on; to get along",
+      "example_ko": "그 색깔이 정말 잘 어울려요.",
+      "example_en": "That colour really suits you.",
+      "notes": "N이/가 N에게 어울리다. 잘 어울려요 is a common compliment.",
+      "related": "맞다 (to fit)",
+      "unit": "Example (replace with your unit, e.g. Sogang 4A Unit 1)",
+      "tags": [
+        "shopping",
+        "compliments"
+      ],
+      "date_added": "2026-10-21"
+    },
+    {
+      "id": "",
+      "korean": "취소하다",
+      "hanja": "取消",
+      "pos": "verb",
+      "meaning_en": "to cancel",
+      "example_ko": "비 때문에 여행을 취소했어요.",
+      "example_en": "We cancelled the trip because of the rain.",
+      "notes": "하다 verb: 취소해요 / 취소했어요. Passive: 취소되다.",
+      "related": "↔ 예약하다 (to book)",
+      "unit": "Example (replace with your unit, e.g. Sogang 4A Unit 1)",
+      "tags": [
+        "travel",
+        "verbs"
+      ],
+      "date_added": "2026-10-21"
+    }
+  ]
+}

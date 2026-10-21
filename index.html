@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>한국어 단어장 · Korean Vocab</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%234f46e5'/%3E%3Ctext x='32' y='44' font-size='34' text-anchor='middle' fill='white' font-family='sans-serif'%3E한%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f5f4f0; --bg2:#ecebf5; --panel:#ffffff; --panel2:#f8f8fc; --text:#1c1f2e; --muted:#6b6f85; --border:#e4e4ee;
+  --accent:#4f46e5; --accent2:#7c3aed; --accent-soft:#eef0ff; --accent-text:#ffffff;
+  --again:#e5484d; --hard:#f59e0b; --good:#22a06b; --easy:#3b82f6;
+  --shadow:0 1px 2px rgba(20,20,50,.05),0 8px 28px rgba(20,20,60,.08);
+  --shadow-lg:0 2px 6px rgba(20,20,50,.06),0 22px 50px rgba(40,30,120,.14);
+  --radius:18px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',Roboto,sans-serif;
+  --font-ko:'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;
+}
+[data-theme=dark]{
+  --bg:#0e1020; --bg2:#151833; --panel:#171a2e; --panel2:#1e2238; --text:#eceefa; --muted:#9a9fbd; --border:#2a2f4a;
+  --accent:#8b8cf8; --accent2:#b08cff; --accent-soft:#25285a; --accent-text:#0e1020;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+  --shadow-lg:0 2px 6px rgba(0,0,0,.35),0 22px 50px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font);color:var(--text);background:radial-gradient(1200px 600px at 10% -10%,var(--bg2),transparent 60%),var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.45;transition:background-color .3s,color .3s}
+.ko,[lang=ko]{font-family:var(--font-ko)}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--accent)}
+.app{max-width:880px;margin:0 auto;padding:16px 16px 96px}
+header.top{display:flex;align-items:center;gap:12px;padding:6px 2px 14px}
+.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;display:grid;place-items:center;font-family:var(--font-ko);font-weight:800;font-size:20px;box-shadow:0 6px 16px rgba(79,70,229,.35)}
+.brand h1{margin:0;font-size:19px;letter-spacing:-.01em}
+.brand small{color:var(--muted);font-size:12.5px}
+.spacer{flex:1}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:var(--panel);border:1px solid var(--border);font-size:13px;font-weight:600;box-shadow:var(--shadow)}
+.iconbtn{width:38px;height:38px;border-radius:12px;border:1px solid var(--border);background:var(--panel);cursor:pointer;display:grid;place-items:center;font-size:17px;box-shadow:var(--shadow);transition:transform .15s}
+.iconbtn:hover{transform:translateY(-1px)} .iconbtn:active{transform:scale(.94)}
+nav.tabs{display:flex;gap:4px;background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:5px;box-shadow:var(--shadow);margin-bottom:18px;overflow-x:auto;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{flex:1;min-width:max-content;border:0;background:transparent;padding:9px 12px;border-radius:11px;cursor:pointer;font-weight:600;font-size:14px;color:var(--muted);transition:background .2s,color .2s}
+nav.tabs button.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 12px rgba(79,70,229,.3)}
+nav.tabs button:not(.active):hover{background:var(--accent-soft);color:var(--text)}
+@media (max-width:640px){
+  nav.tabs{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:50;margin:0}
+  nav.tabs button{padding:9px 8px;font-size:12.5px}
+  nav.tabs .lbl-long{display:none}
+  .brand small{display:none}
+}
+section.view{display:none;animation:fadeUp .35s ease}
+section.view.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+.panel+.panel{margin-top:14px}
+.panel h2{margin:0 0 10px;font-size:17px}
+.panel h3{margin:14px 0 6px;font-size:15px}
+.muted{color:var(--muted)} .small{font-size:13px}
+.btn{border:1px solid var(--border);background:var(--panel2);padding:9px 14px;border-radius:12px;cursor:pointer;font-weight:600;font-size:14px;transition:transform .12s,box-shadow .2s,background .2s;display:inline-flex;align-items:center;gap:6px;justify-content:center}
+.btn:hover{box-shadow:var(--shadow)} .btn:active{transform:scale(.96)}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
+.btn.danger{color:var(--again)}
+.btn.sm{padding:5px 9px;font-size:12.5px;border-radius:9px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input[type=text],input[type=url],input[type=number],input[type=search],select,textarea{background:var(--panel2);border:1px solid var(--border);border-radius:11px;padding:9px 11px;outline:none;transition:border-color .2s,box-shadow .2s;max-width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+textarea{width:100%;min-height:110px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
+label.field{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:10px 0 4px}
+label.check{display:flex;gap:8px;align-items:center;margin:8px 0;font-size:14px;cursor:pointer}
+.kbd{display:inline-block;padding:1px 6px;border-radius:6px;border:1px solid var(--border);border-bottom-width:2px;font-size:11.5px;font-family:ui-monospace,monospace;background:var(--panel2);color:var(--muted)}
+
+/* ---------- Study ---------- */
+.study-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.counts{display:flex;gap:6px}
+.count{font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--panel);border:1px solid var(--border)}
+.count.new{color:var(--easy)} .count.rev{color:var(--good)} .count.left{color:var(--muted)}
+.progressbar{height:6px;border-radius:99px;background:var(--border);overflow:hidden;flex:1;min-width:120px}
+.progressbar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .4s ease}
+.scene{perspective:1400px;margin:0 auto;max-width:620px}
+.flip{display:grid;transition:transform .55s cubic-bezier(.2,.8,.2,1);transform-style:preserve-3d;cursor:pointer;position:relative}
+.flip.flipped{transform:rotateY(180deg)}
+.face{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--panel);border:1px solid var(--border);border-radius:24px;box-shadow:var(--shadow-lg);padding:26px 24px;min-height:340px;display:flex;flex-direction:column}
+.face.back{transform:rotateY(180deg)}
+.face .top-meta{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);font-weight:600}
+.tagchip{display:inline-block;padding:2px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:11.5px;font-weight:700}
+.st-new{background:rgba(59,130,246,.13);color:var(--easy)} .st-learning{background:rgba(245,158,11,.15);color:#c27c06} .st-mastered{background:rgba(34,160,107,.14);color:var(--good)}
+[data-theme=dark] .st-learning{color:var(--hard)}
+.face .center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;padding:14px 0}
+.word-big{font-family:var(--font-ko);font-size:clamp(44px,11vw,68px);font-weight:800;letter-spacing:-.02em;line-height:1.1;word-break:keep-all}
+.en-big{font-size:clamp(24px,6vw,34px);font-weight:700;line-height:1.25}
+.pos{font-size:13px;color:var(--muted);font-style:italic}
+.roman{font-size:14px;color:var(--muted);letter-spacing:.02em}
+.hint{font-size:12.5px;color:var(--muted);margin-top:auto;text-align:center}
+.speak{border:0;background:var(--accent-soft);color:var(--accent);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:16px;display:inline-grid;place-items:center;transition:transform .15s;vertical-align:middle;flex:none}
+.speak:hover{transform:scale(1.08)} .speak:active{transform:scale(.92)}
+.speak.sm{width:28px;height:28px;font-size:13px}
+.speak.playing{animation:pulse 1s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(79,70,229,.45)}100%{box-shadow:0 0 0 12px rgba(79,70,229,0)}}
+.back-body{text-align:left;display:flex;flex-direction:column;gap:12px;margin-top:10px}
+.back-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;text-align:center}
+.back-head .word-big{font-size:clamp(34px,8vw,48px)}
+.meaning{font-size:21px;font-weight:700;text-align:center}
+.hanja{font-size:15px;color:var(--muted);text-align:center}
+.example{background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start}
+.example .ko,.example .en,.related,.meaning{word-break:keep-all;overflow-wrap:anywhere}
+.example .ko{font-size:17px;font-weight:600}
+.example .en{font-size:14px;color:var(--muted);margin-top:2px}
+.notes{word-break:keep-all;overflow-wrap:anywhere;font-size:14px;border-left:3px solid var(--accent);padding:4px 0 4px 12px;white-space:pre-wrap}
+.related{font-size:13.5px;color:var(--muted)}
+.controls{max-width:620px;margin:16px auto 0}
+.showbtn{width:100%;padding:15px;font-size:16px;border-radius:16px}
+.grades{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.grade{border:0;border-radius:16px;padding:12px 6px;cursor:pointer;color:#fff;font-weight:700;font-size:15px;display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .12s,filter .2s;box-shadow:var(--shadow)}
+.grade small{font-weight:600;opacity:.85;font-size:11.5px}
+.grade:hover{filter:brightness(1.07);transform:translateY(-2px)} .grade:active{transform:scale(.94)}
+.g1{background:var(--again)} .g2{background:var(--hard)} .g3{background:var(--good)} .g4{background:var(--easy)}
+.shortcuts{text-align:center;margin-top:12px;font-size:12px;color:var(--muted)}
+.done{text-align:center;padding:40px 20px}
+.done .big{font-size:56px;animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+.flash-ok{animation:okflash .45s ease}
+@keyframes okflash{0%{box-shadow:0 0 0 0 rgba(34,160,107,.6)}100%{box-shadow:0 0 0 18px rgba(34,160,107,0)}}
+.confetti{position:fixed;pointer-events:none;top:0;left:0;width:100%;height:0;z-index:99}
+.confetti i{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;animation:fall 1.6s ease-in forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.2}}
+
+/* ---------- Quiz ---------- */
+.quiz-card{max-width:620px;margin:0 auto;text-align:center}
+.quiz-prompt{font-size:clamp(22px,5.5vw,30px);font-weight:700;margin:14px 0 4px}
+.quiz-input{width:100%;font-size:24px;text-align:center;padding:14px;border-radius:16px;font-family:var(--font-ko);margin-top:14px}
+.quiz-fb{min-height:56px;margin-top:12px;font-weight:700}
+.quiz-fb.ok{color:var(--good)} .quiz-fb.bad{color:var(--again)}
+.mc{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.mc button{border:1px solid var(--border);background:var(--panel2);border-radius:16px;padding:16px 12px;cursor:pointer;font-weight:600;font-size:15px;transition:transform .12s,background .2s,opacity .2s;text-align:left;display:flex;gap:10px;align-items:center}
+.mc button:hover{transform:translateY(-2px);border-color:var(--accent)}
+.mc button .n{flex:none;width:24px;height:24px;border-radius:8px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-size:12.5px}
+.mc button.right{background:var(--good);color:#fff;border-color:transparent;animation:pop .35s}
+.mc button.wrong{background:var(--again);color:#fff;border-color:transparent;animation:shake .35s}
+.mc button.dim{opacity:.45}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@media (max-width:520px){.mc{grid-template-columns:1fr}}
+.seg{display:inline-flex;background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:3px}
+.seg button{border:0;background:transparent;padding:7px 12px;border-radius:9px;cursor:pointer;font-weight:600;font-size:13.5px;color:var(--muted)}
+.seg button.on{background:var(--panel);color:var(--text);box-shadow:var(--shadow)}
+
+/* ---------- Words ---------- */
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.toolbar input[type=search]{flex:1;min-width:160px}
+.tablewrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:10px 10px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);background:var(--panel2);position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+tbody tr{transition:background .15s} tbody tr:hover{background:var(--panel2)}
+td.k{font-family:var(--font-ko);font-weight:700;font-size:16px;white-space:nowrap}
+td.actions{white-space:nowrap;text-align:right}
+@media (max-width:640px){.hide-sm{display:none}}
+details.import{margin-top:14px}
+details.import summary{cursor:pointer;font-weight:700}
+
+/* ---------- Progress ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
+.stat b{display:block;font-size:26px;letter-spacing:-.02em}
+.stat span{font-size:12.5px;color:var(--muted);font-weight:600}
+.stat.hl{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
+.stat.hl span{color:rgba(255,255,255,.85)}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12.5px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+
+/* ---------- Modal / toast ---------- */
+.modal-bg{position:fixed;inset:0;background:rgba(10,10,30,.45);backdrop-filter:blur(3px);display:none;align-items:flex-start;justify-content:center;z-index:80;padding:30px 12px;overflow-y:auto}
+.modal-bg.open{display:flex;animation:fadeUp .25s}
+.modal{background:var(--panel);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow-lg);padding:20px;width:100%;max-width:560px}
+.modal .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.modal input,.modal select,.modal textarea{width:100%}
+.modal textarea{font-family:var(--font);font-size:14px;min-height:64px}
+@media (max-width:520px){.modal .grid2{grid-template-columns:1fr}}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:11px 16px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:100;max-width:92vw;box-shadow:var(--shadow-lg)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.banner{background:rgba(245,158,11,.14);border:1px solid rgba(245,158,11,.4);border-radius:12px;padding:10px 12px;font-size:13.5px;margin-bottom:12px}
+.help ol li,.help ul li{margin:6px 0}
+code{background:var(--panel2);border:1px solid var(--border);padding:1px 5px;border-radius:6px;font-size:12.5px}
+.status-line{font-size:13px;margin-top:8px}
+.status-line.ok{color:var(--good)} .status-line.err{color:var(--again)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="logo" aria-hidden="true">한</div>
+    <div class="brand"><h1>한국어 단어장</h1><small>Korean vocab · 10 new words a day</small></div>
+    <div class="spacer"></div>
+    <span class="pill" id="streakPill" title="Day streak">🔥 <span id="streakNum">0</span></span>
+    <button class="iconbtn" id="darkModeToggle" title="Toggle light/dark mode" aria-label="Toggle dark mode">🌙</button>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button data-tab="study" class="active">📚 Study</button>
+    <button data-tab="quiz">✍️ Quiz</button>
+    <button data-tab="words">🗂️ Words</button>
+    <button data-tab="progress">📈 <span class="lbl-long">Progress</span><span class="lbl-short"></span></button>
+    <button data-tab="settings">⚙️ <span class="lbl-long">Settings</span></button>
+    <button data-tab="help">❓ <span class="lbl-long">Help</span></button>
+  </nav>
+
+  <div id="storageBanner" class="banner" style="display:none">⚠️ This browser is blocking local storage, so progress won't be saved. Use <b>Settings → Export backup</b> before closing.</div>
+
+  <!-- STUDY -->
+  <section class="view active" id="view-study">
+    <div class="study-head">
+      <div class="counts"><span class="count new" id="cNew" title="New cards left">0 new</span><span class="count rev" id="cRev" title="Reviews left">0 review</span></div>
+      <div class="progressbar"><i id="sessBar"></i></div>
+      <div class="seg" id="dirSeg" title="Card direction">
+        <button data-dir="ko2en">한→EN</button><button data-dir="en2ko">EN→한</button><button data-dir="mixed">Mixed</button>
+      </div>
+    </div>
+    <div id="studyArea"></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="view" id="view-quiz">
+    <div class="panel" id="quizArea"></div>
+  </section>
+
+  <!-- WORDS -->
+  <section class="view" id="view-words">
+    <div class="panel">
+      <div class="row" style="justify-content:space-between;margin-bottom:10px">
+        <h2 style="margin:0">Vocab bank <span class="muted small" id="wordCount"></span></h2>
+        <div class="row">
+          <button class="btn primary" data-action="add-word">＋ Add word</button>
+          <button class="btn" data-action="toggle-import">⇪ Import / paste</button>
+        </div>
+      </div>
+      <div class="toolbar">
+        <input type="search" id="fSearch" placeholder="Search Korean, English, notes…" aria-label="Search">
+        <select id="fUnit" aria-label="Filter by unit"></select>
+        <select id="fTag" aria-label="Filter by tag"></select>
+        <select id="fStatus" aria-label="Filter by status">
+          <option value="">All statuses</option><option value="new">New</option><option value="learning">Learning</option><option value="mastered">Mastered</option><option value="due">Due now</option>
+        </select>
+      </div>
+      <div class="tablewrap"><table>
+        <thead><tr><th></th><th>Korean</th><th>Meaning</th><th class="hide-sm">POS</th><th class="hide-sm">Unit</th><th>Status</th><th class="hide-sm">Due</th><th></th></tr></thead>
+        <tbody id="wordTable"></tbody>
+      </table></div>
+      <details class="import" id="importBox">
+        <summary>Import words (file, or paste CSV / TSV from Google Sheets)</summary>
+        <p class="small muted">Imports <b>merge</b>: words are matched by Korean + meaning (or id). New words are added, matching words are updated, and your review progress is never wiped. A header row is recommended — see Help for the column format.</p>
+        <div class="row"><input type="file" id="importFile" accept=".csv,.tsv,.txt,.json,application/json,text/csv"> <button class="btn sm" data-action="download-template-csv">⬇ CSV template</button><button class="btn sm" data-action="download-template-json">⬇ JSON template</button></div>
+        <label class="field" for="pasteBox">…or paste rows (with header row, comma- or tab-separated):</label>
+        <textarea id="pasteBox" placeholder="korean,meaning_en,pos,example_ko,example_en,notes,unit,tags&#10;취소하다,to cancel,verb,비 때문에 여행을 취소했어요.,We canceled the trip because of the rain.,하다 verb,My list,travel"></textarea>
+        <div class="row" style="margin-top:8px"><button class="btn primary" data-action="import-paste">Import pasted rows</button></div>
+      </details>
+    </div>
+  </section>
+
+  <!-- PROGRESS -->
+  <section class="view" id="view-progress">
+    <div class="stats" id="statTiles"></div>
+    <div class="panel chart" style="margin-top:14px">
+      <h2>Last 7 days</h2>
+      <div id="chart"></div>
+      <div class="legend"><span><i style="background:var(--accent)"></i>New words learned</span><span><i style="background:var(--good)"></i>Reviews</span></div>
+    </div>
+    <div class="panel" id="masteredPanel"></div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="view" id="view-settings">
+    <div class="panel">
+      <h2>Study</h2>
+      <label class="field" for="sNew">New words per day</label>
+      <input type="number" id="sNew" min="0" max="100" style="width:110px">
+      <label class="field" for="sDir">Card direction</label>
+      <select id="sDir"><option value="ko2en">Korean → English</option><option value="en2ko">English → Korean</option><option value="mixed">Mixed</option></select>
+      <label class="field" for="sTheme">Theme</label>
+      <select id="sTheme"><option value="auto">Match system</option><option value="light">Light</option><option value="dark">Dark</option></select>
+      <label class="check"><input type="checkbox" id="sRoman"> Show romanization (approximate; off by default — you read Hangul!)</label>
+      <label class="check"><input type="checkbox" id="sAutoSpeak"> Auto-play pronunciation when a Korean word appears</label>
+      <label class="field" for="sRate">Speech speed: <span id="rateVal"></span></label>
+      <input type="range" id="sRate" min="0.5" max="1.3" step="0.05" style="width:220px">
+      <div class="small muted" id="voiceStatus" style="margin-top:6px"></div>
+    </div>
+    <div class="panel">
+      <h2>🔄 Sync from a URL (self-updating word list)</h2>
+      <p class="small muted">Paste a Google Sheets <b>Publish to web → CSV</b> link, or any raw CSV/JSON URL (e.g. GitHub raw). New words are merged in on every open and when you press Sync now — progress is kept and nothing is deleted.</p>
+      <input type="url" id="sSyncUrl" placeholder="https://docs.google.com/spreadsheets/d/e/…/pub?output=csv" style="width:100%">
+      <label class="check"><input type="checkbox" id="sAutoSync"> Sync automatically when the app opens</label>
+      <div class="row"><button class="btn primary" data-action="sync-now">Save &amp; Sync now</button><button class="btn" data-action="clear-sync">Clear URL</button></div>
+      <div class="status-line" id="syncStatus"></div>
+    </div>
+    <div class="panel">
+      <h2>💾 Backup</h2>
+      <p class="small muted">Your words and progress live in this browser (localStorage). Export a backup now and then, and to move to another device.</p>
+      <div class="row">
+        <button class="btn primary" data-action="export">⬇ Export backup (JSON)</button>
+        <button class="btn" data-action="export-csv">⬇ Export words (CSV)</button>
+        <label class="btn" for="restoreFile" style="cursor:pointer">⇪ Import / restore file</label>
+        <input type="file" id="restoreFile" accept=".json,.csv,.tsv,.txt" style="display:none">
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Danger zone</h2>
+      <div class="row">
+        <button class="btn danger" data-action="reset-progress">Reset progress (keep words)</button>
+        <button class="btn danger" data-action="reset-all">Delete everything</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- HELP -->
+  <section class="view help" id="view-help">
+    <div class="panel">
+      <h2>How it works</h2>
+      <p>Each day you get up to <b>10 new words</b> (change it in Settings) plus any reviews that are due. Flip the card, then grade yourself honestly — the app schedules the next review using spaced repetition (SM‑2 style: roughly 1 → 3 → 8 → 20 days…). A word counts as <b>mastered</b> once its interval reaches 21 days.</p>
+      <h3>Keyboard shortcuts</h3>
+      <ul>
+        <li><span class="kbd">Space</span> / <span class="kbd">Enter</span> flip the card</li>
+        <li><span class="kbd">1</span> Again · <span class="kbd">2</span> Hard · <span class="kbd">3</span> Good · <span class="kbd">4</span> Easy</li>
+        <li><span class="kbd">P</span> pronounce the word · <span class="kbd">E</span> pronounce the example</li>
+        <li>Multiple-choice quiz: <span class="kbd">1</span>–<span class="kbd">4</span> pick an answer</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h2>Three ways to add words</h2>
+      <ol>
+        <li><b>Manual form</b> — Words tab → <b>＋ Add word</b>. Edit or delete any word from the table.</li>
+        <li><b>Import a file or paste</b> — Words tab → <b>Import / paste</b>. Upload a <code>.csv</code>, <code>.tsv</code> or <code>.json</code> file, or copy cells straight out of Google Sheets / Excel (include the header row) and paste them. Download the template there to see the format.</li>
+        <li><b>Sync URL (self-updating)</b> — keep your list in a Google Sheet. In Sheets: <b>File → Share → Publish to web</b> → choose the sheet → <b>Comma-separated values (.csv)</b> → Publish, and copy the link. Paste it in <b>Settings → Sync</b>. Every time you open the app, new rows are added automatically. A GitHub “raw” CSV/JSON link works too (normal github.com/…/blob/… links are converted automatically).</li>
+      </ol>
+      <h3>Column format</h3>
+      <p class="small"><code>id, korean, hanja, pos, meaning_en, example_ko, example_en, notes, related, unit, tags, date_added</code></p>
+      <ul class="small">
+        <li>Only <code>korean</code> and <code>meaning_en</code> are required; column order doesn't matter when there's a header row. Header aliases like <code>word</code>, <code>english</code>, <code>meaning</code>, <code>example</code> also work.</li>
+        <li><code>tags</code>: separate with <code>;</code> (e.g. <code>travel;verbs</code>). <code>date_added</code>: <code>YYYY-MM-DD</code>. Leave <code>id</code> blank and the app makes one.</li>
+        <li>Merging: matched by <code>id</code> or by Korean + meaning. Non-empty values from the import update the word; blank cells never erase anything. If you change a word's meaning in the sheet (and it has no id) it's treated as a new word.</li>
+      </ul>
+      <h3>About sync & opening the file directly</h3>
+      <p class="small">Sync works best when the app is hosted (e.g. GitHub Pages). When opened by double-clicking (<code>file://</code>), some browsers block network requests or treat the page as having no origin; Google Sheets and GitHub raw usually still work, but if you see a sync error, host the file or use <b>Import</b> instead. The source must allow cross-origin requests (Google “Publish to web” CSV and raw.githubusercontent.com do; a normal Google Drive file link does not).</p>
+      <p class="small">Progress is stored per browser and per site address. If you move the app to a new URL or device, use <b>Export backup</b> → <b>Import</b>.</p>
+    </div>
+  </section>
+</div>
+
+<!-- Edit modal -->
+<div class="modal-bg" id="modalBg">
+  <form class="modal" id="wordForm" autocomplete="off">
+    <h2 id="formTitle" style="margin-top:0">Add word</h2>
+    <input type="hidden" id="fmId">
+    <div class="grid2">
+      <div><label class="field" for="fmKorean">Korean *</label><input type="text" id="fmKorean" lang="ko" required></div>
+      <div><label class="field" for="fmMeaning">Meaning (English) *</label><input type="text" id="fmMeaning" required></div>
+      <div><label class="field" for="fmPos">Part of speech</label><input type="text" id="fmPos" list="posList" placeholder="verb, noun, adjective…"></div>
+      <div><label class="field" for="fmHanja">Hanja (optional)</label><input type="text" id="fmHanja"></div>
+    </div>
+    <datalist id="posList"><option value="noun"><option value="verb"><option value="adjective"><option value="adverb"><option value="expression"><option value="particle"><option value="counter"><option value="conjunction"></datalist>
+    <label class="field" for="fmExKo">Example (Korean)</label><input type="text" id="fmExKo" lang="ko" style="width:100%">
+    <label class="field" for="fmExEn">Example (English)</label><input type="text" id="fmExEn" style="width:100%">
+    <label class="field" for="fmNotes">Notes (grammar / conjugation tips)</label><textarea id="fmNotes"></textarea>
+    <label class="field" for="fmRelated">Synonyms / antonyms / related</label><input type="text" id="fmRelated" style="width:100%">
+    <div class="grid2">
+      <div><label class="field" for="fmUnit">Unit</label><input type="text" id="fmUnit" list="unitList" placeholder="e.g. Sogang 4A Unit 2"></div>
+      <div><label class="field" for="fmTags">Tags (separate with ;)</label><input type="text" id="fmTags"></div>
+    </div>
+    <datalist id="unitList"></datalist>
+    <div class="row" style="margin-top:16px;justify-content:flex-end">
+      <button type="button" class="btn danger" id="fmDelete" style="margin-right:auto">Delete</button>
+      <button type="button" class="btn" data-action="close-modal">Cancel</button>
+      <button type="submit" class="btn primary">Save</button>
+    </div>
+  </form>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div class="confetti" id="confetti"></div>
+<script>
+(function(){
+'use strict';
+/* =====================================================================
+   Ian's vocabulary (from his original 한국어 퀴즈 file — meanings kept
+   exactly as he wrote them; examples/notes added).
+   ===================================================================== */
+const SEED_DATE = '2026-10-21';
+const IAN_UNIT = "Ian's original list";
+const SEED_CARDS = [
+ {id:'ian-01',korean:'시작하다',hanja:'始作',pos:'verb',meaning_en:'to start, to begin (Something)',example_ko:'내일부터 운동을 시작할 거예요.',example_en:"I'm going to start exercising from tomorrow.",notes:'하다 verb: 시작해요 / 시작했어요. Transitive (N을/를 시작하다). For "something starts" use 시작되다: 수업이 시작됐어요.',related:'시작되다 (to be started) · ↔ 끝내다 (to finish)',tags:['verbs','core']},
+ {id:'ian-02',korean:'모르다',hanja:'',pos:'verb',meaning_en:'to not know',example_ko:'그 사람 이름을 몰라요.',example_en:"I don't know that person's name.",notes:'르 irregular: 몰라요 / 몰랐어요 / 모르는.',related:'↔ 알다 (to know)',tags:['verbs','core']},
+ {id:'ian-03',korean:'좋아하다',hanja:'',pos:'verb',meaning_en:'to like, to enjoy',example_ko:'저는 매운 음식을 좋아해요.',example_en:'I like spicy food.',notes:'Takes an object: N을/를 좋아하다. Compare the adjective 좋다: N이/가 좋다 (저는 이 노래가 좋아요).',related:'↔ 싫어하다 (to dislike) · 좋다',tags:['verbs','core','feelings']},
+ {id:'ian-04',korean:'타다',hanja:'',pos:'verb',meaning_en:'to take, to ride, to get on',example_ko:'회사에 갈 때 지하철을 타요.',example_en:'I take the subway when I go to work.',notes:'N을/를 타다 (버스를 타다). 타요 / 탔어요. Also: 타다 = to burn (빵이 탔어요).',related:'↔ 내리다 (to get off) · 갈아타다 (to transfer)',tags:['verbs','core','travel']},
+ {id:'ian-05',korean:'들어가다',hanja:'',pos:'verb',meaning_en:'to enter, to go into',example_ko:'날씨가 추우니까 안으로 들어가요.',example_en:"It's cold, so let's go inside.",notes:'들어가요 / 들어갔어요. N에 들어가다. Going in away from the speaker (vs 들어오다 = come in). Also "to get into" a school/company: 대학교에 들어가다.',related:'↔ 나오다 (to come out) · 들어오다',tags:['verbs','core','movement']},
+ {id:'ian-06',korean:'보이다',hanja:'',pos:'verb',meaning_en:'to be seen, to look',example_ko:'창문 밖으로 바다가 보여요.',example_en:'You can see the sea out of the window.',notes:'Passive of 보다: N이/가 보이다. 보여요 / 보였어요. "To look + adj": -아/어 보이다 (피곤해 보여요 = you look tired). 보여 주다 = to show.',related:'보다 (to see) · 들리다 (to be heard)',tags:['verbs','core']},
+ {id:'ian-07',korean:'나가다',hanja:'',pos:'verb',meaning_en:'to go out; to attend; to leave, to quit',example_ko:'주말에 친구들하고 밖에 나가서 놀았어요.',example_en:'At the weekend I went out and hung out with my friends.',notes:'나가요 / 나갔어요. 모임에 나가다 = attend a gathering; 회사를 나가다 = leave/quit a company.',related:'↔ 들어오다 (to come in) · 나오다',tags:['verbs','core','movement']},
+ {id:'ian-08',korean:'나다',hanja:'',pos:'verb',meaning_en:'to grow, to sprout; to happen, to occur',example_ko:'어제 집 근처에서 사고가 났어요.',example_en:'There was an accident near my house yesterday.',notes:'N이/가 나다. Very common collocations: 사고가 나다 (accident happens), 열이 나다 (have a fever), 화가 나다 (get angry), 냄새가 나다 (smell), 생각이 나다 (come to mind). 나요 / 났어요.',related:'생기다 (to come about)',tags:['verbs','core']},
+ {id:'ian-09',korean:'들어오다',hanja:'',pos:'verb',meaning_en:'to enter, to come into',example_ko:'밖에 추우니까 빨리 들어오세요.',example_en:"It's cold outside, so come in quickly.",notes:'들어와요 / 들어왔어요. Coming in toward the speaker (vs 들어가다 = go in).',related:'↔ 나가다 (to go out) · 들어가다',tags:['verbs','core','movement']},
+ {id:'ian-10',korean:'필요하다',hanja:'必要',pos:'adjective',meaning_en:'to need',example_ko:'여행을 가려면 여권이 필요해요.',example_en:'You need a passport to travel abroad.',notes:'Descriptive verb (adjective): the thing needed takes 이/가, not 을/를 — 돈이 필요해요. 필요해요 / 필요했어요. Noun: 필요.',related:'필요 없다 (not needed) · 중요하다 (to be important)',tags:['adjectives','core']},
+ {id:'ian-11',korean:'읽다',hanja:'',pos:'verb',meaning_en:'to read',example_ko:'자기 전에 보통 책을 읽어요.',example_en:'I usually read a book before going to bed.',notes:'Regular. Pronunciation: 읽다 [익따], 읽어요 [일거요], 읽고 [일꼬].',related:'쓰다 (to write) · 책 (book)',tags:['verbs','core']}
+].map(c=>Object.assign({unit:IAN_UNIT,date_added:SEED_DATE},c));
+
+const FIELDS = ['id','korean','hanja','pos','meaning_en','example_ko','example_en','notes','related','unit','tags','date_added'];
+const TEMPLATE_ROWS = [
+ {id:'',korean:'이사하다',hanja:'移徙',pos:'verb',meaning_en:'to move (house)',example_ko:'다음 달에 학교 근처로 이사할 거예요.',example_en:"I'm going to move near the school next month.",notes:'하다 verb: 이사해요 / 이사했어요. Noun: 이사.',related:'이삿짐 (moving boxes)',unit:'Example (replace with your unit, e.g. Sogang 4A Unit 1)',tags:'daily life;home',date_added:'2026-10-21'},
+ {id:'',korean:'어울리다',hanja:'',pos:'verb',meaning_en:'to suit, to look good on; to get along',example_ko:'그 색깔이 정말 잘 어울려요.',example_en:'That colour really suits you.',notes:'N이/가 N에게 어울리다. 잘 어울려요 is a common compliment.',related:'맞다 (to fit)',unit:'Example (replace with your unit, e.g. Sogang 4A Unit 1)',tags:'shopping;compliments',date_added:'2026-10-21'},
+ {id:'',korean:'취소하다',hanja:'取消',pos:'verb',meaning_en:'to cancel',example_ko:'비 때문에 여행을 취소했어요.',example_en:'We cancelled the trip because of the rain.',notes:'하다 verb: 취소해요 / 취소했어요. Passive: 취소되다.',related:'↔ 예약하다 (to book)',unit:'Example (replace with your unit, e.g. Sogang 4A Unit 1)',tags:'travel;verbs',date_added:'2026-10-21'}
+];
+
+/* ============================ Storage ============================ */
+const K = {cards:'kvf.cards.v1',srs:'kvf.srs.v1',settings:'kvf.settings.v1',log:'kvf.log.v1'};
+const DEFAULTS = {newPerDay:10,direction:'ko2en',theme:'auto',showRoman:false,autoSpeak:false,rate:0.9,syncUrl:'',autoSync:true,lastSync:null,migrated:false};
+let storageOK = true;
+const mem = {};
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){storageOK=false;return mem[k]===undefined?null:mem[k]}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){storageOK=false;mem[k]=v}}
+function lsDel(k){try{localStorage.removeItem(k)}catch(e){delete mem[k]}}
+function readJSON(k,def){const s=lsGet(k);if(s==null)return def;try{return JSON.parse(s)}catch(e){return def}}
+
+let cards=[], srs={}, settings={}, log={};
+function save(){lsSet(K.cards,JSON.stringify(cards));lsSet(K.srs,JSON.stringify(srs));lsSet(K.settings,JSON.stringify(settings));lsSet(K.log,JSON.stringify(log));}
+function load(){
+  settings=Object.assign({},DEFAULTS,readJSON(K.settings,{}));
+  srs=readJSON(K.srs,{})||{};
+  log=readJSON(K.log,{})||{};
+  const c=readJSON(K.cards,null);
+  if(Array.isArray(c)){cards=c.map(normCard).filter(Boolean)}
+  else{cards=SEED_CARDS.map(x=>normCard(x));}
+  if(!settings.migrated){migrateOld();settings.migrated=true;}
+  save();
+}
+/* Migrate progress from Ian's original app (same site address only) */
+function migrateOld(){
+  try{
+    const dm=lsGet('darkMode'); if(dm==='true'&&settings.theme==='auto')settings.theme='dark';
+    const ws=readJSON('wordStats',null); if(!ws||typeof ws!=='object')return;
+    let n=0;
+    for(const [ko,st] of Object.entries(ws)){
+      if(!st||!(st.correctCount||st.incorrectCount))continue;
+      const card=cards.find(c=>c.korean===ko); if(!card||(srs[card.id]&&srs[card.id].introduced))continue;
+      const last=st.lastSeen?ymd(new Date(st.lastSeen)):today();
+      const iv=st.mastered?21:Math.max(1,Math.round(st.interval||1));
+      srs[card.id]={reps:st.correctCount||0,interval:iv,ease:2.5,lapses:st.incorrectCount||0,introduced:last,last:last,due:addDays(last,iv)};
+      n++;
+    }
+    if(n)setTimeout(()=>toast('Imported progress for '+n+' words from your old quiz'),600);
+  }catch(e){console.warn('migration skipped',e)}
+}
+
+/* ============================ Utils ============================ */
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function ymd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function today(){return ymd(new Date())}
+function addDays(s,n){const p=s.split('-').map(Number);return ymd(new Date(p[0],p[1]-1,p[2]+n))}
+function daysBetween(a,b){const pa=a.split('-').map(Number),pb=b.split('-').map(Number);return Math.round((new Date(pb[0],pb[1]-1,pb[2])-new Date(pa[0],pa[1]-1,pa[2]))/864e5)}
+function uid(){return 'w'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function norm(s){return String(s||'').normalize('NFC').toLowerCase().replace(/[\s.,!?~·…'"“”‘’()\[\]\-_\/;:]/g,'')}
+function keyOf(c){return norm(c.korean)+'|'+norm(c.meaning_en)}
+function parseTags(t){if(Array.isArray(t))return t.map(x=>String(x).trim()).filter(Boolean);return String(t||'').split(/[;|,]/).map(x=>x.trim()).filter(Boolean)}
+function normCard(c){
+  if(!c)return null;
+  const o={};
+  FIELDS.forEach(f=>{o[f]=f==='tags'?parseTags(c.tags):String(c[f]==null?'':c[f]).trim()});
+  if(c.romanization)o.romanization=String(c.romanization).trim();
+  if(!o.korean&&!o.meaning_en)return null;
+  if(!o.id)o.id=uid();
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(o.date_added))o.date_added=today();
+  return o;
+}
+let toastT;
+function toast(msg,ms){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),ms||2600)}
+function download(name,text,type){const b=new Blob([text],{type:type||'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+
+/* Approximate letter-by-letter Revised Romanization (optional toggle only) */
+const RI=['g','kk','n','d','tt','r','m','b','pp','s','ss','','j','jj','ch','k','t','p','h'];
+const RM=['a','ae','ya','yae','eo','e','yeo','ye','o','wa','wae','oe','yo','u','wo','we','wi','yu','eu','ui','i'];
+const RF=['','k','k','k','n','n','n','t','l','k','m','l','l','l','p','l','m','p','p','t','t','ng','t','t','k','t','p','t'];
+function romanize(s){let out='';for(const ch of String(s)){const c=ch.charCodeAt(0)-0xAC00;if(c>=0&&c<11172){out+=RI[Math.floor(c/588)]+RM[Math.floor((c%588)/28)]+RF[c%28]}else out+=ch}return out}
+
+/* ============================ SRS (SM-2 style) ============================ */
+function statusOf(c){const s=srs[c.id];if(!s||!s.introduced)return 'new';return s.interval>=21?'mastered':'learning'}
+function isDue(c,t){const s=srs[c.id];return !!(s&&s.introduced&&s.due<=(t||today()))}
+function schedule(prev,g){
+  const t=today();
+  const s=Object.assign({reps:0,interval:0,ease:2.5,lapses:0,introduced:null,last:null,due:t},prev||{});
+  if(g===1){s.reps=0;s.interval=0;s.ease=Math.max(1.3,s.ease-0.2);s.lapses++;}
+  else if(g===2){s.interval=s.reps===0?1:Math.max(s.interval+1,Math.round(s.interval*1.2));s.ease=Math.max(1.3,s.ease-0.15);s.reps++;}
+  else if(g===3){s.interval=s.reps===0?1:s.reps===1?3:Math.max(s.interval+1,Math.round(s.interval*s.ease));s.reps++;}
+  else{s.interval=s.reps===0?4:s.reps===1?7:Math.max(s.interval+1,Math.round(s.interval*s.ease*1.3));s.ease=Math.min(3.5,s.ease+0.15);s.reps++;}
+  s.ease=Math.round(s.ease*100)/100;
+  s.introduced=s.introduced||t;s.last=t;s.due=addDays(t,s.interval);
+  return s;
+}
+function ivLabel(d){if(d<=0)return 'again';if(d<30)return d+'d';if(d<365)return Math.round(d/30)+'mo';return (d/365).toFixed(1)+'y'}
+function dayLog(d){d=d||today();if(!log[d])log[d]={new:0,reviews:0,correct:0};return log[d]}
+
+/* ============================ Theme ============================ */
+const mq=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null;
+function applyTheme(){
+  const dark=settings.theme==='dark'||(settings.theme==='auto'&&mq&&mq.matches);
+  document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+  $('#darkModeToggle').textContent=dark?'☀️':'🌙';
+  const m=document.querySelector('meta[name=theme-color]');if(m)m.content=dark?'#0e1020':'#4f46e5';
+}
+if(mq&&mq.addEventListener)mq.addEventListener('change',applyTheme);
+
+/* ============================ Speech ============================ */
+const hasTTS='speechSynthesis' in window && typeof SpeechSynthesisUtterance!=='undefined';
+let koVoice=null, warnedVoice=false;
+function pickVoice(){if(!hasTTS)return;const vs=speechSynthesis.getVoices()||[];koVoice=vs.find(v=>/^ko([-_]|$)/i.test(v.lang))||null;updateVoiceStatus()}
+if(hasTTS){pickVoice();if('onvoiceschanged' in speechSynthesis)speechSynthesis.onvoiceschanged=pickVoice;}
+function updateVoiceStatus(){const el=$('#voiceStatus');if(!el)return;el.textContent=!hasTTS?'🔇 This browser has no speech support — pronunciation buttons are disabled.':koVoice?('🔊 Korean voice: '+koVoice.name):'⚠️ No Korean voice found yet. The browser will try ko-KR anyway; if you hear nothing, install a Korean voice in your OS settings (e.g. Settings → Time & Language → Speech on Windows, or Spoken Content on iOS/macOS).'}
+function speak(text,btn){
+  if(!text)return;
+  if(!hasTTS){toast('Speech is not supported in this browser');return}
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);u.lang='ko-KR';u.rate=Number(settings.rate)||0.9;
+    if(!koVoice)pickVoice();
+    if(koVoice)u.voice=koVoice;else if(!warnedVoice){warnedVoice=true;toast('No Korean voice installed — trying the default voice')}
+    if(btn){btn.classList.add('playing');u.onend=u.onerror=()=>btn.classList.remove('playing')}
+    speechSynthesis.speak(u);
+  }catch(e){toast('Could not play audio')}
+}
+function speakBtn(text,sm){if(!text)return '';return '<button class="speak'+(sm?' sm':'')+'" data-action="speak" data-text="'+esc(text)+'" title="Listen" aria-label="Listen"'+(hasTTS?'':' disabled')+'>🔊</button>'}
+
+/* ============================ Session ============================ */
+const sess={queue:[],cur:null,flipped:false,dir:'ko2en',date:null,extraNew:0,total:0,done:0,built:false};
+function buildQueue(){
+  const t=today();
+  if(sess.date!==t){sess.extraNew=0}
+  sess.date=t;
+  const due=shuffle(cards.filter(c=>isDue(c,t))).sort((a,b)=>srs[a.id].due<srs[b.id].due?-1:srs[a.id].due>srs[b.id].due?1:0).map(c=>c.id);
+  const allowed=Math.max(0,Number(settings.newPerDay)+sess.extraNew-dayLog(t).new);
+  const news=cards.filter(c=>statusOf(c)==='new').slice(0,allowed).map(c=>c.id);
+  const q=[];let i=0,j=0;
+  while(i<due.length||j<news.length){if(i<due.length)q.push(due[i++]);if(i<due.length)q.push(due[i++]);if(j<news.length)q.push(news[j++]);}
+  sess.queue=q;sess.total=q.length;sess.done=0;sess.built=true;sess.cur=null;
+  nextCard();
+}
+function nextCard(){
+  sess.queue=sess.queue.filter(id=>cards.some(c=>c.id===id));
+  sess.cur=sess.queue.shift()||null;sess.flipped=false;
+  const d=settings.direction;sess.dir=d==='mixed'?(Math.random()<.5?'ko2en':'en2ko'):d;
+  renderStudy();
+  if(sess.cur&&settings.autoSpeak&&sess.dir==='ko2en'){const c=getCard(sess.cur);if(c)setTimeout(()=>speak(c.korean),250)}
+}
+function getCard(id){return cards.find(c=>c.id===id)}
+function flip(){
+  if(!sess.cur)return;
+  sess.flipped=!sess.flipped;
+  const f=$('#flip');if(f)f.classList.toggle('flipped',sess.flipped);
+  renderControls();
+  if(sess.flipped&&settings.autoSpeak&&sess.dir==='en2ko'){const c=getCard(sess.cur);if(c)speak(c.korean)}
+}
+function grade(g){
+  if(!sess.cur||!sess.flipped)return;
+  const id=sess.cur,wasNew=!(srs[id]&&srs[id].introduced);
+  srs[id]=schedule(srs[id],g);
+  const L=dayLog();L.reviews++;if(wasNew)L.new++;if(g>1)L.correct++;
+  if(g===1){sess.queue.splice(Math.min(3,sess.queue.length),0,id);sess.total++}
+  sess.done++;
+  save();
+  const btn=$('.grade.g'+g);if(btn)btn.classList.add('flash-ok');
+  if(srs[id].interval>=21&&g>1&&(srs[id].interval-g)>=0&&statusOf(getCard(id))==='mastered'&&!srs[id].masteredDate){srs[id].masteredDate=today();save();toast('🎉 Mastered: '+getCard(id).korean)}
+  nextCard();
+  updateHeader();
+  if(!sess.cur&&sess.done>0)confetti();
+}
+function renderStudy(){
+  const area=$('#studyArea');
+  $$('#dirSeg button').forEach(b=>b.classList.toggle('on',b.dataset.dir===settings.direction));
+  const newLeft=sess.queue.concat(sess.cur?[sess.cur]:[]).filter(id=>{const c=getCard(id);return c&&statusOf(c)==='new'}).length;
+  const all=sess.queue.length+(sess.cur?1:0);
+  $('#cNew').textContent=newLeft+' new';$('#cRev').textContent=(all-newLeft)+' review';
+  $('#sessBar').style.width=(sess.total?Math.round(100*sess.done/(sess.done+all)):0)+'%';
+  if(!sess.cur){
+    const remainingNew=cards.filter(c=>statusOf(c)==='new').length;
+    const tomorrow=cards.filter(c=>isDue(c,addDays(today(),1))).length;
+    const L=dayLog();
+    if(!cards.length){area.innerHTML='<div class="panel done"><div class="big">📭</div><h2>No words yet</h2><p class="muted">Add words in the <b>Words</b> tab, import a file, or set a sync URL in Settings.</p><button class="btn primary" data-action="goto" data-tab="words">Add words</button></div>';return}
+    area.innerHTML='<div class="panel done"><div class="big">'+(L.reviews?'🎉':'✨')+'</div><h2>'+(L.reviews?'수고했어요! All done for today':'Nothing due right now')+'</h2>'+
+      '<p class="muted">Today: <b>'+L.new+'</b> new · <b>'+L.reviews+'</b> reviews'+(L.reviews?' · '+Math.round(100*L.correct/L.reviews)+'% recalled':'')+'<br>Due tomorrow: <b>'+tomorrow+'</b> · Unseen words left: <b>'+remainingNew+'</b></p>'+
+      '<div class="row" style="justify-content:center">'+(remainingNew?'<button class="btn primary" data-action="more-new">Learn 5 more new words</button>':'')+
+      '<button class="btn" data-action="goto" data-tab="quiz">Practice in quiz mode</button></div></div>';
+    return;
+  }
+  const c=getCard(sess.cur), st=statusOf(c), ko2en=sess.dir==='ko2en';
+  const roman=settings.showRoman?'<div class="roman">'+esc(c.romanization||romanize(c.korean))+'</div>':'';
+  const meta='<div class="top-meta"><span class="tagchip st-'+st+'">'+st+'</span><span>'+esc(c.unit)+'</span></div>';
+  const koBlock='<div class="word-big" lang="ko">'+esc(c.korean)+'</div>'+roman;
+  const front=ko2en
+    ? '<div class="center">'+koBlock+'<div class="pos">'+esc(c.pos)+'</div><div style="margin-top:8px">'+speakBtn(c.korean)+'</div></div><div class="hint">Tap or press <span class="kbd">Space</span> to flip</div>'
+    : '<div class="center"><div class="en-big">'+esc(c.meaning_en)+'</div><div class="pos">'+esc(c.pos)+'</div><div class="muted small" style="margin-top:6px">What is it in Korean?</div></div><div class="hint">Tap or press <span class="kbd">Space</span> to flip</div>';
+  const back='<div class="back-body">'+
+    (ko2en?'<div class="back-head"><span class="word-big" lang="ko">'+esc(c.korean)+'</span>'+speakBtn(c.korean)+'</div>'+roman+'<div class="meaning">'+esc(c.meaning_en)+'</div>'
+          :'<div class="back-head"><span class="word-big" lang="ko">'+esc(c.korean)+'</span>'+speakBtn(c.korean)+'</div>'+roman+'<div class="meaning" style="font-size:16px;font-weight:600">'+esc(c.meaning_en)+'</div>')+
+    (c.hanja||c.pos?'<div class="hanja">'+(c.hanja?'<span lang="ko">'+esc(c.hanja)+'</span>':'')+(c.hanja&&c.pos?' · ':'')+'<i>'+esc(c.pos)+'</i></div>':'')+
+    (c.example_ko?'<div class="example">'+speakBtn(c.example_ko,1)+'<div><div class="ko" lang="ko">'+esc(c.example_ko)+'</div><div class="en">'+esc(c.example_en)+'</div></div></div>':'')+
+    (c.notes?'<div class="notes">'+esc(c.notes)+'</div>':'')+
+    (c.related?'<div class="related">🔗 '+esc(c.related)+'</div>':'')+
+    (c.tags.length?'<div>'+c.tags.map(t=>'<span class="tagchip" style="margin-right:4px">'+esc(t)+'</span>').join('')+'</div>':'')+
+    '</div>';
+  area.innerHTML='<div class="scene"><div class="flip'+(sess.flipped?' flipped':'')+'" id="flip" data-action="flip" role="button" tabindex="0" aria-label="Flashcard, press space to flip">'+
+    '<div class="face front">'+meta+front+'</div><div class="face back">'+meta+back+'</div></div></div><div class="controls" id="controls"></div>';
+  renderControls();
+}
+function renderControls(){
+  const el=$('#controls');if(!el)return;
+  if(!sess.flipped){el.innerHTML='<button class="btn primary showbtn" data-action="flip">Show answer <span class="kbd" style="margin-left:6px;background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.3)">Space</span></button><div class="shortcuts"><span class="kbd">P</span> pronounce · <span class="kbd">Space</span> flip</div>';return}
+  const s=srs[sess.cur];const names=['','Again','Hard','Good','Easy'];
+  el.innerHTML='<div class="grades">'+[1,2,3,4].map(g=>'<button class="grade g'+g+'" data-action="grade" data-g="'+g+'">'+names[g]+'<small>'+ivLabel(schedule(s,g).interval)+' · '+g+'</small></button>').join('')+'</div><div class="shortcuts"><span class="kbd">1</span>–<span class="kbd">4</span> grade · <span class="kbd">P</span> word · <span class="kbd">E</span> example</div>';
+}
+function confetti(){const box=$('#confetti');const cols=['#4f46e5','#7c3aed','#22a06b','#f59e0b','#e5484d','#3b82f6'];let h='';for(let i=0;i<40;i++){h+='<i style="left:'+(Math.random()*100)+'%;background:'+cols[i%cols.length]+';animation-delay:'+(Math.random()*.5)+'s;animation-duration:'+(1.2+Math.random())+'s"></i>'}box.innerHTML=h;setTimeout(()=>box.innerHTML='',2600)}
+
+/* ============================ Quiz ============================ */
+const quiz={mode:'mc',source:'studied',n:10,items:[],i:0,score:0,answered:false,options:[],running:false};
+function quizPool(){
+  let pool=quiz.source==='all'?cards.slice():quiz.source==='hard'?cards.filter(c=>srs[c.id]&&(srs[c.id].lapses>0)):cards.filter(c=>statusOf(c)!=='new');
+  if(quiz.source.startsWith('unit:')){const u=quiz.source.slice(5);pool=cards.filter(c=>c.unit===u)}
+  return pool.filter(c=>c.korean&&c.meaning_en);
+}
+function renderQuiz(){
+  const a=$('#quizArea');
+  if(!quiz.running){
+    const units=[...new Set(cards.map(c=>c.unit).filter(Boolean))].sort();
+    a.innerHTML='<div class="quiz-card"><h2>Quiz practice</h2><p class="muted small">Practice outside the schedule — quizzes don’t change your spaced-repetition reviews.</p>'+
+      '<div class="seg" id="quizMode" style="margin:6px 0 14px"><button data-qmode="mc" class="'+(quiz.mode==='mc'?'on':'')+'">Multiple choice (한→EN)</button><button data-qmode="type" class="'+(quiz.mode==='type'?'on':'')+'">Typing (EN→한)</button></div><br>'+
+      '<div class="row" style="justify-content:center"><select id="quizSource"><option value="studied">Words I’ve studied</option><option value="all">All words</option><option value="hard">Words I’ve forgotten before</option>'+units.map(u=>'<option value="unit:'+esc(u)+'">Unit: '+esc(u)+'</option>').join('')+'</select>'+
+      '<select id="quizN"><option>5</option><option selected>10</option><option>20</option><option value="999">All</option></select>'+
+      '<button class="btn primary" data-action="quiz-start">Start</button></div><p class="small muted" id="quizMsg"></p></div>';
+    $('#quizSource').value=quiz.source;if(!$('#quizSource').value)$('#quizSource').value='studied';
+    $('#quizN').value=String(quiz.n);
+    return;
+  }
+  if(quiz.i>=quiz.items.length){
+    const pct=Math.round(100*quiz.score/quiz.items.length);
+    a.innerHTML='<div class="quiz-card done"><div class="big">'+(pct>=80?'🏆':pct>=50?'👏':'💪')+'</div><h2>'+quiz.score+' / '+quiz.items.length+' correct</h2><p class="muted">'+(pct>=80?'훌륭해요!':pct>=50?'잘했어요!':'괜찮아요 — keep going!')+'</p><div class="row" style="justify-content:center"><button class="btn primary" data-action="quiz-start">Again</button><button class="btn" data-action="quiz-exit">Change settings</button></div></div>';
+    if(pct>=80)confetti();return;
+  }
+  const c=getCard(quiz.items[quiz.i]);if(!c){quiz.i++;return renderQuiz()}
+  const head='<div class="row" style="justify-content:space-between"><span class="muted small">Question '+(quiz.i+1)+' / '+quiz.items.length+'</span><span class="row"><span class="muted small">Score '+quiz.score+'</span><button class="btn sm" data-action="quiz-exit">✕ Quit</button></span></div><div class="progressbar" style="margin:8px 0"><i style="width:'+Math.round(100*quiz.i/quiz.items.length)+'%"></i></div>';
+  if(quiz.mode==='mc'){
+    if(!quiz.answered){
+      const others=shuffle(cards.filter(x=>x.id!==c.id&&norm(x.meaning_en)!==norm(c.meaning_en)));
+      const opts=[c];for(const o of others){if(opts.length>=4)break;if(!opts.some(p=>norm(p.meaning_en)===norm(o.meaning_en)))opts.push(o)}
+      quiz.options=shuffle(opts).map(o=>o.id);
+    }
+    a.innerHTML='<div class="quiz-card">'+head+'<div class="word-big" lang="ko" style="margin-top:18px">'+esc(c.korean)+'</div><div>'+speakBtn(c.korean)+'</div>'+
+      '<div class="mc" id="mc">'+quiz.options.map((id,k)=>'<button data-action="mc-pick" data-id="'+esc(id)+'"><span class="n">'+(k+1)+'</span><span>'+esc(getCard(id).meaning_en)+'</span></button>').join('')+'</div><div class="quiz-fb" id="quizFb"></div></div>';
+  }else{
+    a.innerHTML='<div class="quiz-card">'+head+'<div class="quiz-prompt">'+esc(c.meaning_en)+'</div><div class="pos">'+esc(c.pos)+'</div>'+
+      '<input type="text" class="quiz-input" id="quizInput" lang="ko" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="한국어로 입력하세요">'+
+      '<div class="row" style="justify-content:center;margin-top:10px"><button class="btn primary" data-action="type-check" id="typeCheck">Check ↵</button><button class="btn" data-action="type-hint">Hint</button><button class="btn" data-action="type-skip">Show answer</button></div>'+
+      '<div class="quiz-fb" id="quizFb"></div></div>';
+    setTimeout(()=>{const i=$('#quizInput');if(i)i.focus()},30);
+  }
+}
+function startQuiz(){
+  const src=$('#quizSource'),n=$('#quizN');if(src)quiz.source=src.value;if(n)quiz.n=Number(n.value);
+  let pool=quizPool();
+  if(pool.length<1&&quiz.source==='studied'){pool=cards.slice();toast('No studied words yet — using all words')}
+  if(!pool.length){toast('No words to quiz');return}
+  quiz.items=shuffle(pool).slice(0,quiz.n).map(c=>c.id);quiz.i=0;quiz.score=0;quiz.answered=false;quiz.running=true;renderQuiz();
+}
+function mcPick(id){
+  if(quiz.answered)return; quiz.answered=true;
+  const c=getCard(quiz.items[quiz.i]),ok=id===c.id;if(ok)quiz.score++;
+  $$('#mc button').forEach(b=>{if(b.dataset.id===c.id)b.classList.add('right');else if(b.dataset.id===id)b.classList.add('wrong');else b.classList.add('dim')});
+  const fb=$('#quizFb');fb.className='quiz-fb '+(ok?'ok':'bad');fb.innerHTML=ok?'CORRECT! 맞아요 ✓':'GOOD TRY! <span class="muted">'+esc(c.korean)+' = '+esc(c.meaning_en)+'</span>';
+  setTimeout(()=>{quiz.i++;quiz.answered=false;renderQuiz()},ok?900:1700);
+}
+function answers(c){const base=String(c.korean);const parts=base.split(/[\/,;]| or /).map(s=>s.trim()).filter(Boolean);const all=new Set([norm(base)]);parts.forEach(p=>{all.add(norm(p));all.add(norm(p.replace(/\(.*?\)/g,'')))});return all}
+function typeCheck(skip){
+  const c=getCard(quiz.items[quiz.i]),inp=$('#quizInput'),fb=$('#quizFb');
+  if(quiz.answered){quiz.i++;quiz.answered=false;renderQuiz();return}
+  const val=inp?inp.value:'';
+  if(!skip&&!val.trim()){inp&&inp.focus();return}
+  quiz.answered=true;
+  const ok=!skip&&answers(c).has(norm(val));
+  if(ok)quiz.score++;
+  fb.className='quiz-fb '+(ok?'ok':'bad');
+  fb.innerHTML=(ok?'정답! ✓ ':(skip?'':'Not quite. '))+'<span lang="ko" style="font-size:22px">'+esc(c.korean)+'</span> '+speakBtn(c.korean,1)+(c.example_ko?'<div class="small muted" style="font-weight:500;margin-top:6px" lang="ko">'+esc(c.example_ko)+'</div>':'')+
+    (!ok&&!skip?'<div style="margin-top:6px"><button class="btn sm" data-action="type-override">I was right (count it)</button></div>':'');
+  if(inp)inp.disabled=true;
+  const b=$('#typeCheck');if(b)b.textContent='Next ↵';
+  if(ok||settings.autoSpeak)speak(c.korean);
+  setTimeout(()=>{if(b)b.focus()},20);
+}
+
+/* ============================ Words table ============================ */
+function fillFilters(){
+  const units=[...new Set(cards.map(c=>c.unit).filter(Boolean))].sort();
+  const tags=[...new Set(cards.flatMap(c=>c.tags))].sort();
+  const fu=$('#fUnit'),ft=$('#fTag'),vu=fu.value,vt=ft.value;
+  fu.innerHTML='<option value="">All units</option>'+units.map(u=>'<option>'+esc(u)+'</option>').join('');
+  ft.innerHTML='<option value="">All tags</option>'+tags.map(t=>'<option>'+esc(t)+'</option>').join('');
+  fu.value=units.includes(vu)?vu:'';ft.value=tags.includes(vt)?vt:'';
+  $('#unitList').innerHTML=units.map(u=>'<option value="'+esc(u)+'">').join('');
+}
+function renderWords(){
+  fillFilters();
+  const q=norm($('#fSearch').value),u=$('#fUnit').value,tg=$('#fTag').value,st=$('#fStatus').value;
+  const rows=cards.filter(c=>{
+    if(u&&c.unit!==u)return false;if(tg&&!c.tags.includes(tg))return false;
+    if(st==='due'){if(!isDue(c))return false}else if(st&&statusOf(c)!==st)return false;
+    if(q){const hay=norm([c.korean,c.meaning_en,c.hanja,c.notes,c.example_ko,c.example_en,c.related,c.tags.join(' '),c.pos].join(' '));if(!hay.includes(q))return false}
+    return true;
+  });
+  $('#wordCount').textContent='· '+rows.length+' of '+cards.length;
+  $('#wordTable').innerHTML=rows.length?rows.map(c=>{const s=srs[c.id],stt=statusOf(c);return '<tr><td>'+speakBtn(c.korean,1)+'</td><td class="k" lang="ko">'+esc(c.korean)+(c.hanja?' <span class="muted small" style="font-weight:400">'+esc(c.hanja)+'</span>':'')+'</td><td>'+esc(c.meaning_en)+'</td><td class="hide-sm muted">'+esc(c.pos)+'</td><td class="hide-sm small">'+esc(c.unit)+'</td><td><span class="tagchip st-'+stt+'">'+stt+'</span></td><td class="hide-sm small muted">'+(s&&s.introduced?esc(s.due):'—')+'</td><td class="actions"><button class="btn sm" data-action="edit-word" data-id="'+esc(c.id)+'">Edit</button></td></tr>'}).join('')
+    :'<tr><td colspan="8" class="muted" style="text-align:center;padding:24px">No words match.</td></tr>';
+}
+function openForm(id){
+  const c=id?getCard(id):null;
+  $('#formTitle').textContent=c?'Edit word':'Add word';
+  $('#fmId').value=c?c.id:'';
+  const map={fmKorean:'korean',fmMeaning:'meaning_en',fmPos:'pos',fmHanja:'hanja',fmExKo:'example_ko',fmExEn:'example_en',fmNotes:'notes',fmRelated:'related',fmUnit:'unit'};
+  for(const [el,f] of Object.entries(map))$('#'+el).value=c?c[f]:'';
+  $('#fmTags').value=c?c.tags.join('; '):'';
+  if(!c){const fu=$('#fUnit').value;if(fu)$('#fmUnit').value=fu}
+  $('#fmDelete').style.display=c?'':'none';
+  $('#modalBg').classList.add('open');
+  setTimeout(()=>$('#fmKorean').focus(),50);
+}
+function closeForm(){$('#modalBg').classList.remove('open')}
+function submitForm(e){
+  e.preventDefault();
+  const id=$('#fmId').value;
+  const data={korean:$('#fmKorean').value,meaning_en:$('#fmMeaning').value,pos:$('#fmPos').value,hanja:$('#fmHanja').value,example_ko:$('#fmExKo').value,example_en:$('#fmExEn').value,notes:$('#fmNotes').value,related:$('#fmRelated').value,unit:$('#fmUnit').value,tags:$('#fmTags').value};
+  if(!data.korean.trim()||!data.meaning_en.trim()){toast('Korean and meaning are required');return}
+  if(id){const c=getCard(id);const n=normCard(Object.assign({},c,data,{id:c.id,date_added:c.date_added}));Object.assign(c,n);toast('Saved')}
+  else{
+    const n=normCard(Object.assign(data,{date_added:today()}));
+    const dup=cards.find(c=>keyOf(c)===keyOf(n));if(dup){toast('That word is already in your list');return}
+    cards.push(n);toast('Added '+n.korean);
+  }
+  save();closeForm();refreshAll();
+}
+function deleteWord(id){const c=getCard(id);if(!c)return;if(!confirm('Delete "'+c.korean+'"? Its progress will be removed too.'))return;cards=cards.filter(x=>x.id!==id);delete srs[id];save();closeForm();refreshAll();toast('Deleted')}
+
+/* ============================ Import / export ============================ */
+function parseDelimited(text){
+  text=String(text).replace(/^\uFEFF/,'').replace(/\r\n?/g,'\n');
+  const first=text.split('\n',1)[0];
+  const delim=first.includes('\t')?'\t':(first.split(';').length>first.split(',').length?';':',');
+  const rows=[];let row=[],f='',q=false;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i];
+    if(q){if(ch==='"'){if(text[i+1]==='"'){f+='"';i++}else q=false}else f+=ch}
+    else if(ch==='"'&&f==='')q=true;
+    else if(ch===delim){row.push(f);f=''}
+    else if(ch==='\n'){row.push(f);rows.push(row);row=[];f=''}
+    else f+=ch;
+  }
+  if(f!==''||row.length){row.push(f);rows.push(row)}
+  return rows.filter(r=>r.some(x=>String(x).trim()!==''));
+}
+const ALIASES={id:['id'],korean:['korean','word','ko','hangul','한국어','단어','kr','term'],hanja:['hanja','한자','chinese'],pos:['pos','partofspeech','part_of_speech','type','wordclass','품사'],
+  meaning_en:['meaning_en','meaning','english','en','definition','translation','뜻','meaning_english','gloss'],example_ko:['example_ko','example','examplesentence','sentence','example_korean','예문','sentence_ko'],
+  example_en:['example_en','exampletranslation','example_english','sentence_en','translation_example','examplemeaning'],notes:['notes','note','grammar','tips','memo','메모','comment','comments'],
+  related:['related','synonymsantonyms','synonyms','antonyms','relatedwords','synonyms_antonyms','related_words','synonym','antonym'],unit:['unit','lesson','chapter','book','과','source'],tags:['tags','tag','labels','category'],date_added:['date_added','date','added','dateadded'],romanization:['romanization','romaja','roman']};
+function hdrKey(h){const n=String(h).trim().toLowerCase().replace(/[\s\-()\/.]+/g,'_').replace(/^_+|_+$/g,'');const n2=n.replace(/_/g,'');for(const [k,al] of Object.entries(ALIASES)){if(al.includes(n)||al.includes(n2))return k}return null}
+function rowsToCards(rows){
+  if(!rows.length)return [];
+  const hk=rows[0].map(hdrKey);
+  let map,body;
+  if(hk.includes('korean')||hk.includes('meaning_en')){map=hk;body=rows.slice(1)}
+  else{map=['korean','meaning_en','pos','example_ko','example_en','notes','unit','tags'];body=rows}
+  return body.map(r=>{const o={};map.forEach((k,i)=>{if(!k)return;const v=(r[i]||'').trim();if(k==='related'&&o.related&&v)o.related+=' · '+v;else if(v||o[k]===undefined)o[k]=v});return o}).filter(o=>(o.korean||'').trim()&&(o.meaning_en||'').trim());
+}
+function parseAny(text){
+  const t=String(text).replace(/^\uFEFF/,'').trim();
+  if(!t)throw new Error('The file is empty');
+  if(/^<(!doctype|html)/i.test(t))throw new Error('Got a web page instead of CSV/JSON. For Google Sheets use File → Share → Publish to web → CSV link.');
+  if(t[0]==='{'||t[0]==='['){
+    const obj=JSON.parse(t);
+    if(Array.isArray(obj))return {cards:obj};
+    if(Array.isArray(obj.cards))return obj;
+    if(Array.isArray(obj.words))return {cards:obj.words};
+    throw new Error('JSON must be an array of words or {"cards":[…]}');
+  }
+  return {cards:rowsToCards(parseDelimited(t))};
+}
+function mergeCards(incoming,inSrs,inLog){
+  let added=0,updated=0,same=0;
+  const byKey=new Map(cards.map(c=>[keyOf(c),c])),byId=new Map(cards.map(c=>[c.id,c]));
+  for(const raw of incoming){
+    const n=normCard(Object.assign({},raw,{id:raw&&raw.id?String(raw.id):''}));if(!n||!n.korean||!n.meaning_en)continue;
+    let ex=null;
+    if(raw.id){const c=byId.get(String(raw.id));if(c&&(norm(c.korean)===norm(n.korean)||norm(c.meaning_en)===norm(n.meaning_en)))ex=c}
+    if(!ex)ex=byKey.get(keyOf(n));
+    if(ex){
+      let ch=false;
+      for(const f of FIELDS){if(f==='id'||f==='date_added')continue;
+        if(f==='tags'){const u=[...new Set(ex.tags.concat(n.tags))];if(u.length!==ex.tags.length){ex.tags=u;ch=true}continue}
+        if(n[f]&&n[f]!==ex[f]){ex[f]=n[f];ch=true}}
+      if(n.romanization&&n.romanization!==ex.romanization){ex.romanization=n.romanization;ch=true}
+      const s=inSrs&&raw.id&&inSrs[raw.id];
+      if(s&&s.introduced&&!(srs[ex.id]&&srs[ex.id].introduced)){srs[ex.id]=s;ch=true}
+      ch?updated++:same++;
+      if(ch){byKey.set(keyOf(ex),ex)}
+    }else{
+      if(byId.has(n.id))n.id=uid();
+      if(!raw.date_added)n.date_added=today();
+      cards.push(n);byKey.set(keyOf(n),n);byId.set(n.id,n);added++;
+      const s=inSrs&&raw.id&&inSrs[raw.id];if(s&&s.introduced)srs[n.id]=s;
+    }
+  }
+  if(inLog&&typeof inLog==='object'){for(const [d,v] of Object.entries(inLog)){if(!log[d]&&v)log[d]=v}}
+  save();
+  return {added,updated,same};
+}
+function importText(text,label){
+  try{
+    const obj=parseAny(text);
+    if(!obj.cards.length){toast('No words found. Make sure there is a header row with korean and meaning_en columns.',4500);return null}
+    const r=mergeCards(obj.cards,obj.srs,obj.log);
+    refreshAll();
+    toast((label||'Import')+': '+r.added+' new, '+r.updated+' updated, '+r.same+' unchanged',4000);
+    return r;
+  }catch(e){toast('Import failed: '+e.message,5000);return null}
+}
+function handleFile(file){if(!file)return;const fr=new FileReader();fr.onload=()=>importText(fr.result,file.name);fr.onerror=()=>toast('Could not read file');fr.readAsText(file,'utf-8')}
+function csvCell(v){v=Array.isArray(v)?v.join(';'):String(v==null?'':v);return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
+function toCSV(list){return FIELDS.join(',')+'\n'+list.map(c=>FIELDS.map(f=>csvCell(c[f])).join(',')).join('\n')+'\n'}
+function exportBackup(){
+  const data={app:'korean-vocab-flashcards',version:1,exported_at:new Date().toISOString(),cards,srs,log,settings:Object.assign({},settings,{lastSync:undefined})};
+  download('korean-vocab-backup-'+today()+'.json',JSON.stringify(data,null,2),'application/json');
+  toast('Backup downloaded');return data;
+}
+
+/* ============================ Sync ============================ */
+function fixUrl(u){
+  u=String(u||'').trim();
+  let m=u.match(/^https?:\/\/github\.com\/([^\/]+)\/([^\/]+)\/blob\/(.+)$/);
+  if(m)return 'https://raw.githubusercontent.com/'+m[1]+'/'+m[2]+'/'+m[3];
+  m=u.match(/^https?:\/\/docs\.google\.com\/spreadsheets\/d\/([a-zA-Z0-9_-]{20,})\/(edit|view)[^#]*(#gid=(\d+))?/);
+  if(m&&!/\/d\/e\//.test(u))return 'https://docs.google.com/spreadsheets/d/'+m[1]+'/export?format=csv'+(m[4]?'&gid='+m[4]:'');
+  return u;
+}
+let syncing=false;
+async function syncNow(manual){
+  const url=fixUrl(settings.syncUrl);
+  if(!url){if(manual)toast('Paste a sync URL first');return}
+  if(syncing)return;syncing=true;
+  setSyncStatus('Syncing…','');
+  let ctl=null,timer=null;
+  try{
+    if(typeof AbortController!=='undefined'){ctl=new AbortController();timer=setTimeout(()=>ctl.abort(),20000)}
+    const bust=(url.includes('?')?'&':'?')+'_ts='+Date.now();
+    const res=await fetch(/docs\.google\.com|googleusercontent/.test(url)?url:url+bust,{cache:'no-store',redirect:'follow',signal:ctl?ctl.signal:undefined});
+    if(!res.ok)throw new Error('HTTP '+res.status+(res.status===404?' (not found — check the link)':res.status===401||res.status===403?' (not public — publish the sheet to the web)':''));
+    const text=await res.text();
+    const obj=parseAny(text);
+    if(!obj.cards.length)throw new Error('No words found in the file (need korean and meaning_en columns)');
+    const r=mergeCards(obj.cards,null,null);
+    settings.lastSync={at:new Date().toISOString(),ok:true,msg:r.added+' new, '+r.updated+' updated ('+obj.cards.length+' rows)'};save();
+    refreshAll();
+    setSyncStatus('✓ Synced '+fmtTime(settings.lastSync.at)+': '+settings.lastSync.msg,'ok');
+    if(manual||r.added||r.updated)toast('Sync: '+r.added+' new, '+r.updated+' updated');
+    if(r.added&&sess.built&&!sess.cur)buildQueue();
+  }catch(e){
+    let msg=e&&e.name==='AbortError'?'Timed out':(e&&e.message)||'Network error';
+    const net=/Failed to fetch|NetworkError|Load failed|network|Timed out/i.test(msg);
+    if(net&&msg!=='Timed out')msg='Could not reach the URL (offline, wrong link, or the server blocks cross-origin requests).';
+    if(net&&location.protocol==='file:')msg+=' Note: you opened this file directly (file://); some browsers block downloads from here. Host the app (e.g. GitHub Pages) or use Words → Import instead.';
+    settings.lastSync={at:new Date().toISOString(),ok:false,msg};save();
+    setSyncStatus('✗ Sync failed: '+msg,'err');
+    if(manual)toast('Sync failed — see Settings',3500);else toast('Word list sync failed (see Settings)',3000);
+  }finally{if(timer)clearTimeout(timer);syncing=false}
+}
+function fmtTime(iso){try{return new Date(iso).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}catch(e){return iso}}
+function setSyncStatus(t,cls){const el=$('#syncStatus');el.textContent=t;el.className='status-line '+(cls||'')}
+
+/* ============================ Progress ============================ */
+function streak(){let d=today(),n=0;if(!(log[d]&&log[d].reviews))d=addDays(d,-1);while(log[d]&&log[d].reviews){n++;d=addDays(d,-1)}return n}
+function updateHeader(){$('#streakNum').textContent=streak()}
+function renderProgress(){
+  const L=dayLog(),t=today();
+  const counts={new:0,learning:0,mastered:0};cards.forEach(c=>counts[statusOf(c)]++);
+  const due=cards.filter(c=>isDue(c,t)).length,tom=cards.filter(c=>{const s=srs[c.id];return s&&s.introduced&&s.due===addDays(t,1)}).length;
+  const tiles=[['🔥 '+streak(),'Day streak',1],[L.new+' / '+settings.newPerDay,'New words today'],[L.reviews,'Reviews today'],[due,'Due now'],[cards.length,'Total words'],[counts.learning,'Learning'],[counts.mastered,'Mastered'],[counts.new,'Not seen yet']];
+  $('#statTiles').innerHTML=tiles.map(x=>'<div class="stat'+(x[2]?' hl':'')+'"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>').join('');
+  const days=[];for(let i=6;i>=0;i--){const d=addDays(t,-i);days.push({d,l:log[d]||{new:0,reviews:0}})}
+  const max=Math.max(5,...days.map(x=>x.l.reviews));
+  const W=560,H=200,pad=28,bw=(W-pad*2)/7;
+  let svg='<svg viewBox="0 0 '+W+' '+(H+30)+'" role="img" aria-label="Reviews and new words over the last 7 days">';
+  [0,.5,1].forEach(f=>{const y=pad+(H-pad)*(1-f);svg+='<line x1="'+pad+'" x2="'+(W-pad)+'" y1="'+y+'" y2="'+y+'" stroke="var(--border)" stroke-dasharray="3 4"/><text x="'+(pad-6)+'" y="'+(y+4)+'" font-size="11" text-anchor="end" fill="var(--muted)">'+Math.round(max*f)+'</text>'});
+  days.forEach((x,i)=>{
+    const rv=x.l.reviews||0,nw=x.l.new||0;const hR=(H-pad)*rv/max,hN=(H-pad)*nw/max;const xx=pad+i*bw+bw*.2,w=bw*.6;
+    svg+='<rect x="'+xx+'" y="'+(H-hR)+'" width="'+w+'" height="'+hR+'" rx="6" fill="var(--good)" opacity=".85"><title>'+x.d+': '+rv+' reviews, '+nw+' new</title></rect>';
+    if(hN)svg+='<rect x="'+(xx+w*.2)+'" y="'+(H-hN)+'" width="'+(w*.6)+'" height="'+hN+'" rx="4" fill="var(--accent)"/>';
+    if(rv)svg+='<text x="'+(xx+w/2)+'" y="'+(H-hR-6)+'" font-size="11" text-anchor="middle" fill="var(--muted)" font-weight="700">'+rv+'</text>';
+    const wd=new Date(x.d+'T12:00:00').toLocaleDateString([], {weekday:'short'});
+    svg+='<text x="'+(xx+w/2)+'" y="'+(H+20)+'" font-size="12" text-anchor="middle" fill="'+(x.d===t?'var(--accent)':'var(--muted)')+'" font-weight="'+(x.d===t?'800':'600')+'">'+(x.d===t?'Today':wd)+'</text>';
+  });
+  $('#chart').innerHTML=svg+'</svg>';
+  const m=cards.filter(c=>statusOf(c)==='mastered');
+  $('#masteredPanel').innerHTML='<h2>Mastered words ('+m.length+')</h2>'+(m.length?'<div class="row">'+m.map(c=>'<span class="tagchip st-mastered" lang="ko" title="'+esc(c.meaning_en)+'">'+esc(c.korean)+'</span>').join('')+'</div>':'<p class="muted small">No words mastered yet — a word is mastered when its review interval reaches 21 days. Keep practicing!</p>');
+}
+
+/* ============================ Settings ============================ */
+function renderSettings(){
+  $('#sNew').value=settings.newPerDay;$('#sDir').value=settings.direction;$('#sTheme').value=settings.theme;
+  $('#sRoman').checked=!!settings.showRoman;$('#sAutoSpeak').checked=!!settings.autoSpeak;$('#sRate').value=settings.rate;$('#rateVal').textContent=Number(settings.rate).toFixed(2)+'×';
+  $('#sSyncUrl').value=settings.syncUrl||'';$('#sAutoSync').checked=!!settings.autoSync;
+  const ls=settings.lastSync;if(ls&&!syncing)setSyncStatus((ls.ok?'✓ Last sync ':'✗ Last sync failed ')+fmtTime(ls.at)+': '+ls.msg,ls.ok?'ok':'err');else if(!ls)setSyncStatus('','');
+  updateVoiceStatus();
+}
+function bindSettings(){
+  $('#sNew').addEventListener('change',e=>{settings.newPerDay=Math.max(0,Math.min(100,parseInt(e.target.value,10)||0));save();if(!sess.flipped)buildQueue();toast('New words per day: '+settings.newPerDay)});
+  $('#sDir').addEventListener('change',e=>setDirection(e.target.value));
+  $('#sTheme').addEventListener('change',e=>{settings.theme=e.target.value;save();applyTheme()});
+  $('#sRoman').addEventListener('change',e=>{settings.showRoman=e.target.checked;save();renderStudy()});
+  $('#sAutoSpeak').addEventListener('change',e=>{settings.autoSpeak=e.target.checked;save()});
+  $('#sRate').addEventListener('input',e=>{settings.rate=Number(e.target.value);$('#rateVal').textContent=settings.rate.toFixed(2)+'×';save()});
+  $('#sAutoSync').addEventListener('change',e=>{settings.autoSync=e.target.checked;save()});
+  $('#sSyncUrl').addEventListener('change',e=>{settings.syncUrl=e.target.value.trim();save()});
+}
+function setDirection(d){settings.direction=d;save();const c=getCard(sess.cur);sess.dir=d==='mixed'?(Math.random()<.5?'ko2en':'en2ko'):d;sess.flipped=false;renderStudy();$('#sDir').value=d}
+
+/* ============================ Navigation ============================ */
+let tab='study';
+function showTab(t){
+  if(!document.getElementById('view-'+t))t='study';
+  tab=t;
+  $$('#tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));
+  $$('section.view').forEach(s=>s.classList.toggle('active',s.id==='view-'+t));
+  if(t==='study'){if(!sess.built||sess.date!==today())buildQueue();else renderStudy()}
+  if(t==='quiz')renderQuiz();if(t==='words')renderWords();if(t==='progress')renderProgress();if(t==='settings')renderSettings();
+  if(location.hash!=='#'+t)history.replaceState(null,'','#'+t);
+}
+function refreshAll(){
+  updateHeader();
+  if(tab==='words')renderWords();if(tab==='progress')renderProgress();if(tab==='settings')renderSettings();
+  if(tab==='study'){if(!sess.cur)buildQueue();else renderStudy()}
+  if(tab==='quiz'&&!quiz.running)renderQuiz();
+}
+
+/* ============================ Events ============================ */
+document.addEventListener('click',e=>{
+  const tb=e.target.closest('#tabs button');if(tb){showTab(tb.dataset.tab);return}
+  const ds=e.target.closest('#dirSeg button');if(ds){setDirection(ds.dataset.dir);return}
+  const qm=e.target.closest('[data-qmode]');if(qm){quiz.mode=qm.dataset.qmode;renderQuiz();return}
+  const el=e.target.closest('[data-action]');if(!el)return;
+  const a=el.dataset.action;
+  if(a==='speak'){e.stopPropagation();speak(el.dataset.text,el);return}
+  switch(a){
+    case 'flip':flip();break;
+    case 'grade':grade(Number(el.dataset.g));break;
+    case 'more-new':sess.extraNew+=5;buildQueue();break;
+    case 'goto':showTab(el.dataset.tab);break;
+    case 'add-word':openForm(null);break;
+    case 'edit-word':openForm(el.dataset.id);break;
+    case 'close-modal':closeForm();break;
+    case 'toggle-import':{const d=$('#importBox');d.open=!d.open;if(d.open)d.scrollIntoView({behavior:'smooth',block:'start'});break}
+    case 'import-paste':{const v=$('#pasteBox').value;if(!v.trim()){toast('Paste some rows first');break}if(importText(v,'Paste'))$('#pasteBox').value='';break}
+    case 'download-template-csv':download('vocab-template.csv','\uFEFF'+toCSV(TEMPLATE_ROWS),'text/csv');break;
+    case 'download-template-json':download('vocab-template.json',JSON.stringify({cards:TEMPLATE_ROWS.map(r=>Object.assign({},r,{tags:parseTags(r.tags)}))},null,2),'application/json');break;
+    case 'export':exportBackup();break;
+    case 'export-csv':download('korean-vocab-'+today()+'.csv','\uFEFF'+toCSV(cards),'text/csv');break;
+    case 'sync-now':settings.syncUrl=$('#sSyncUrl').value.trim();save();syncNow(true);break;
+    case 'clear-sync':settings.syncUrl='';settings.lastSync=null;save();renderSettings();toast('Sync URL cleared');break;
+    case 'reset-progress':if(confirm('Reset all review progress? Your words are kept.')){srs={};log={};save();sess.built=false;refreshAll();toast('Progress reset')}break;
+    case 'reset-all':if(confirm('Delete ALL words and progress from this browser? Export a backup first if unsure.')){cards=[];srs={};log={};save();sess.built=false;refreshAll();toast('Everything deleted')}break;
+    case 'quiz-start':startQuiz();break;
+    case 'quiz-exit':quiz.running=false;renderQuiz();break;
+    case 'mc-pick':mcPick(el.dataset.id);break;
+    case 'type-check':typeCheck(false);break;
+    case 'type-skip':typeCheck(true);break;
+    case 'type-hint':{const c=getCard(quiz.items[quiz.i]);const i=$('#quizInput');if(c&&i&&!quiz.answered){const ch=[...c.korean];const fb=$('#quizFb');fb.className='quiz-fb';fb.innerHTML='Hint: <span lang="ko">'+esc(ch[0])+'</span>'+' _'.repeat(Math.max(0,ch.length-1))+' <span class="muted small">('+ch.length+' characters)</span>';i.focus()}break}
+    case 'type-override':quiz.score++;el.parentNode.innerHTML='<span class="small">Counted ✓</span>';break;
+  }
+});
+$('#fmDelete').addEventListener('click',()=>deleteWord($('#fmId').value));
+$('#wordForm').addEventListener('submit',submitForm);
+$('#modalBg').addEventListener('mousedown',e=>{if(e.target.id==='modalBg')closeForm()});
+['fSearch','fUnit','fTag','fStatus'].forEach(id=>$('#'+id).addEventListener('input',renderWords));
+$('#importFile').addEventListener('change',e=>{handleFile(e.target.files[0]);e.target.value=''});
+$('#restoreFile').addEventListener('change',e=>{handleFile(e.target.files[0]);e.target.value=''});
+$('#darkModeToggle').addEventListener('click',()=>{const dark=document.documentElement.getAttribute('data-theme')==='dark';settings.theme=dark?'light':'dark';save();applyTheme();if(tab==='settings')renderSettings()});
+document.addEventListener('keydown',e=>{
+  if(e.isComposing||e.keyCode===229)return;
+  if($('#modalBg').classList.contains('open')){if(e.key==='Escape')closeForm();return}
+  const tag=(e.target.tagName||'').toLowerCase();
+  if(tab==='quiz'&&quiz.running&&quiz.mode==='type'&&e.key==='Enter'&&(e.target.id==='quizInput'||quiz.answered)){e.preventDefault();typeCheck(false);return}
+  if(tag==='input'||tag==='textarea'||tag==='select'||e.ctrlKey||e.metaKey||e.altKey)return;
+  if(tab==='study'){
+    if(e.key===' '||e.key==='Enter'){e.preventDefault();flip();return}
+    if(['1','2','3','4'].includes(e.key)){if(sess.flipped){e.preventDefault();grade(Number(e.key))}return}
+    const c=getCard(sess.cur);
+    if(c&&(e.key==='p'||e.key==='P')){speak(c.korean,$('.face.'+(sess.flipped?'back':'front')+' .speak'))}
+    if(c&&(e.key==='e'||e.key==='E')&&c.example_ko){speak(c.example_ko)}
+  }else if(tab==='quiz'&&quiz.running&&quiz.mode==='mc'&&['1','2','3','4'].includes(e.key)){
+    const b=$$('#mc button')[Number(e.key)-1];if(b)b.click();
+  }
+});
+window.addEventListener('hashchange',()=>{const t=location.hash.slice(1);if(t&&t!==tab)showTab(t)});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&sess.date&&sess.date!==today()&&tab==='study'&&!sess.flipped)buildQueue()});
+
+/* ============================ Boot ============================ */
+load();
+applyTheme();
+bindSettings();
+if(!storageOK)$('#storageBanner').style.display='block';
+showTab((location.hash||'#study').slice(1));
+updateHeader();
+if(settings.autoSync&&settings.syncUrl)setTimeout(()=>syncNow(false),400);
+
+/* Small hook for testing / power users in the console */
+window.KVF={get cards(){return cards},get srs(){return srs},get settings(){return settings},get log(){return log},get session(){return sess},parseAny,mergeCards,importText,exportBackup,syncNow,schedule,toCSV,romanize};
+})();
+</script>
+</body>
+</html>
