@@ -315,6 +315,18 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
 .sc-hi>i{background:var(--good)} .sc-mid>i{background:var(--hard)} .sc-lo>i{background:var(--again)}
 .sp-t{font-family:var(--font-ko);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #quizKind button{font-size:14px;padding:8px 16px}
+/* Perfect-score celebration (Story Quiz) + Celebration GIF settings */
+.celebrate{margin:4px auto 18px;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:10px;animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+.celebrate-gif{display:block;width:100%;max-width:320px;max-height:min(42vh,280px);object-fit:contain;border-radius:16px;border:1px solid var(--border);background:var(--panel2);box-shadow:var(--shadow)}
+.celebrate-gif.gif-failed{display:none}
+.celebrate-ko{font-family:var(--font-ko);font-size:clamp(28px,8vw,40px);font-weight:800;letter-spacing:-.01em;line-height:1.15;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.celebrate-en{font-size:13px;font-weight:600;color:var(--muted);margin-top:-6px}
+.gif-prev{margin-top:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.gif-prev img{width:120px;height:90px;object-fit:cover;border-radius:12px;border:1px solid var(--border);background:var(--panel2)}
+.gif-prev img.gif-failed{display:none}
+.gif-prev.off img{opacity:.35;filter:grayscale(1)}
+#sCelebrateGifUrl.invalid{border-color:var(--again);box-shadow:0 0 0 3px rgba(229,72,77,.15)}
+@media (max-width:420px){.celebrate{max-width:100%}.celebrate-gif{max-width:260px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -443,6 +455,16 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
         <input type="url" id="sStoriesUrl" aria-label="Stories CSV URL override" placeholder="https://docs.google.com/spreadsheets/d/e/…/pub?gid=…&amp;single=true&amp;output=csv" style="width:100%">
         <div class="row" style="margin-top:8px"><button class="btn primary" data-action="stories-load-override">Save &amp; Load</button><button class="btn" data-action="stories-clear">Clear override</button></div>
       </details>
+    </div>
+    <div class="panel" id="celebratePanel">
+      <h2>🎉 Celebration GIF</h2>
+      <p class="small muted">Shown with the message when you get every question right in a Story Quiz round.</p>
+      <label class="check"><input type="checkbox" id="sCelebrateGif"> Show a GIF on a perfect Story Quiz score (when off, only the message is shown)</label>
+      <label class="field" for="sCelebrateGifUrl">Custom GIF link (leave empty to use the default)</label>
+      <input type="url" id="sCelebrateGifUrl" placeholder="https://media.giphy.com/media/…/giphy.gif" autocomplete="off" spellcheck="false" style="width:100%">
+      <div class="row" style="margin-top:8px"><button class="btn primary" data-action="gif-save">Save link</button><button class="btn" data-action="gif-reset">Reset to default</button></div>
+      <div class="status-line" id="gifStatus"></div>
+      <div class="gif-prev" id="gifPrev"><img id="gifPrevImg" alt="Celebration GIF preview" referrerpolicy="no-referrer"><span class="small muted" id="gifPrevNote"></span></div>
     </div>
     <div class="panel">
       <h2>💾 Backup</h2>
@@ -605,7 +627,7 @@ const STORY_SEED_ROWS=[["st-01","1","1","Food & cooking","dialogue","카페에�
 
 /* ============================ Storage ============================ */
 const K = {cards:'kvf.cards.v1',srs:'kvf.srs.v1',settings:'kvf.settings.v1',log:'kvf.log.v1',storyProg:'kvf.storyprog.v1',stories:'kvf.stories.v1'};
-const DEFAULTS = {newPerDay:10,direction:'ko2en',theme:'auto',showRoman:false,autoSpeak:false,rate:0.9,syncUrl:'',autoSync:true,lastSync:null,migrated:false,storiesUrl:'',unlockAllStories:false,lastStorySync:null};
+const DEFAULTS = {newPerDay:10,direction:'ko2en',theme:'auto',showRoman:false,autoSpeak:false,rate:0.9,syncUrl:'',autoSync:true,lastSync:null,migrated:false,storiesUrl:'',unlockAllStories:false,lastStorySync:null,celebrateGif:true,celebrateGifUrl:''};
 let storageOK = true;
 const mem = {};
 function lsGet(k){try{return localStorage.getItem(k)}catch(e){storageOK=false;return mem[k]===undefined?null:mem[k]}}
@@ -811,6 +833,25 @@ function renderControls(){
   el.innerHTML='<div class="grades">'+[1,2,3,4].map(g=>'<button class="grade g'+g+'" data-action="grade" data-g="'+g+'">'+names[g]+'<small>'+ivLabel(schedule(s,g).interval)+' · '+g+'</small></button>').join('')+'</div><div class="shortcuts"><span class="kbd">1</span>–<span class="kbd">4</span> grade · <span class="kbd">P</span> word · <span class="kbd">E</span> example</div>';
 }
 function confetti(){const box=$('#confetti');const cols=['#4f46e5','#7c3aed','#22a06b','#f59e0b','#e5484d','#3b82f6'];let h='';for(let i=0;i<40;i++){h+='<i style="left:'+(Math.random()*100)+'%;background:'+cols[i%cols.length]+';animation-delay:'+(Math.random()*.5)+'s;animation-duration:'+(1.2+Math.random())+'s"></i>'}box.innerHTML=h;setTimeout(()=>box.innerHTML='',2600)}
+/* ---- Perfect-score celebration (Story Quiz) ---- */
+const DEFAULT_CELEBRATE_GIF='https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2R3dTN6dGtjeW83MWZib29iaDc2a3A0ZDFzeThkeXMyMGs1NDZ0bSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/UkYA557fdMYTe/giphy.gif';
+/* returns the normalized URL if it is a valid http(s) URL, else '' */
+function validGifUrl(u){
+  u=String(u||'').trim();if(!u)return '';
+  try{const x=new URL(u);return (x.protocol==='http:'||x.protocol==='https:')&&x.hostname?x.href:''}catch(e){return ''}
+}
+function celebrateGifSrc(){return validGifUrl(settings.celebrateGifUrl)||DEFAULT_CELEBRATE_GIF}
+/* onerror handler: hide the broken image, keep the text */
+function gifFailed(img){if(!img)return;img.classList.add('gif-failed');img.removeAttribute('src');img.setAttribute('aria-hidden','true');
+  if(img.id==='gifPrevImg'){const n=$('#gifPrevNote');if(n)n.textContent='⚠️ Couldn’t load this GIF — the message will still show.'}}
+function celebrationHTML(){
+  const gif=settings.celebrateGif!==false;
+  return '<div class="celebrate" id="celebrate" role="status">'+
+    (gif?'<img class="celebrate-gif" id="celebrateGif" alt="Celebration GIF" referrerpolicy="no-referrer">':'')+
+    '<div class="celebrate-ko" lang="ko">수고했어요!</div><div class="celebrate-en">Good work!</div></div>';
+}
+/* attach the onerror handler before setting src, so a failed load always hides the image */
+function wireCelebration(root){const img=root&&root.querySelector('#celebrateGif');if(!img)return;img.onerror=()=>gifFailed(img);img.src=celebrateGifSrc()}
 
 /* ============================ Quiz ============================ */
 const quiz={kind:'words',mode:'mc',source:'studied',n:10,items:[],i:0,score:0,answered:false,options:[],running:false};
@@ -1359,8 +1400,10 @@ function renderStoryQuiz(a){
   }
   if(sq.i>=sq.items.length){
     const n=sq.items.length,pct=n?Math.round(100*sq.score/n):0;
-    a.innerHTML='<div class="quiz-card done"><div class="big">'+(pct>=80?'🏆':pct>=50?'👏':'💪')+'</div><h2>'+sq.score+' / '+n+' correct</h2><p class="muted">'+(pct>=80?'Excellent!':pct>=50?'Nice work!':'Keep going!')+(sq.missed?' The '+sq.missed+' you missed will come back next round.':'')+'</p>'+
+    const perfect=n>0&&sq.score===n;
+    a.innerHTML='<div class="quiz-card done'+(perfect?' perfect':'')+'">'+(perfect?celebrationHTML():'<div class="big">'+(pct>=80?'🏆':pct>=50?'👏':'💪')+'</div>')+'<h2>'+sq.score+' / '+n+' correct</h2><p class="muted">'+(pct>=80?'Excellent!':pct>=50?'Nice work!':'Keep going!')+(sq.missed?' The '+sq.missed+' you missed will come back next round.':'')+'</p>'+
       '<div class="row" style="justify-content:center"><button class="btn primary" data-action="sq-start">Next round</button><button class="btn" data-action="sq-quit">Done</button><button class="btn" data-action="goto" data-tab="stories">All stories</button></div></div>';
+    if(perfect)wireCelebration(a);
     if(pct>=80&&!sq.celebrated){sq.celebrated=true;confetti()}return;
   }
   const it=sq.items[sq.i],s=getStory(it.sid),q=s&&s.questions[it.qi];
@@ -1602,7 +1645,26 @@ function renderSettings(){
   if(settings.storiesUrl)$('#storiesAdv').open=true;
   renderStoriesStatus();
   updateVoiceStatus();
+  renderGifSettings();
 }
+function renderGifSettings(){
+  const on=settings.celebrateGif!==false,cb=$('#sCelebrateGif'),inp=$('#sCelebrateGifUrl');if(!cb||!inp)return;
+  cb.checked=on;if(document.activeElement!==inp){inp.value=settings.celebrateGifUrl||'';inp.classList.remove('invalid')}
+  const src=celebrateGifSrc(),img=$('#gifPrevImg'),note=$('#gifPrevNote');
+  $('#gifPrev').classList.toggle('off',!on);
+  img.classList.remove('gif-failed');img.removeAttribute('aria-hidden');img.onerror=()=>gifFailed(img);
+  if(img.getAttribute('src')!==src)img.setAttribute('src',src);
+  note.textContent=(validGifUrl(settings.celebrateGifUrl)?'Preview · your custom GIF':'Preview · default GIF')+(on?'':' (GIFs are off)');
+}
+function setGifStatus(msg,cls){const el=$('#gifStatus');if(el){el.textContent=msg;el.className='status-line'+(cls?' '+cls:'')}}
+function saveGifUrl(){
+  const inp=$('#sCelebrateGifUrl'),raw=inp.value.trim();
+  if(!raw){settings.celebrateGifUrl='';save();inp.classList.remove('invalid');setGifStatus('Using the default GIF.','ok');renderGifSettings();return true}
+  const u=validGifUrl(raw);
+  if(!u){inp.classList.add('invalid');setGifStatus('✗ Please enter a valid http:// or https:// link.','err');return false}
+  settings.celebrateGifUrl=u;save();inp.value=u;inp.classList.remove('invalid');setGifStatus('✓ Custom GIF saved.','ok');renderGifSettings();return true;
+}
+function resetGifUrl(){settings.celebrateGifUrl='';save();const inp=$('#sCelebrateGifUrl');inp.value='';inp.classList.remove('invalid');setGifStatus('Reset to the default GIF.','ok');renderGifSettings()}
 function bindSettings(){
   $('#sNew').addEventListener('change',e=>{settings.newPerDay=Math.max(0,Math.min(100,parseInt(e.target.value,10)||0));save();if(!sess.flipped)buildQueue();toast('New words per day: '+settings.newPerDay)});
   $('#sDir').addEventListener('change',e=>setDirection(e.target.value));
@@ -1614,6 +1676,10 @@ function bindSettings(){
   $('#sSyncUrl').addEventListener('change',e=>{settings.syncUrl=e.target.value.trim();save()});
   $('#sStoriesUrl').addEventListener('change',e=>{settings.storiesUrl=e.target.value.trim();save();renderStoriesStatus()});
   $('#sUnlockStories').addEventListener('change',e=>{settings.unlockAllStories=e.target.checked;save();toast(settings.unlockAllStories?'All stories unlocked':'Stories unlock stage by stage')});
+  $('#sCelebrateGif').addEventListener('change',e=>{settings.celebrateGif=e.target.checked;save();renderGifSettings();toast(settings.celebrateGif?'Celebration GIF on':'Celebration GIF off')});
+  $('#sCelebrateGifUrl').addEventListener('change',()=>saveGifUrl());
+  $('#sCelebrateGifUrl').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveGifUrl()}});
+  $('#sCelebrateGifUrl').addEventListener('input',e=>{if(!e.target.value.trim()||validGifUrl(e.target.value)){e.target.classList.remove('invalid');setGifStatus('','')}});
 }
 function setDirection(d){settings.direction=d;save();const c=getCard(sess.cur);sess.dir=d==='mixed'?(Math.random()<.5?'ko2en':'en2ko'):d;sess.flipped=false;renderStudy();$('#sDir').value=d}
 
@@ -1686,6 +1752,8 @@ document.addEventListener('click',e=>{
     case 'sq-ord':qOrderTap(el.dataset.key,Number(el.dataset.k));break;
     case 'sq-ord-reset':delete storyUI.ord[el.dataset.key];rerenderQ(el.dataset.key);break;
     case 'sq-start':startStoryQuiz();break;
+    case 'gif-save':saveGifUrl();break;
+    case 'gif-reset':resetGifUrl();break;
     case 'sq-quit':sq.running=false;sq.ans=null;renderQuiz();break;
     case 'sq-next':sq.i++;sq.ans=null;sq.hint=false;renderQuiz();window.scrollTo({top:0,behavior:'auto'});break;
     case 'sq-hint':{sq.hint=!sq.hint;const q=$('#sqQ');if(q)q.classList.toggle('peek',sq.hint);el.setAttribute('aria-pressed',String(sq.hint));break}
