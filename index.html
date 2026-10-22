@@ -110,6 +110,9 @@ label.check{display:flex;gap:8px;align-items:center;margin:8px 0;font-size:14px;
 .speak:hover{transform:scale(1.08)} .speak:active{transform:scale(.92)}
 .speak.sm{width:28px;height:28px;font-size:13px}
 .speak.playing{animation:pulse 1s infinite}
+.speak.lg{width:84px;height:84px}.speak.lg .ico{width:38px;height:38px}
+.tagchip.chip-tricky{background:rgba(229,72,77,.12);color:#c2323a}
+[data-theme=dark] .tagchip.chip-tricky{color:#ff8a8d}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(79,70,229,.45)}100%{box-shadow:0 0 0 12px rgba(79,70,229,0)}}
 .back-body{text-align:left;display:flex;flex-direction:column;gap:12px;margin-top:10px}
 .back-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;text-align:center}
@@ -389,7 +392,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
       <div class="counts"><span class="count new" id="cNew" title="New cards left">0 new</span><span class="count rev" id="cRev" title="Reviews left">0 review</span></div>
       <div class="progressbar"><i id="sessBar"></i></div>
       <div class="seg" id="dirSeg" title="Card direction">
-        <button data-dir="ko2en">한→EN</button><button data-dir="en2ko">EN→한</button><button data-dir="mixed">Mixed</button>
+        <button data-dir="ko2en">한→EN</button><button data-dir="en2ko">EN→한</button><button data-dir="mixed">Mixed</button><button data-dir="listen">Listen</button>
       </div>
     </div>
     <div id="studyArea"></div>
@@ -420,7 +423,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
         <select id="fUnit" aria-label="Filter by unit"></select>
         <select id="fTag" aria-label="Filter by tag"></select>
         <select id="fStatus" aria-label="Filter by status">
-          <option value="">All statuses</option><option value="new">New</option><option value="learning">Learning</option><option value="mastered">Mastered</option><option value="due">Reviews due</option>
+          <option value="">All statuses</option><option value="new">New</option><option value="learning">Learning</option><option value="mastered">Mastered</option><option value="due">Reviews due</option><option value="tricky">Tricky</option>
         </select>
       </div>
       <div class="tablewrap"><table>
@@ -447,6 +450,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
       <div class="legend"><span><i style="background:var(--accent)"></i>New words learned</span><span><i style="background:var(--good)"></i>Reviews</span></div>
     </div>
     <div class="panel" id="storyProgress"></div>
+    <div class="panel" id="trickyPanel"></div>
     <div class="panel" id="masteredPanel"></div>
   </section>
 
@@ -457,7 +461,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
       <label class="field" for="sNew">New words per day</label>
       <input type="number" id="sNew" min="0" max="100" style="width:110px">
       <label class="field" for="sDir">Card direction</label>
-      <select id="sDir"><option value="ko2en">Korean → English</option><option value="en2ko">English → Korean</option><option value="mixed">Mixed</option></select>
+      <select id="sDir"><option value="ko2en">Korean → English</option><option value="en2ko">English → Korean</option><option value="mixed">Mixed</option><option value="listen">Listen (audio only)</option></select>
       <label class="field" for="sTheme">Theme</label>
       <select id="sTheme"><option value="auto">Match system</option><option value="light">Light</option><option value="dark">Dark</option></select>
       <label class="check"><input type="checkbox" id="sRoman"> Show romanization (approximate; off by default — you read Hangul!)</label>
@@ -673,6 +677,7 @@ const STORY_SEED_ROWS=[["st-01","1","1","Food & cooking","dialogue","카페에�
 /* ============================ Storage ============================ */
 const K = {cards:'kvf.cards.v1',srs:'kvf.srs.v1',settings:'kvf.settings.v1',log:'kvf.log.v1',storyProg:'kvf.storyprog.v1',stories:'kvf.stories.v1',storyReview:'kvf.storyReview.v1'};
 const DEFAULT_SYNC_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vQZXf7It5YFldLPav5vy0MlEivnPhxzGscPJtPjlSU5PWPmRs15lNyKulsDqaCh6mTGszHuceT0tWlK/pub?gid=2124601305&single=true&output=csv';
+const DIRS=['ko2en','en2ko','mixed','listen'];
 const DEFAULTS = {newPerDay:10,direction:'ko2en',theme:'auto',showRoman:false,autoSpeak:false,rate:0.9,syncUrl:DEFAULT_SYNC_URL,autoSync:true,lastSync:null,migrated:false,storiesUrl:'',unlockAllStories:false,lastStorySync:null,celebrateGif:true,celebrateGifUrl:'',hiddenPresets:[]};
 let storageOK = true;
 const mem = {};
@@ -685,6 +690,7 @@ let cards=[], srs={}, settings={}, log={};
 function save(){lsSet(K.cards,JSON.stringify(cards));lsSet(K.srs,JSON.stringify(srs));lsSet(K.settings,JSON.stringify(settings));lsSet(K.log,JSON.stringify(log));lsSet(K.storyProg,JSON.stringify(storyProg));}
 function load(){
   settings=Object.assign({},DEFAULTS,readJSON(K.settings,{}));
+  if(!DIRS.includes(settings.direction))settings.direction='ko2en';
   srs=readJSON(K.srs,{})||{};
   log=readJSON(K.log,{})||{};
   const c=readJSON(K.cards,null);
@@ -746,6 +752,8 @@ function romanize(s){let out='';for(const ch of String(s)){const c=ch.charCodeAt
 
 /* ============================ SRS (SM-2 style) ============================ */
 function statusOf(c){const s=srs[c.id];if(!s||!s.introduced)return 'new';return s.interval>=21?'mastered':'learning'}
+/* tricky = forgotten (graded Again) 2+ times and not yet mastered; drops off once mastered */
+function isTricky(c){const s=srs[c.id];return !!s&&(s.lapses||0)>=2&&statusOf(c)!=='mastered'}
 function isDue(c,t){const s=srs[c.id];return !!(s&&s.introduced&&s.due<=(t||today()))}
 function schedule(prev,g){
   const t=today();
@@ -808,11 +816,15 @@ function buildQueue(){
 function nextCard(){
   sess.queue=sess.queue.filter(id=>cards.some(c=>c.id===id));
   sess.cur=sess.queue.shift()||null;sess.flipped=false;
-  const d=settings.direction;sess.dir=d==='mixed'?(Math.random()<.5?'ko2en':'en2ko'):d;
+  sess.dir=pickDir();
   renderStudy();
-  if(sess.cur&&settings.autoSpeak&&sess.dir==='ko2en'){const c=getCard(sess.cur);if(c)setTimeout(()=>speak(c.korean),250)}
+  if(sess.cur&&(sess.dir==='listen'||(settings.autoSpeak&&sess.dir==='ko2en'))){const c=getCard(sess.cur);if(c)setTimeout(()=>speak(c.korean),250)}
 }
 function getCard(id){return cards.find(c=>c.id===id)}
+let listenWarned=false;
+function pickDir(){const d=settings.direction;if(d==='mixed')return Math.random()<.5?'ko2en':'en2ko';
+  if(d==='listen'&&!hasTTS){if(!listenWarned){listenWarned=true;toast('Listen mode needs speech support — showing Korean → English instead')}return 'ko2en'}
+  return DIRS.includes(d)?d:'ko2en'}
 function flip(){
   if(!sess.cur)return;
   sess.flipped=!sess.flipped;
@@ -852,11 +864,13 @@ function renderStudy(){
       '<button class="btn" data-action="goto" data-tab="quiz">Practice in quiz mode</button></div></div>';
     return;
   }
-  const c=getCard(sess.cur), st=statusOf(c), ko2en=sess.dir==='ko2en';
+  const c=getCard(sess.cur), st=statusOf(c), ko2en=sess.dir!=='en2ko', listen=sess.dir==='listen';
   const roman=settings.showRoman?'<div class="roman">'+esc(c.romanization||romanize(c.korean))+'</div>':'';
   const meta='<div class="top-meta"><span class="tagchip st-'+st+'">'+st+'</span><span>'+esc(c.unit)+'</span></div>';
   const koBlock='<div class="word-big" lang="ko">'+esc(c.korean)+'</div>'+roman;
-  const front=ko2en
+  const front=listen
+    ? '<div class="center"><button class="speak lg" data-action="speak" data-text="'+esc(c.korean)+'" title="Play again" aria-label="Play the word again"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="muted small" style="margin-top:12px">Listen and recall the meaning</div></div><div class="hint">Tap or press <span class="kbd">Space</span> to flip</div>'
+    : ko2en
     ? '<div class="center">'+koBlock+'<div class="pos">'+esc(c.pos)+'</div><div style="margin-top:8px">'+speakBtn(c.korean)+'</div></div><div class="hint">Tap or press <span class="kbd">Space</span> to flip</div>'
     : '<div class="center"><div class="en-big">'+esc(c.meaning_en)+'</div><div class="pos">'+esc(c.pos)+'</div><div class="muted small" style="margin-top:6px">What is it in Korean?</div></div><div class="hint">Tap or press <span class="kbd">Space</span> to flip</div>';
   const back='<div class="back-body">'+
@@ -929,20 +943,23 @@ function wireCelebration(root){const img=root&&root.querySelector('#celebrateGif
 /* ============================ Quiz ============================ */
 const quiz={mode:'mc',source:'studied',n:10,items:[],i:0,score:0,answered:false,options:[],running:false};
 function quizPool(){
-  let pool=quiz.source==='all'?cards.slice():quiz.source==='hard'?cards.filter(c=>srs[c.id]&&(srs[c.id].lapses>0)):cards.filter(c=>statusOf(c)!=='new');
+  let pool=quiz.source==='all'?cards.slice():quiz.source==='hard'?cards.filter(c=>srs[c.id]&&(srs[c.id].lapses>0)):quiz.source==='tricky'?cards.filter(isTricky):cards.filter(c=>statusOf(c)!=='new');
   if(quiz.source.startsWith('unit:')){const u=quiz.source.slice(5);pool=cards.filter(c=>c.unit===u)}
   return pool.filter(c=>c.korean&&c.meaning_en);
 }
 function renderQuiz(){
   const a=$('#quizArea');
   if(!quiz.running){
-    const units=[...new Set(cards.map(c=>c.unit).filter(Boolean))].sort();
+    const units=[...new Set(cards.map(c=>c.unit).filter(Boolean))].sort(), nTricky=cards.filter(isTricky).length;
     a.innerHTML='<div class="quiz-card"><h2>Quiz practice</h2><p class="muted small">Practice outside the schedule — quizzes don’t change your spaced-repetition reviews.</p>'+
       '<div class="seg" id="quizMode" style="margin:6px 0 14px"><button data-qmode="mc" class="'+(quiz.mode==='mc'?'on':'')+'">Multiple choice (한→EN)</button><button data-qmode="type" class="'+(quiz.mode==='type'?'on':'')+'">Typing (EN→한)</button></div><br>'+
-      '<div class="row" style="justify-content:center"><select id="quizSource"><option value="studied">Words I’ve studied</option><option value="all">All words</option><option value="hard">Words I’ve forgotten before</option>'+units.map(u=>'<option value="unit:'+esc(u)+'">Unit: '+esc(u)+'</option>').join('')+'</select>'+
+      '<div class="row" style="justify-content:center"><select id="quizSource"><option value="studied">Words I’ve studied</option><option value="all">All words</option><option value="hard">Words I’ve forgotten before</option><option value="tricky"'+(nTricky?'':' disabled')+'>Tricky words only ('+nTricky+')</option>'+units.map(u=>'<option value="unit:'+esc(u)+'">Unit: '+esc(u)+'</option>').join('')+'</select>'+
       '<select id="quizN"><option>5</option><option selected>10</option><option>20</option><option value="999">All</option></select>'+
       '<button class="btn primary" data-action="quiz-start">Start</button></div><p class="small muted" id="quizMsg"></p></div>';
+    if(quiz.source==='tricky'&&!nTricky)quiz.source='studied';
     $('#quizSource').value=quiz.source;if(!$('#quizSource').value)$('#quizSource').value='studied';
+    const qm=$('#quizMsg'),hint=()=>{qm.textContent=$('#quizSource').value==='tricky'&&nTricky<4?'Only '+nTricky+' tricky word'+(nTricky===1?'':'s')+' — a short quiz (answer choices still come from your whole deck).':nTricky?'':'Tricky words (forgotten 2+ times, not mastered) will appear here once you have some.'};
+    $('#quizSource').addEventListener('change',hint);hint();
     $('#quizN').value=String(quiz.n);
     return;
   }
@@ -1016,12 +1033,12 @@ function renderWords(){
   const q=norm($('#fSearch').value),u=$('#fUnit').value,tg=$('#fTag').value,st=$('#fStatus').value;
   const rows=cards.filter(c=>{
     if(u&&c.unit!==u)return false;if(tg&&!c.tags.includes(tg))return false;
-    if(st==='due'){if(!isDue(c))return false}else if(st&&statusOf(c)!==st)return false;
+    if(st==='due'){if(!isDue(c))return false}else if(st==='tricky'){if(!isTricky(c))return false}else if(st&&statusOf(c)!==st)return false;
     if(q){const hay=norm([c.korean,c.meaning_en,c.hanja,c.notes,c.example_ko,c.example_en,c.related,c.tags.join(' '),c.pos].join(' '));if(!hay.includes(q))return false}
     return true;
   });
   $('#wordCount').textContent='· '+rows.length+' of '+cards.length;
-  $('#wordTable').innerHTML=rows.length?rows.map(c=>{const s=srs[c.id],stt=statusOf(c);return '<tr><td>'+speakBtn(c.korean,1)+'</td><td class="k" lang="ko">'+esc(c.korean)+(c.hanja?' <span class="muted small" style="font-weight:400">'+esc(c.hanja)+'</span>':'')+'</td><td>'+esc(c.meaning_en)+'</td><td class="hide-sm muted">'+esc(c.pos)+'</td><td class="hide-sm small">'+esc(c.unit)+'</td><td><span class="tagchip st-'+stt+'">'+stt+'</span></td><td class="hide-sm small muted">'+(s&&s.introduced?esc(s.due):'—')+'</td><td class="actions"><button class="btn sm" data-action="edit-word" data-id="'+esc(c.id)+'">Edit</button></td></tr>'}).join('')
+  $('#wordTable').innerHTML=rows.length?rows.map(c=>{const s=srs[c.id],stt=statusOf(c);return '<tr><td>'+speakBtn(c.korean,1)+'</td><td class="k" lang="ko">'+esc(c.korean)+(c.hanja?' <span class="muted small" style="font-weight:400">'+esc(c.hanja)+'</span>':'')+(isTricky(c)?' <span class="tagchip chip-tricky" title="Forgotten '+s.lapses+' times">tricky</span>':'')+'</td><td>'+esc(c.meaning_en)+'</td><td class="hide-sm muted">'+esc(c.pos)+'</td><td class="hide-sm small">'+esc(c.unit)+'</td><td><span class="tagchip st-'+stt+'">'+stt+'</span></td><td class="hide-sm small muted">'+(s&&s.introduced?esc(s.due):'—')+'</td><td class="actions"><button class="btn sm" data-action="edit-word" data-id="'+esc(c.id)+'">Edit</button></td></tr>'}).join('')
     :'<tr><td colspan="8" class="muted" style="text-align:center;padding:24px">No words match.</td></tr>';
 }
 function openForm(id){
@@ -1211,6 +1228,8 @@ function renderProgress(){
   });
   $('#chart').innerHTML=svg+'</svg>';
   renderStoryProgress();
+  const tk=cards.filter(isTricky);
+  $('#trickyPanel').innerHTML='<h2>Tricky words ('+tk.length+')</h2>'+(tk.length?'<div class="row">'+tk.map(c=>'<span class="tagchip chip-tricky" lang="ko" title="'+esc(c.meaning_en)+'">'+esc(c.korean)+'</span>').join('')+'</div>':'<p class="muted small">No tricky words right now — words you forget twice or more show up here until mastered.</p>');
   const m=cards.filter(c=>statusOf(c)==='mastered');
   $('#masteredPanel').innerHTML='<h2>Mastered words ('+m.length+')</h2>'+(m.length?'<div class="row">'+m.map(c=>'<span class="tagchip st-mastered" lang="ko" title="'+esc(c.meaning_en)+'">'+esc(c.korean)+'</span>').join('')+'</div>':'<p class="muted small">No words mastered yet — a word is mastered when its review interval reaches 21 days. Keep practicing!</p>');
 }
@@ -1757,7 +1776,7 @@ function bindSettings(){
   $('#sCelebrateGifUrl').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveGifUrl()}});
   $('#sCelebrateGifUrl').addEventListener('input',e=>{if(!e.target.value.trim()||validGifUrl(e.target.value)){e.target.classList.remove('invalid');setGifStatus('','')}});
 }
-function setDirection(d){settings.direction=d;save();const c=getCard(sess.cur);sess.dir=d==='mixed'?(Math.random()<.5?'ko2en':'en2ko'):d;sess.flipped=false;renderStudy();$('#sDir').value=d}
+function setDirection(d){if(!DIRS.includes(d))d='ko2en';settings.direction=d;save();const c=getCard(sess.cur);sess.dir=pickDir();sess.flipped=false;renderStudy();$('#sDir').value=d;if(c&&sess.dir==='listen')speak(c.korean,$('.face.front .speak'))}
 
 /* ============================ Navigation ============================ */
 let tab='study';
