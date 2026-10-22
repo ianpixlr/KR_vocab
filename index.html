@@ -200,6 +200,7 @@ details.import summary{cursor:pointer;font-weight:700}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .banner{background:rgba(245,158,11,.14);border:1px solid rgba(245,158,11,.4);border-radius:12px;padding:10px 12px;font-size:13.5px;margin-bottom:12px}
 .help ol li,.help ul li{margin:6px 0}
+#helpBox{margin-top:14px} #helpBox[hidden]{display:none} #helpPanel{scroll-margin-top:14px}
 code{background:var(--panel2);border:1px solid var(--border);padding:1px 5px;border-radius:6px;font-size:12.5px}
 .status-line{font-size:13px;margin-top:8px}
 .status-line.ok{color:var(--good)} .status-line.err{color:var(--again)}
@@ -381,7 +382,6 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
     <button data-tab="words">Words</button>
     <button data-tab="progress">Progress</button>
     <button data-tab="settings">Settings</button>
-    <button data-tab="help">Help</button>
   </nav>
 
   <div id="storageBanner" class="banner" style="display:none">This browser is blocking local storage, so progress won't be saved. Use <b>Settings → Export backup</b> before closing.</div>
@@ -432,7 +432,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
       </table></div>
       <details class="import" id="importBox">
         <summary>Import words (file, or paste CSV / TSV from Google Sheets)</summary>
-        <p class="small muted">Imports <b>merge</b>: words are matched by Korean + meaning (or id). New words are added, matching words are updated, and your review progress is never wiped. A header row is recommended — see Help for the column format.</p>
+        <p class="small muted">Imports <b>merge</b>: words are matched by Korean + meaning (or id). New words are added, matching words are updated, and your review progress is never wiped. A header row is recommended — see Settings → Help &amp; shortcuts for the column format.</p>
         <div class="row"><input type="file" id="importFile" accept=".csv,.tsv,.txt,.json,application/json,text/csv"> <button class="btn sm" data-action="download-template-csv">CSV template</button><button class="btn sm" data-action="download-template-json">JSON template</button></div>
         <label class="field" for="pasteBox">…or paste rows (with header row, comma- or tab-separated):</label>
         <textarea id="pasteBox" placeholder="korean,meaning_en,pos,example_ko,example_en,notes,unit,tags&#10;취소하다,to cancel,verb,비 때문에 여행을 취소했어요.,We canceled the trip because of the rain.,하다 verb,My list,travel"></textarea>
@@ -532,81 +532,87 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
         <button class="btn danger" data-action="reset-all">Delete everything</button>
       </div>
     </div>
+    <!-- HELP (opened from here; #help and data-tab="help" land here too) -->
+    <div class="panel" id="helpPanel">
+      <div class="row" style="justify-content:space-between;flex-wrap:nowrap">
+        <div><h2 style="margin:0">Help &amp; shortcuts</h2><p class="small muted" style="margin:4px 0 0">How reviews work, keyboard shortcuts, stories, and adding words.</p></div>
+        <button class="btn sm" data-action="toggle-help" id="helpToggle" aria-expanded="false" aria-controls="helpBox">Show</button>
+      </div>
+    </div>
+    <div class="help" id="helpBox" hidden>
+      <div class="panel">
+        <h2>How it works</h2>
+        <p>Each day you get up to <b>10 new words</b> (change it in Settings) plus any reviews that are due. Flip the card, then grade yourself honestly — the app schedules the next review using spaced repetition (SM‑2 style: roughly 1 → 3 → 8 → 20 days…). A word counts as <b>mastered</b> once its interval reaches 21 days.</p>
+        <h3>Keyboard shortcuts</h3>
+        <ul>
+          <li><span class="kbd">Space</span> / <span class="kbd">Enter</span> flip the card</li>
+          <li><span class="kbd">1</span> Again · <span class="kbd">2</span> Hard · <span class="kbd">3</span> Good · <span class="kbd">4</span> Easy</li>
+          <li><span class="kbd">P</span> pronounce the word · <span class="kbd">E</span> pronounce the example</li>
+          <li>Multiple-choice quiz: <span class="kbd">1</span>–<span class="kbd">4</span> pick an answer</li>
+          <li>Stories: <span class="kbd">E</span> show / hide English · <span class="kbd">Esc</span> close the word popup, then back to the story list</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h2>Stories</h2>
+        <p>Short graded reading in four stages, from simple dialogues to diary entries. A stage unlocks once you’ve read every story in the stages before it (or turn on <b>Settings → Unlock all stories</b>).</p>
+        <ul>
+          <li><b>Korean first.</b> Read the whole story in Korean. Tap a line or speech bubble to peek at just that line’s English, or press <b>Show English</b> (<span class="kbd">E</span>) to show it under every line.</li>
+          <li><b>Dotted words</b> are this story’s key vocabulary — tap one for its meaning. <span class="tagchip badge-deck">✓ In your deck</span> means it’s already in your flashcards. Story vocab comes into your deck through sync (the Vocab tab of your sheet).</li>
+          <li>The <b>speaker button</b> reads one line; <b>▶ Read whole story</b> reads it all (dialogue speakers get different voices or pitch where your device allows).</li>
+          <li>Answer the <b>Comprehension check</b>; when every question is answered the story is marked as read (or press <b>Mark as read</b>). Get every question right for a small celebration.</li>
+          <li><b>Missed questions</b> are remembered: the story shows <span class="tagchip chip-review">↻ N to review</span> in the list. Open it, reread it, and the questions you missed are reset at the end (flagged <span class="qflag">Review</span>) so you can try them again. A correct answer clears it from the review list.</li>
+          <li><b>Comprehension N%</b> on each story card = your % correct on that story’s questions, from the comprehension check. The Progress tab lists it per story.</li>
+        </ul>
+        <h3>Question types</h3>
+        <ul class="small">
+          <li><code>tf</code> <b>O/X</b> — a statement about the story; answer 맞아요 or 틀려요.</li>
+          <li><code>mcq</code> <b>선택</b> — pick the right answer from 2–4 options.</li>
+          <li><code>who</code> <b>누가</b> — a quoted line: who said it? (dialogues)</li>
+          <li><code>order</code> <b>순서</b> — tap 3–4 events in the order they happened.</li>
+          <li><code>blank</code> <b>빈칸</b> — a sentence from the story with ___; pick the missing word (choices come from the story’s word list and your deck).</li>
+          <li><code>short</code> <b>대답</b> — answer in your head or out loud, press <b>Show answer</b> (답 보기 in the quiz), compare with the model answer, then mark yourself right or wrong.</li>
+        </ul>
+        <h3>Adding a story in the Google Sheet</h3>
+        <p class="small">Use the <b>Stories</b> tab, one row per element, with columns <code>story_id, stage, order, theme, format, title_ko, title_en, type, speaker, ko, en, word_ref, notes, qtype</code>. Give the new story a new id (e.g. <code>st-17</code>), its stage, and number <code>order</code> 1, 2, 3… The <code>type</code> column says what each row is:</p>
+        <ul class="small">
+          <li><code>meta</code> — one per story: <code>stage</code>, <code>theme</code>, <code>format</code> (dialogue / prose / mixed), <code>title_ko</code>, <code>title_en</code>; <code>en</code> = a one-line summary.</li>
+          <li><code>line</code> — one dialogue line (<code>speaker</code> = name) or one prose sentence (<code>speaker</code> blank); <code>ko</code> + <code>en</code>. Put <code>¶</code> in <code>notes</code> to start a new paragraph.</li>
+          <li><code>vocab</code> — <code>ko</code> = dictionary form, <code>en</code> = meaning, <code>word_ref</code> = the Vocab tab id if the word is in your bank, <code>notes</code> = <code>in story: form1, form2 — usage note</code> (the forms listed are what gets underlined).</li>
+          <li><code>grammar</code> — <code>ko</code> = pattern, <code>en</code> = explanation plus the example from the story.</li>
+          <li><code>question</code> — <code>ko</code> = the question in Korean, <code>en</code> = its English (hidden until asked for), <code>notes</code> = <code>answer in Korean | answer in English</code>, <code>qtype</code> = one of the types above, <code>word_ref</code> = optional <code>L5</code> = the story line the answer comes from (shown after answering; the app guesses if blank). By type:
+            <ul>
+              <li><code>tf</code>: <code>ko</code> = the statement; notes <code>맞아요 | True</code> or <code>틀려요 | False — why</code>.</li>
+              <li><code>mcq</code>: options in <code>speaker</code> separated by <code> / </code>; the Korean answer must match one option exactly.</li>
+              <li><code>who</code>: <code>ko</code> = <code>“quoted line” 누가 말했어요?</code>; <code>speaker</code> = the names separated by <code> / </code> (blank = the story’s speakers); answer = the name.</li>
+              <li><code>order</code>: <code>speaker</code> = 3–4 events separated by <code> / </code> <i>in the correct order</i> (the app shuffles them).</li>
+              <li><code>blank</code>: <code>ko</code> = a story sentence with <code>___</code> where a word from the story’s vocab list was; answer = that word, exactly as it fits the blank.</li>
+              <li><code>short</code>: answer = a model answer.</li>
+            </ul>
+            A row with no <code>qtype</code> is treated as <code>mcq</code> if it has options, otherwise <code>short</code>. Aim for 4–6 questions per story.</li>
+        </ul>
+        <p class="small"><b>Publishing:</b> nothing extra to paste — the sync link in <b>Settings</b> does both. Publish the sheet with <b>File → Share → Publish to web → Entire document → Comma-separated values (.csv)</b>; the app fetches the Vocab tab from your link and the Stories tab (gid <code>1019870171</code>) from the same sheet. Edits show up next time the app opens (Google can take a few minutes to refresh). If you ever keep stories elsewhere, use <b>Settings → Stories → Advanced: Stories CSV URL override</b>.</p>
+      </div>
+      <div class="panel">
+        <h2>Three ways to add words</h2>
+        <ol>
+          <li><b>Manual form</b> — Words tab → <b>＋ Add word</b>. Edit or delete any word from the table.</li>
+          <li><b>Import a file or paste</b> — Words tab → <b>Import / paste</b>. Upload a <code>.csv</code>, <code>.tsv</code> or <code>.json</code> file, or copy cells straight out of Google Sheets / Excel (include the header row) and paste them. Download the template there to see the format.</li>
+          <li><b>Sync URL (self-updating)</b> — keep your list in a Google Sheet. In Sheets: <b>File → Share → Publish to web</b> → <b>Entire document</b> → <b>Comma-separated values (.csv)</b> → Publish, and copy the link (a link to just the Vocab tab, <code>…pub?gid=…&amp;single=true&amp;output=csv</code>, works too). Paste it in <b>Settings → Sync</b>. The same link also loads your Stories tab. Every time you open the app, new rows are added automatically. A GitHub “raw” CSV/JSON link works too (normal github.com/…/blob/… links are converted automatically).</li>
+        </ol>
+        <h3>Column format</h3>
+        <p class="small"><code>id, korean, hanja, pos, meaning_en, example_ko, example_en, notes, related, unit, tags, date_added</code></p>
+        <ul class="small">
+          <li>Only <code>korean</code> and <code>meaning_en</code> are required; column order doesn't matter when there's a header row. Header aliases like <code>word</code>, <code>english</code>, <code>meaning</code>, <code>example</code> also work.</li>
+          <li><code>tags</code>: separate with <code>;</code> (e.g. <code>travel;verbs</code>). <code>date_added</code>: <code>YYYY-MM-DD</code>. Leave <code>id</code> blank and the app makes one.</li>
+          <li>Merging: matched by <code>id</code> or by Korean + meaning. Non-empty values from the import update the word; blank cells never erase anything. If you change a word's meaning in the sheet (and it has no id) it's treated as a new word.</li>
+        </ul>
+        <h3>About sync & opening the file directly</h3>
+        <p class="small">Sync works best when the app is hosted (e.g. GitHub Pages). When opened by double-clicking (<code>file://</code>), some browsers block network requests or treat the page as having no origin; Google Sheets and GitHub raw usually still work, but if you see a sync error, host the file or use <b>Import</b> instead. The source must allow cross-origin requests (Google “Publish to web” CSV and raw.githubusercontent.com do; a normal Google Drive file link does not).</p>
+        <p class="small">Progress is stored per browser and per site address. If you move the app to a new URL or device, use <b>Export backup</b> → <b>Import</b>.</p>
+      </div>
+    </div>
   </section>
 
-  <!-- HELP -->
-  <section class="view help" id="view-help">
-    <div class="panel">
-      <h2>How it works</h2>
-      <p>Each day you get up to <b>10 new words</b> (change it in Settings) plus any reviews that are due. Flip the card, then grade yourself honestly — the app schedules the next review using spaced repetition (SM‑2 style: roughly 1 → 3 → 8 → 20 days…). A word counts as <b>mastered</b> once its interval reaches 21 days.</p>
-      <h3>Keyboard shortcuts</h3>
-      <ul>
-        <li><span class="kbd">Space</span> / <span class="kbd">Enter</span> flip the card</li>
-        <li><span class="kbd">1</span> Again · <span class="kbd">2</span> Hard · <span class="kbd">3</span> Good · <span class="kbd">4</span> Easy</li>
-        <li><span class="kbd">P</span> pronounce the word · <span class="kbd">E</span> pronounce the example</li>
-        <li>Multiple-choice quiz: <span class="kbd">1</span>–<span class="kbd">4</span> pick an answer</li>
-        <li>Stories: <span class="kbd">E</span> show / hide English · <span class="kbd">Esc</span> close the word popup, then back to the story list</li>
-      </ul>
-    </div>
-    <div class="panel">
-      <h2>Stories</h2>
-      <p>Short graded reading in four stages, from simple dialogues to diary entries. A stage unlocks once you’ve read every story in the stages before it (or turn on <b>Settings → Unlock all stories</b>).</p>
-      <ul>
-        <li><b>Korean first.</b> Read the whole story in Korean. Tap a line or speech bubble to peek at just that line’s English, or press <b>Show English</b> (<span class="kbd">E</span>) to show it under every line.</li>
-        <li><b>Dotted words</b> are this story’s key vocabulary — tap one for its meaning. <span class="tagchip badge-deck">✓ In your deck</span> means it’s already in your flashcards. Story vocab comes into your deck through sync (the Vocab tab of your sheet).</li>
-        <li>The <b>speaker button</b> reads one line; <b>▶ Read whole story</b> reads it all (dialogue speakers get different voices or pitch where your device allows).</li>
-        <li>Answer the <b>Comprehension check</b>; when every question is answered the story is marked as read (or press <b>Mark as read</b>). Get every question right for a small celebration.</li>
-        <li><b>Missed questions</b> are remembered: the story shows <span class="tagchip chip-review">↻ N to review</span> in the list. Open it, reread it, and the questions you missed are reset at the end (flagged <span class="qflag">Review</span>) so you can try them again. A correct answer clears it from the review list.</li>
-        <li><b>Comprehension N%</b> on each story card = your % correct on that story’s questions, from the comprehension check. The Progress tab lists it per story.</li>
-      </ul>
-      <h3>Question types</h3>
-      <ul class="small">
-        <li><code>tf</code> <b>O/X</b> — a statement about the story; answer 맞아요 or 틀려요.</li>
-        <li><code>mcq</code> <b>선택</b> — pick the right answer from 2–4 options.</li>
-        <li><code>who</code> <b>누가</b> — a quoted line: who said it? (dialogues)</li>
-        <li><code>order</code> <b>순서</b> — tap 3–4 events in the order they happened.</li>
-        <li><code>blank</code> <b>빈칸</b> — a sentence from the story with ___; pick the missing word (choices come from the story’s word list and your deck).</li>
-        <li><code>short</code> <b>대답</b> — answer in your head or out loud, press <b>Show answer</b> (답 보기 in the quiz), compare with the model answer, then mark yourself right or wrong.</li>
-      </ul>
-      <h3>Adding a story in the Google Sheet</h3>
-      <p class="small">Use the <b>Stories</b> tab, one row per element, with columns <code>story_id, stage, order, theme, format, title_ko, title_en, type, speaker, ko, en, word_ref, notes, qtype</code>. Give the new story a new id (e.g. <code>st-17</code>), its stage, and number <code>order</code> 1, 2, 3… The <code>type</code> column says what each row is:</p>
-      <ul class="small">
-        <li><code>meta</code> — one per story: <code>stage</code>, <code>theme</code>, <code>format</code> (dialogue / prose / mixed), <code>title_ko</code>, <code>title_en</code>; <code>en</code> = a one-line summary.</li>
-        <li><code>line</code> — one dialogue line (<code>speaker</code> = name) or one prose sentence (<code>speaker</code> blank); <code>ko</code> + <code>en</code>. Put <code>¶</code> in <code>notes</code> to start a new paragraph.</li>
-        <li><code>vocab</code> — <code>ko</code> = dictionary form, <code>en</code> = meaning, <code>word_ref</code> = the Vocab tab id if the word is in your bank, <code>notes</code> = <code>in story: form1, form2 — usage note</code> (the forms listed are what gets underlined).</li>
-        <li><code>grammar</code> — <code>ko</code> = pattern, <code>en</code> = explanation plus the example from the story.</li>
-        <li><code>question</code> — <code>ko</code> = the question in Korean, <code>en</code> = its English (hidden until asked for), <code>notes</code> = <code>answer in Korean | answer in English</code>, <code>qtype</code> = one of the types above, <code>word_ref</code> = optional <code>L5</code> = the story line the answer comes from (shown after answering; the app guesses if blank). By type:
-          <ul>
-            <li><code>tf</code>: <code>ko</code> = the statement; notes <code>맞아요 | True</code> or <code>틀려요 | False — why</code>.</li>
-            <li><code>mcq</code>: options in <code>speaker</code> separated by <code> / </code>; the Korean answer must match one option exactly.</li>
-            <li><code>who</code>: <code>ko</code> = <code>“quoted line” 누가 말했어요?</code>; <code>speaker</code> = the names separated by <code> / </code> (blank = the story’s speakers); answer = the name.</li>
-            <li><code>order</code>: <code>speaker</code> = 3–4 events separated by <code> / </code> <i>in the correct order</i> (the app shuffles them).</li>
-            <li><code>blank</code>: <code>ko</code> = a story sentence with <code>___</code> where a word from the story’s vocab list was; answer = that word, exactly as it fits the blank.</li>
-            <li><code>short</code>: answer = a model answer.</li>
-          </ul>
-          A row with no <code>qtype</code> is treated as <code>mcq</code> if it has options, otherwise <code>short</code>. Aim for 4–6 questions per story.</li>
-      </ul>
-      <p class="small"><b>Publishing:</b> nothing extra to paste — the sync link in <b>Settings</b> does both. Publish the sheet with <b>File → Share → Publish to web → Entire document → Comma-separated values (.csv)</b>; the app fetches the Vocab tab from your link and the Stories tab (gid <code>1019870171</code>) from the same sheet. Edits show up next time the app opens (Google can take a few minutes to refresh). If you ever keep stories elsewhere, use <b>Settings → Stories → Advanced: Stories CSV URL override</b>.</p>
-    </div>
-    <div class="panel">
-      <h2>Three ways to add words</h2>
-      <ol>
-        <li><b>Manual form</b> — Words tab → <b>＋ Add word</b>. Edit or delete any word from the table.</li>
-        <li><b>Import a file or paste</b> — Words tab → <b>Import / paste</b>. Upload a <code>.csv</code>, <code>.tsv</code> or <code>.json</code> file, or copy cells straight out of Google Sheets / Excel (include the header row) and paste them. Download the template there to see the format.</li>
-        <li><b>Sync URL (self-updating)</b> — keep your list in a Google Sheet. In Sheets: <b>File → Share → Publish to web</b> → <b>Entire document</b> → <b>Comma-separated values (.csv)</b> → Publish, and copy the link (a link to just the Vocab tab, <code>…pub?gid=…&amp;single=true&amp;output=csv</code>, works too). Paste it in <b>Settings → Sync</b>. The same link also loads your Stories tab. Every time you open the app, new rows are added automatically. A GitHub “raw” CSV/JSON link works too (normal github.com/…/blob/… links are converted automatically).</li>
-      </ol>
-      <h3>Column format</h3>
-      <p class="small"><code>id, korean, hanja, pos, meaning_en, example_ko, example_en, notes, related, unit, tags, date_added</code></p>
-      <ul class="small">
-        <li>Only <code>korean</code> and <code>meaning_en</code> are required; column order doesn't matter when there's a header row. Header aliases like <code>word</code>, <code>english</code>, <code>meaning</code>, <code>example</code> also work.</li>
-        <li><code>tags</code>: separate with <code>;</code> (e.g. <code>travel;verbs</code>). <code>date_added</code>: <code>YYYY-MM-DD</code>. Leave <code>id</code> blank and the app makes one.</li>
-        <li>Merging: matched by <code>id</code> or by Korean + meaning. Non-empty values from the import update the word; blank cells never erase anything. If you change a word's meaning in the sheet (and it has no id) it's treated as a new word.</li>
-      </ul>
-      <h3>About sync & opening the file directly</h3>
-      <p class="small">Sync works best when the app is hosted (e.g. GitHub Pages). When opened by double-clicking (<code>file://</code>), some browsers block network requests or treat the page as having no origin; Google Sheets and GitHub raw usually still work, but if you see a sync error, host the file or use <b>Import</b> instead. The source must allow cross-origin requests (Google “Publish to web” CSV and raw.githubusercontent.com do; a normal Google Drive file link does not).</p>
-      <p class="small">Progress is stored per browser and per site address. If you move the app to a new URL or device, use <b>Export backup</b> → <b>Import</b>.</p>
-    </div>
-  </section>
 </div>
 
 <!-- Edit modal -->
@@ -1779,6 +1785,7 @@ function setDirection(d){if(!DIRS.includes(d))d='ko2en';settings.direction=d;sav
 /* ============================ Navigation ============================ */
 let tab='study';
 function showTab(t){
+  if(t==='help'){showTab('settings');setHelp(true,true);return} /* Help now lives in Settings; old #help links land there */
   if(!document.getElementById('view-'+t))t='study';
   if(tab==='stories'&&t!=='stories'){stopStoryAudio();closePop()}
   tab=t;
@@ -1789,6 +1796,8 @@ function showTab(t){
   if(t==='quiz')renderQuiz();if(t==='words')renderWords();if(t==='progress')renderProgress();if(t==='settings')renderSettings();
   if(location.hash!=='#'+t)history.replaceState(null,'','#'+t);
 }
+function setHelp(open,scroll){const box=$('#helpBox'),btn=$('#helpToggle');if(!box)return;box.hidden=!open;btn.textContent=open?'Hide':'Show';btn.setAttribute('aria-expanded',String(open));
+  if(open&&scroll)requestAnimationFrame(()=>$('#helpPanel').scrollIntoView({block:'start',behavior:'auto'}))}
 function refreshAll(){
   updateHeader();
   if(tab==='words')renderWords();if(tab==='progress')renderProgress();if(tab==='settings')renderSettings();
@@ -1816,6 +1825,7 @@ document.addEventListener('click',e=>{
     case 'add-word':openForm(null);break;
     case 'edit-word':openForm(el.dataset.id);break;
     case 'close-modal':closeForm();break;
+    case 'toggle-help':setHelp($('#helpBox').hidden,true);break;
     case 'toggle-import':{const d=$('#importBox');d.open=!d.open;if(d.open)d.scrollIntoView({behavior:'smooth',block:'start'});break}
     case 'import-paste':{const v=$('#pasteBox').value;if(!v.trim()){toast('Paste some rows first');break}if(importText(v,'Paste'))$('#pasteBox').value='';break}
     case 'download-template-csv':download('vocab-template.csv','\uFEFF'+toCSV(TEMPLATE_ROWS),'text/csv');break;
