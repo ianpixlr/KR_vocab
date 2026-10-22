@@ -497,7 +497,6 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
       <label class="check"><input type="checkbox" id="sCelebrateGif"> Show a GIF when you get every question right in a story (when off, only the message is shown)</label>
       <label class="field" id="gifChoiceLabel">Choose a GIF</label>
       <div class="gif-tiles" id="gifTiles" role="radiogroup" aria-labelledby="gifChoiceLabel"></div>
-      <button type="button" class="gif-restore" id="gifRestore" data-action="gif-restore" hidden>Restore removed presets</button>
       <div id="gifCustom" hidden>
         <label class="field" for="sCelebrateGifUrl">Custom GIF link</label>
         <input type="url" id="sCelebrateGifUrl" placeholder="https://media.giphy.com/media/…/giphy.gif" autocomplete="off" spellcheck="false" style="width:100%">
@@ -1721,7 +1720,7 @@ function renderGifSettings(){
   cb.checked=on;$('#gifTiles').classList.toggle('off',!on);
   const hid=hiddenPresets();
   $$('#gifTiles .gif-cell').forEach(c=>{c.hidden=hid.includes(c.dataset.preset)});
-  const rb=$('#gifRestore');rb.hidden=!hid.length;rb.textContent='Restore removed presets ('+hid.length+')';
+  
   $$('#gifTiles .gif-tile').forEach(t=>{const sel=t.dataset.choice===choice;t.setAttribute('aria-checked',String(sel));t.tabIndex=sel?0:-1});
   $('#gifCustom').hidden=choice!=='custom';
   if(document.activeElement!==inp){inp.value=settings.celebrateGifUrl||'';inp.classList.remove('invalid')}
@@ -1749,7 +1748,6 @@ function removePreset(id){
   toast(p.label+' removed'+(wasSel?(d?' · now using '+d.label:' · no GIF will show until you add a custom link'):''));
   const f=$('#gifTiles .gif-tile[tabindex="0"]')||$('#gifRestore');if(f&&!f.hidden)f.focus();
 }
-function restorePresets(){const n=hiddenPresets().length;settings.hiddenPresets=[];save();renderGifSettings();toast(n===1?'1 preset restored':n+' presets restored')}
 function setGifStatus(msg,cls){const el=$('#gifStatus');if(el){el.textContent=msg;el.className='status-line'+(cls?' '+cls:'')}}
 function saveGifUrl(){
   const inp=$('#sCelebrateGifUrl'),raw=inp.value.trim();
@@ -1758,7 +1756,7 @@ function saveGifUrl(){
   if(!u){inp.classList.add('invalid');setGifStatus('✗ Please enter a valid http:// or https:// link.','err');return false}
   settings.celebrateGifUrl=u;settings.celebrateGifChoice='custom';save();inp.value=u;inp.classList.remove('invalid');setGifStatus('✓ Custom GIF saved.','ok');renderGifSettings();return true;
 }
-function resetGifUrl(){const d=defaultPreset();settings.celebrateGifChoice=d?d.id:'custom';save();const inp=$('#sCelebrateGifUrl');inp.classList.remove('invalid');setGifStatus(d?'Reset to the default GIF ('+d.label+').':'All presets are removed. Restore them, or save a custom link.','ok');renderGifSettings()}
+function resetGifUrl(){const d=defaultPreset();settings.celebrateGifChoice=d?d.id:'custom';save();const inp=$('#sCelebrateGifUrl');inp.classList.remove('invalid');setGifStatus(d?'Reset to the default GIF ('+d.label+').':'All presets are removed. Save a custom link to show a GIF.','ok');renderGifSettings()}
 function bindSettings(){
   $('#sNew').addEventListener('change',e=>{settings.newPerDay=Math.max(0,Math.min(100,parseInt(e.target.value,10)||0));save();if(!sess.flipped)buildQueue();toast('New words per day: '+settings.newPerDay)});
   $('#sDir').addEventListener('change',e=>setDirection(e.target.value));
@@ -1847,7 +1845,6 @@ document.addEventListener('click',e=>{
     case 'gif-save':saveGifUrl();break;
     case 'gif-pick':pickGif(el.dataset.choice);break;
     case 'gif-remove':removePreset(el.dataset.id);break;
-    case 'gif-restore':restorePresets();break;
     case 'install-hint-hide':settings.hideInstallHint=true;save();renderInstallHint();toast('Install instructions hidden');break;
     case 'install-app':if(installPrompt){const ip=installPrompt;installPrompt=null;ip.prompt();(ip.userChoice||Promise.resolve()).then(()=>renderInstallHint()).catch(()=>{})}break;
     case 'gif-reset':resetGifUrl();break;
