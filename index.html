@@ -672,7 +672,8 @@ const STORY_SEED_ROWS=[["st-01","1","1","Food & cooking","dialogue","카페에�
 
 /* ============================ Storage ============================ */
 const K = {cards:'kvf.cards.v1',srs:'kvf.srs.v1',settings:'kvf.settings.v1',log:'kvf.log.v1',storyProg:'kvf.storyprog.v1',stories:'kvf.stories.v1',storyReview:'kvf.storyReview.v1'};
-const DEFAULTS = {newPerDay:10,direction:'ko2en',theme:'auto',showRoman:false,autoSpeak:false,rate:0.9,syncUrl:'',autoSync:true,lastSync:null,migrated:false,storiesUrl:'',unlockAllStories:false,lastStorySync:null,celebrateGif:true,celebrateGifUrl:'',hiddenPresets:[]};
+const DEFAULT_SYNC_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vQZXf7It5YFldLPav5vy0MlEivnPhxzGscPJtPjlSU5PWPmRs15lNyKulsDqaCh6mTGszHuceT0tWlK/pub?gid=2124601305&single=true&output=csv';
+const DEFAULTS = {newPerDay:10,direction:'ko2en',theme:'auto',showRoman:false,autoSpeak:false,rate:0.9,syncUrl:DEFAULT_SYNC_URL,autoSync:true,lastSync:null,migrated:false,storiesUrl:'',unlockAllStories:false,lastStorySync:null,celebrateGif:true,celebrateGifUrl:'',hiddenPresets:[]};
 let storageOK = true;
 const mem = {};
 function lsGet(k){try{return localStorage.getItem(k)}catch(e){storageOK=false;return mem[k]===undefined?null:mem[k]}}
@@ -1747,7 +1748,7 @@ function bindSettings(){
   $('#sAutoSpeak').addEventListener('change',e=>{settings.autoSpeak=e.target.checked;save()});
   $('#sRate').addEventListener('input',e=>{settings.rate=Number(e.target.value);$('#rateVal').textContent=settings.rate.toFixed(2)+'×';save()});
   $('#sAutoSync').addEventListener('change',e=>{settings.autoSync=e.target.checked;save()});
-  $('#sSyncUrl').addEventListener('change',e=>{settings.syncUrl=e.target.value.trim();save()});
+  $('#sSyncUrl').addEventListener('change',e=>{settings.syncUrl=e.target.value.trim();settings.syncUrlCleared=!settings.syncUrl;save()});
   $('#sStoriesUrl').addEventListener('change',e=>{settings.storiesUrl=e.target.value.trim();save();renderStoriesStatus()});
   $('#sUnlockStories').addEventListener('change',e=>{settings.unlockAllStories=e.target.checked;save();toast(settings.unlockAllStories?'All stories unlocked':'Stories unlock stage by stage')});
   $('#sCelebrateGif').addEventListener('change',e=>{settings.celebrateGif=e.target.checked;save();renderGifSettings();toast(settings.celebrateGif?'Celebration GIF on':'Celebration GIF off')});
@@ -1869,6 +1870,7 @@ document.addEventListener('keydown',e=>{
   }
 });
 window.addEventListener('hashchange',()=>{const t=location.hash.slice(1);if(t&&t!==tab)showTab(t)});
+document.addEventListener('visibilitychange',()=>{if(document.hidden||!settings.autoSync||!settings.syncUrl)return;const ls=settings.lastSync&&Date.parse(settings.lastSync.at);if(!ls||Date.now()-ls>5*60*1000){syncNow(false);if(storiesSource().url)loadStoriesFromUrl(false)}}); /* iPhone home-screen apps resume instead of reloading, so also sync when brought back */
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&sess.date&&sess.date!==today()&&tab==='study'&&!sess.flipped)buildQueue()});
 
 /* ============================ Boot ============================ */
@@ -1879,6 +1881,7 @@ if(!Array.isArray(settings.hiddenPresets)||settings.hiddenPresets.length!==hidde
 if(!settings.celebrateGifChoice||(settings.celebrateGifChoice!=='custom'&&!visiblePreset(settings.celebrateGifChoice))){settings.celebrateGifChoice=gifChoice();save()} /* migrate pre-preset settings */ /* leftover from the removed Story Quiz */
 applyTheme();
 bindSettings();
+if(!settings.syncUrlCleared&&!String(settings.syncUrl||'').trim()){settings.syncUrl=DEFAULT_SYNC_URL;save();const f=$('#sSyncUrl');if(f)f.value=settings.syncUrl} /* built-in link: a fresh copy (e.g. home-screen app) syncs without pasting */
 if(!storageOK)$('#storageBanner').style.display='block';
 showTab((location.hash||'#study').slice(1));
 updateHeader();
