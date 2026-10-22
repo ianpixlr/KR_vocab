@@ -420,7 +420,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
         <select id="fUnit" aria-label="Filter by unit"></select>
         <select id="fTag" aria-label="Filter by tag"></select>
         <select id="fStatus" aria-label="Filter by status">
-          <option value="">All statuses</option><option value="new">New</option><option value="learning">Learning</option><option value="mastered">Mastered</option><option value="due">Due now</option>
+          <option value="">All statuses</option><option value="new">New</option><option value="learning">Learning</option><option value="mastered">Mastered</option><option value="due">Reviews due</option>
         </select>
       </div>
       <div class="tablewrap"><table>
@@ -1194,7 +1194,7 @@ function renderProgress(){
   const L=dayLog(),t=today();
   const counts={new:0,learning:0,mastered:0};cards.forEach(c=>counts[statusOf(c)]++);
   const due=cards.filter(c=>isDue(c,t)).length,tom=cards.filter(c=>{const s=srs[c.id];return s&&s.introduced&&s.due===addDays(t,1)}).length;
-  const tiles=[[streak(),'Day streak',1],[L.new+' / '+settings.newPerDay,'New words today'],[L.reviews,'Reviews today'],[due,'Due now'],[cards.length,'Total words'],[counts.learning,'Learning'],[counts.mastered,'Mastered'],[counts.new,'Not seen yet']];
+  const tiles=[[streak(),'Day streak',1],[L.new+' / '+settings.newPerDay,'New words today'],[L.reviews,'Cards studied today'],[due,'Reviews due'],[cards.length,'Total words'],[counts.learning,'Learning'],[counts.mastered,'Mastered'],[counts.new,'Not seen yet']];
   $('#statTiles').innerHTML=tiles.map(x=>'<div class="stat'+(x[2]?' hl':'')+'"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>').join('');
   const days=[];for(let i=6;i>=0;i--){const d=addDays(t,-i);days.push({d,l:log[d]||{new:0,reviews:0}})}
   const max=Math.max(5,...days.map(x=>x.l.reviews));
