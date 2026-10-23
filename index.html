@@ -130,7 +130,7 @@ label.check{display:flex;gap:8px;align-items:center;margin:8px 0;font-size:14px;
 .grades{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .grade{border:0;border-radius:16px;padding:12px 6px;cursor:pointer;color:#fff;font-weight:700;font-size:15px;display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .12s,filter .2s;box-shadow:var(--shadow)}
 .grade small{font-weight:600;opacity:.85;font-size:11.5px}
-.grade:hover{filter:brightness(1.07);transform:translateY(-2px)} .grade:active{transform:scale(.94)}
+@media (hover:hover){.grade:hover{filter:brightness(1.07);transform:translateY(-2px)}} .grade:active{transform:scale(.94)}
 .g1{background:var(--again)} .g2{background:var(--hard)} .g3{background:var(--good)} .g4{background:var(--easy)}
 .shortcuts{text-align:center;margin-top:12px;font-size:12px;color:var(--muted)}
 .done{text-align:center;padding:40px 20px}
@@ -150,11 +150,12 @@ label.check{display:flex;gap:8px;align-items:center;margin:8px 0;font-size:14px;
 .quiz-fb.ok{color:var(--good)} .quiz-fb.bad{color:var(--again)}
 .mc{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
 .mc button{border:1px solid var(--border);background:var(--panel2);border-radius:16px;padding:16px 12px;cursor:pointer;font-weight:600;font-size:15px;transition:transform .12s,background .2s,opacity .2s;text-align:left;display:flex;gap:10px;align-items:center}
-.mc button:hover{transform:translateY(-2px);border-color:var(--accent)}
+@media (hover:hover){.mc button:hover{transform:translateY(-2px);border-color:var(--accent)}}
 .mc button .n{flex:none;width:24px;height:24px;border-radius:8px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-size:12.5px}
 .mc button.right{background:var(--good);color:#fff;border-color:transparent;animation:pop .35s}
 .mc button.wrong{background:var(--again);color:#fff;border-color:transparent;animation:shake .35s}
 .mc button.dim{opacity:.45}
+.mc button,.opts button{-webkit-tap-highlight-color:transparent}
 @keyframes shake{0%,100%{transform:none}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 @media (max-width:520px){.mc{grid-template-columns:1fr}}
 .seg{display:inline-flex;background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:3px}
@@ -273,7 +274,7 @@ code{background:var(--panel2);border:1px solid var(--border);padding:1px 5px;bor
 .qitem .qn{color:var(--accent);margin-right:4px}
 .opts{display:grid;gap:8px;margin-top:10px}
 .opts button{text-align:left;border:1px solid var(--border);background:var(--panel);border-radius:12px;padding:10px 12px;cursor:pointer;font-family:var(--font-ko);font-size:15px;font-weight:600;display:flex;gap:10px;align-items:center;transition:transform .12s,background .2s,opacity .2s}
-.opts button:not(:disabled):hover{border-color:var(--accent);transform:translateY(-1px)}
+@media (hover:hover){.opts button:not(:disabled):hover{border-color:var(--accent);transform:translateY(-1px)}}
 .opts button .n{flex:none;width:22px;height:22px;border-radius:7px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-size:12px;font-family:var(--font)}
 .opts button.right{background:var(--good);color:#fff;border-color:transparent;animation:pop .35s}
 .opts button.wrong{background:var(--again);color:#fff;border-color:transparent;animation:shake .35s}
@@ -999,7 +1000,7 @@ function startQuiz(){
   quiz.items=shuffle(pool).slice(0,quiz.n).map(c=>c.id);quiz.i=0;quiz.score=0;quiz.answered=false;quiz.running=true;renderQuiz();
 }
 function mcPick(id){
-  if(quiz.answered)return; quiz.answered=true;
+  if(quiz.answered)return; quiz.answered=true;if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
   const c=getCard(quiz.items[quiz.i]),ok=id===c.id;if(ok)quiz.score++;
   $$('#mc button').forEach(b=>{if(b.dataset.id===c.id)b.classList.add('right');else if(b.dataset.id===id)b.classList.add('wrong');else b.classList.add('dim')});
   const fb=$('#quizFb');fb.className='quiz-fb '+(ok?'ok':'bad');fb.innerHTML=ok?'CORRECT! 맞아요 ✓':'GOOD TRY! <span class="muted">'+esc(c.korean)+' = '+esc(c.meaning_en)+'</span>';
@@ -1466,7 +1467,7 @@ function setQAnswer(key,val){
   if(val.ok!=null)bumpScore(sid,val.ok);
   recordAnswer(s,qi,val);
 }
-function qPick(key,opt){const {sid,qi}=parseQKey(key);const s=getStory(sid);if(!s)return;const q=s.questions[qi];setQAnswer(key,{pick:opt,ok:opt===qCorrect(q)})}
+function qPick(key,opt){if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();const {sid,qi}=parseQKey(key);const s=getStory(sid);if(!s)return;const q=s.questions[qi];setQAnswer(key,{pick:opt,ok:opt===qCorrect(q)})}
 function qOrderTap(key,k){
   const {sid,qi}=parseQKey(key);const s=getStory(sid);if(!s||getQState(key))return;const q=s.questions[qi];
   const picks=storyUI.ord[key]||(storyUI.ord[key]=[]);if(picks.includes(k))return;picks.push(k);
