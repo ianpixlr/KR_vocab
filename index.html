@@ -1813,6 +1813,7 @@ document.addEventListener('click',e=>{
   const ds=e.target.closest('#dirSeg button');if(ds){setDirection(ds.dataset.dir);return}
   const qm=e.target.closest('[data-qmode]');if(qm){quiz.mode=qm.dataset.qmode;renderQuiz();return}
   const vw=e.target.closest('#reader .vw');if(vw){openVocabPop(vw);return}
+  if(!e.target.closest('#vpop')&&$('#vpop')){closePop();if(!e.target.closest('[data-action]'))return} /* a tap that closes the word popup only closes it (no line peek) */
   if(!e.target.closest('#vpop'))closePop();
   if(!e.target.closest('[data-action]')){const ln=e.target.closest('#reader .ln');if(ln&&!String(window.getSelection?window.getSelection():'')){togglePeek(ln)}return}
   const el=e.target.closest('[data-action]');if(!el)return;
