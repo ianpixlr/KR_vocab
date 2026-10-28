@@ -546,6 +546,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
       <div class="panel">
         <h2>How it works</h2>
         <p>Each day you get up to <b>10 new words</b> (change it in Settings) plus any reviews that are due. Flip the card, then grade yourself honestly — the app schedules the next review using spaced repetition (SM‑2 style: roughly 1 → 3 → 8 → 20 days…). A word counts as <b>mastered</b> once its interval reaches 21 days. If a new word is one you already know, tap <b>I know this</b> to mark it mastered right away (it comes back for one check in 21 days, and it doesn’t use up a daily new-word slot).</p>
+        <p><b>Grammar practice</b> is separate from your flashcards: pick <b>Quiz → Grammar drill</b> to change a random word with a random pattern (unit Grammar in the Words tab), using words from the <b>Drill words</b> tab of your sheet (<code>base, meaning_en, type, irregular, honorific</code>).</p>
         <h3>Keyboard shortcuts</h3>
         <ul>
           <li><span class="kbd">Space</span> / <span class="kbd">Enter</span> flip the card</li>
@@ -813,9 +814,9 @@ function buildQueue(){
   const t=today();
   if(sess.date!==t){sess.extraNew=0}
   sess.date=t;
-  const due=shuffle(cards.filter(c=>isDue(c,t))).sort((a,b)=>srs[a.id].due<srs[b.id].due?-1:srs[a.id].due>srs[b.id].due?1:0).map(c=>c.id);
+  const due=shuffle(deck().filter(c=>isDue(c,t))).sort((a,b)=>srs[a.id].due<srs[b.id].due?-1:srs[a.id].due>srs[b.id].due?1:0).map(c=>c.id);
   const allowed=Math.max(0,Number(settings.newPerDay)+sess.extraNew-dayLog(t).new);
-  const news=cards.filter(c=>statusOf(c)==='new').slice(0,allowed).map(c=>c.id);
+  const news=deck().filter(c=>statusOf(c)==='new').slice(0,allowed).map(c=>c.id);
   const q=[];let i=0,j=0;
   while(i<due.length||j<news.length){if(i<due.length)q.push(due[i++]);if(i<due.length)q.push(due[i++]);if(j<news.length)q.push(news[j++]);}
   sess.queue=q;sess.total=q.length;sess.done=0;sess.built=true;sess.cur=null;
@@ -865,7 +866,7 @@ function knowWord(){
   /* the freed slot goes to the next unseen word, if the daily limit allows */
   const allowed=Math.max(0,Number(settings.newPerDay)+sess.extraNew-L.new);
   const queuedNew=sess.queue.filter(q=>{const x=getCard(q);return x&&statusOf(x)==='new'});
-  if(queuedNew.length<allowed){const nx=cards.find(x=>statusOf(x)==='new'&&!sess.queue.includes(x.id));if(nx){sess.queue.push(nx.id);sess.total++}}
+  if(queuedNew.length<allowed){const nx=deck().find(x=>statusOf(x)==='new'&&!sess.queue.includes(x.id));if(nx){sess.queue.push(nx.id);sess.total++}}
   sess.done++;
   save();
   toast('Marked as known: '+c.korean);
@@ -881,10 +882,10 @@ function renderStudy(){
   $('#cNew').textContent=newLeft+' new';$('#cRev').textContent=(all-newLeft)+' review';
   $('#sessBar').style.width=(sess.total?Math.round(100*sess.done/(sess.done+all)):0)+'%';
   if(!sess.cur){
-    const remainingNew=cards.filter(c=>statusOf(c)==='new').length;
-    const tomorrow=cards.filter(c=>isDue(c,addDays(today(),1))).length;
+    const remainingNew=deck().filter(c=>statusOf(c)==='new').length;
+    const tomorrow=deck().filter(c=>isDue(c,addDays(today(),1))).length;
     const L=dayLog();
-    if(!cards.length){area.innerHTML='<div class="panel done"><h2>No words yet</h2><p class="muted">Add words in the <b>Words</b> tab, import a file, or set a sync URL in Settings.</p><button class="btn primary" data-action="goto" data-tab="words">Add words</button></div>';return}
+    if(!deck().length){area.innerHTML='<div class="panel done"><h2>No words yet</h2><p class="muted">Add words in the <b>Words</b> tab, import a file, or set a sync URL in Settings.</p><button class="btn primary" data-action="goto" data-tab="words">Add words</button></div>';return}
     area.innerHTML='<div class="panel done">'+(L.reviews?'<div class="big">🎉</div>':'')+'<h2>'+(L.reviews?'수고했어요! All done for today':'Nothing due right now')+'</h2>'+
       '<p class="muted">Today: <b>'+L.new+'</b> new · <b>'+L.reviews+'</b> reviews'+(L.reviews?' · '+Math.round(100*L.correct/L.reviews)+'% recalled':'')+'<br>Due tomorrow: <b>'+tomorrow+'</b> · Unseen words left: <b>'+remainingNew+'</b></p>'+
       '<div class="row" style="justify-content:center">'+(remainingNew?'<button class="btn primary" data-action="more-new">Learn 5 more new words</button>':'')+
@@ -968,22 +969,565 @@ function celebrationHTML(){
 /* attach the onerror handler before setting src, so a failed load always hides the image */
 function wireCelebration(root){const img=root&&root.querySelector('#celebrateGif');if(!img)return;const src=celebrateGifSrc();if(!src){img.remove();return}img.onerror=()=>gifFailed(img);img.src=src}
 
+/* ---------- Grammar drills: conjugation engine ---------- */
+/* Word: {base:'먹다', type:'verb'|'adjective'|'exist'|'noun', irr:'regular'|'하다'|'ㄹ-stem'|'으-drop'|'르'|'ㅂ'|'ㄷ'|'ㅅ'|'ㅎ'|'있다', hon:'드시다'} */
+const GR=(function(){
+const SB=0xAC00;
+const isH=ch=>{const c=ch.charCodeAt(0)-SB;return c>=0&&c<11172};
+const dec=ch=>{const c=ch.charCodeAt(0)-SB;return [Math.floor(c/588),Math.floor((c%588)/28),c%28]};
+const com=(l,v,t)=>String.fromCharCode(SB+l*588+v*28+(t||0));
+const last=s=>s[s.length-1], init=s=>s.slice(0,-1);
+const fin=s=>dec(last(s))[2];
+const setFin=(s,t)=>{const [l,v]=dec(last(s));return init(s)+com(l,v,t)};
+const setVow=(s,v)=>{const [l,,t]=dec(last(s));return init(s)+com(l,v,t)};
+const T={ㄴ:4,ㄷ:7,ㄹ:8,ㅂ:17,ㅅ:19,ㅎ:27};
+const bright=s=>{const v=dec(last(s))[1];return v===0||v===2||v===8}; /* ㅏ ㅑ ㅗ */
+const IRR=['regular','하다','ㄹ-stem','으-drop','르','ㅂ','ㄷ','ㅅ','ㅎ','있다'];
+/* blank irregular column: guess only when the stem makes it unambiguous, else null (word skipped) */
+function guessIrr(stem,type){
+  if(!stem||!isH(last(stem)))return null;
+  if(/하$/.test(stem))return '하다';
+  if(/[있없]$/.test(stem))return '있다';
+  const [,v,t]=dec(last(stem));
+  if(t===T.ㄹ)return 'ㄹ-stem';
+  if(t===0&&v===18)return /르$/.test(stem)?null:'으-drop';
+  if(t===T.ㅂ||t===T.ㄷ||t===T.ㅅ||t===T.ㅎ)return null;
+  return 'regular';
+}
+function mk(r){
+  const base=String(r.base||'').trim(),type=String(r.type||'').trim().toLowerCase();
+  if(!/다$/.test(base)||!['verb','adjective','exist','noun'].includes(type))return null;
+  if(type==='noun'){const n=base.replace(/\s*이다$/,'');if(!n||n===base||!isH(last(n)))return null;return {base,type,noun:n,meaning:r.meaning_en||''}}
+  const stem=base.slice(0,-1);if(!stem||!isH(last(stem)))return null;
+  let irr=String(r.irregular||'').trim().replace(/\s*irregular$/i,'');
+  if(irr==='ㄹ'||/^ㄹ.?stem$/i.test(irr))irr='ㄹ-stem';if(irr==='으'||/^으/.test(irr))irr='으-drop';if(/^reg/i.test(irr))irr='regular';
+  if(!irr)irr=guessIrr(stem,type);
+  if(!IRR.includes(irr))return null;
+  /* sanity: class must fit the stem */
+  const t=fin(stem),v=dec(last(stem))[1];
+  const ok={'하다':/하$/.test(stem),'ㄹ-stem':t===T.ㄹ,'으-drop':t===0&&v===18,'르':/[^\s]르$/.test(stem),'ㅂ':t===T.ㅂ,'ㄷ':t===T.ㄷ,'ㅅ':t===T.ㅅ,'ㅎ':t===T.ㅎ,'있다':/[있없]$/.test(stem),'regular':!(t===0&&v===18)}[irr];
+  if(!ok)return null;
+  const hon=String(r.honorific||'').trim();
+  return {base,type,irr,stem,hon:/시다$/.test(hon)?hon:'',meaning:r.meaning_en||''};
+}
+/* -아/어 form (먹어, 가, 해, 도와, 들어, 지어, 몰라, 바빠, 빨개) */
+function A(w){
+  const s=w.stem,t=fin(s);
+  switch(w.irr){
+    case '하다':return init(s)+'해';
+    case 'ㅂ':{const b=setFin(s,0);return b+(/^(돕|곱)$/.test(s)?'와':'워')}
+    case 'ㄷ':{const b=setFin(s,T.ㄹ);return b+(bright(b)?'아':'어')}
+    case 'ㅅ':{const b=setFin(s,0);return b+(bright(b)?'아':'어')}
+    case 'ㅎ':{const b=setFin(s,0),v=dec(last(b))[1];return setVow(b,v===2?3:1)}
+    case '르':{const p=init(s);if(!p)return null;const p2=setFin(p,T.ㄹ);return p2+(bright(p)?'라':'러')}
+    case '으-drop':{const p=init(s);return setVow(s,p&&bright(p)?0:4)}
+  }
+  if(t)return s+(bright(s)?'아':'어');
+  const v=dec(last(s))[1];
+  if([0,1,4,5,6].includes(v))return s;           /* ㅏ ㅐ ㅓ ㅔ ㅕ */
+  if(v===8)return setVow(s,9);                     /* ㅗ→ㅘ */
+  if(v===13)return setVow(s,14);                   /* ㅜ→ㅝ */
+  if(v===20)return setVow(s,6);                    /* ㅣ→ㅕ */
+  if(v===11)return setVow(s,10);                   /* ㅚ→ㅙ */
+  if(v===16||v===19)return s+'어';                 /* ㅟ ㅢ */
+  return null;
+}
+/* attach a (으)-suffix: suf is '면','니까','려고','러','세요','시' or a bare final 'ㄹ' / 'ㄴ' */
+function E(w,suf){
+  let s=w.stem;
+  if(w.irr==='ㄹ-stem'){
+    if(suf==='ㄹ')return s;
+    if(suf==='ㄴ')return setFin(s,T.ㄴ);
+    if(/^[니세시]/.test(suf))return setFin(s,0)+suf;
+    return s+suf;
+  }
+  let forceEu=false;
+  if(w.irr==='ㅂ')s=setFin(s,0)+'우';
+  else if(w.irr==='ㄷ')s=setFin(s,T.ㄹ);
+  else if(w.irr==='ㅅ'){s=setFin(s,0);forceEu=true}
+  else if(w.irr==='ㅎ')s=setFin(s,0);
+  if(fin(s)||forceEu){if(suf==='ㄹ')return s+'을';if(suf==='ㄴ')return s+'은';return s+'으'+suf}
+  if(suf==='ㄹ')return setFin(s,T.ㄹ);if(suf==='ㄴ')return setFin(s,T.ㄴ);
+  return s+suf;
+}
+const usesNeun=w=>w.type==='verb'||w.type==='exist'||w.irr==='있다';
+/* present modifier: 먹는 / 만드는 / 큰 / 맛있는 */
+function MOD(w){if(usesNeun(w))return w.irr==='ㄹ-stem'?setFin(w.stem,0)+'는':w.stem+'는';return E(w,'ㄴ')}
+/* plain present for quoting: 먹는다 / 간다 / 만든다 / 크다 / 있다 */
+function PLAIN(w){
+  if(w.type!=='verb')return w.base;
+  const s=w.stem;
+  if(w.irr==='ㄹ-stem')return setFin(setFin(s,0),T.ㄴ)+'다';
+  if(fin(s))return s+'는다';
+  return setFin(s,T.ㄴ)+'다';
+}
+function HON(w){return w.hon?w.hon.slice(0,-1):E(w,'시')}
+/* noun + 이다 */
+const nv=w=>!fin(w.noun); /* vowel-final noun */
+const N={
+  아서:w=>nv(w)?[w.noun+'라서',w.noun+'여서']:[w.noun+'이라서',w.noun+'이어서'],
+  면:w=>nv(w)?[w.noun+'면',w.noun+'이면']:[w.noun+'이면'],
+  ㄴ:w=>[w.noun+'인'],
+  ㄹ:w=>[w.noun+'일'],
+  이:w=>nv(w)?[w.noun,w.noun+'이']:[w.noun+'이'],      /* before 거든요/잖아요 */
+  이기:w=>nv(w)?[w.noun+'이',w.noun]:[w.noun+'이'],      /* before 기 때문에: 의사이기 / 의사기 */
+  라:w=>nv(w)?[w.noun+'라']:[w.noun+'이라'],
+  니까:w=>nv(w)?[w.noun+'니까',w.noun+'이니까']:[w.noun+'이니까']
+};
+const V='verb',J='adjective',X='exist',NO='noun';
+const ALL=[V,J,X,NO];
+/* words that do not take volitional patterns (promises, plans, permission) */
+const NONVOL=new Set(['죽다','떨어지다','놀라다','넘어지다','다치다','잃어버리다','잊어버리다','생기다','바뀌다','마르다','흐르다','녹다','젖다','낫다','깨닫다','졸다','모르다','되다','끝나다','빠지다','남다','늦다','붓다','지다','잊다','싣다','알다']);
+/* inanimate-subject verbs: no honorific drill */
+const NOHON=new Set(['녹다','흐르다','바뀌다','생기다','끝나다','남다','붓다','날다','불다','돌다','젖다']);
+const VOL=true;
+const P=[
+ {k:'-(으)십니다',shape:'-(으)십니다',types:[V,X],hon:true,vol:false,f:w=>[HON(w)+'ᆸ니다']},
+ {k:'-아/어서',shape:'-아/어서',types:ALL,f:w=>w.type===NO?N.아서(w):[A(w)+'서']},
+ {k:'-(으)면',shape:'-(으)면',types:ALL,f:w=>w.type===NO?N.면(w):[E(w,'면')]},
+ {k:'-(으)ㄴ/는데',shape:'-(으)ㄴ/는데',types:ALL,f:w=>(w.type===NO?N.ㄴ(w):[MOD(w)]).map(x=>x+'데')},
+ {k:'-(으)ㄴ/는 것 같다',shape:'-(으)ㄴ/는 것 같아요',types:ALL,tail:' 것 같아요',alt:[' 것 같다',' 것 같습니다'],f:w=>w.type===NO?N.ㄴ(w):[MOD(w)]},
+ {k:'-기로 하다',shape:'-기로 했어요',types:[V],vol:VOL,tail:'기로 했어요',alt:['기로 하다','기로 해요'],f:w=>[w.stem]},
+ {k:'-(으)ㄹ 때',shape:'-(으)ㄹ 때',types:ALL,tail:' 때',f:w=>w.type===NO?N.ㄹ(w):[E(w,'ㄹ')]},
+ {k:'-아/어도 되다',shape:'-아/어도 돼요',types:[V],vol:VOL,tail:'도 돼요',alt:['도 되다','도 됩니다'],f:w=>[A(w)]},
+ {k:'-(으)면 안 되다',shape:'-(으)면 안 돼요',types:[V],vol:VOL,tail:' 안 돼요',alt:[' 안 되다',' 안 됩니다'],f:w=>[E(w,'면')]},
+ {k:'-게 되다',shape:'-게 됐어요',types:[V],tail:'게 됐어요',alt:['게 되었어요','게 되다','게 돼요'],f:w=>[w.stem]},
+ {k:'-(으)려고 하다',shape:'-(으)려고 해요',types:[V],vol:VOL,tail:' 해요',alt:[' 하다',' 했어요'],f:w=>[E(w,'려고')]},
+ {k:'-는 동안',shape:'-는 동안',types:[V],tail:' 동안',f:w=>[MOD(w)]},
+ {k:'-(으)ㄹ 줄 알다/모르다',shape:'-(으)ㄹ 줄 알아요',types:[V],vol:VOL,tail:' 줄 알아요',alt:[' 줄 알다',' 줄 몰라요',' 줄 모르다'],f:w=>[E(w,'ㄹ')]},
+ {k:'-아/어 보이다',shape:'-아/어 보여요',types:[J],tail:' 보여요',alt:[' 보이다',' 보입니다'],f:w=>[A(w)]},
+ {k:'-거든요',shape:'-거든요',types:ALL,tail:'거든요',f:w=>w.type===NO?N.이(w):[w.stem]},
+ {k:'-잖아요',shape:'-잖아요',types:ALL,tail:'잖아요',f:w=>w.type===NO?N.이(w):[w.stem]},
+ {k:'-(으)ㄹ게요',shape:'-(으)ㄹ게요',types:[V],vol:VOL,tail:'게요',f:w=>[E(w,'ㄹ')]},
+ {k:'-다고 하다',shape:'-(ㄴ/는)다고 했어요',types:ALL,tail:'고 했어요',alt:['고 하다','고 해요','고 합니다'],f:w=>w.type===NO?N.라(w):[PLAIN(w)]},
+ {k:'-(으)ㄴ/는데도',shape:'-(으)ㄴ/는데도',types:ALL,f:w=>(w.type===NO?N.ㄴ(w):[MOD(w)]).map(x=>x+'데도')},
+ {k:'-기 때문에',shape:'-기 때문에',types:ALL,tail:'기 때문에',f:w=>w.type===NO?N.이기(w):[w.stem]},
+ {k:'-(으)ㄹ 테니까',shape:'-(으)ㄹ 테니까',types:[V],tail:' 테니까',f:w=>[E(w,'ㄹ')]},
+ {k:'-도록',shape:'-도록',types:[V],vol:VOL,tail:'도록',f:w=>[w.stem]},
+ {k:'-(으)니까',shape:'-(으)니까',types:ALL,f:w=>w.type===NO?N.니까(w):[E(w,'니까')]},
+ {k:'-(으)ㄴ 적이 있다',shape:'-(으)ㄴ 적이 있어요',types:[V],tail:' 적이 있어요',alt:[' 적이 있다',' 적이 없어요'],f:w=>[E(w,'ㄴ')]}
+];
+/* compose a trailing conjoining final (ᆸ) onto the previous syllable */
+function fix(s){return s.replace(/([\uAC00-\uD7A3])ᆸ/g,(m,c)=>setFin(c,T.ㅂ))}
+function okFor(p,w){
+  if(!p.types.includes(w.type))return false;
+  if(p.hon&&w.type===X&&!w.hon)return false;
+  if(p.hon&&NOHON.has(w.base))return false;
+  if(p.vol&&NONVOL.has(w.base))return false;
+  return true;
+}
+/* all accepted answers, first one is the model answer; null if the combo isn't covered */
+function forms(p,w){
+  if(!okFor(p,w))return null;
+  let cores;try{cores=p.f(w)}catch(e){return null}
+  if(!cores||!cores.length||cores.some(c=>!c||/null|undefined/.test(c)))return null;
+  const tails=[p.tail||''].concat(p.alt||[]),out=[];
+  cores.forEach((c,i)=>tails.forEach((t,j)=>{if(i===0||j===0)out.push(fix(c+t))}));
+  /* honorific: the plain -(으)시 form is also correct for 마시다 (마시십니다 is grammatical) */
+  if(p.hon&&w.hon&&w.base==='마시다')out.push('마시십니다');
+  return [...new Set(out)];
+}
+const norm=s=>String(s||'').replace(/\s+/g,'').replace(/[.!?~]+$/,'');
+function findPattern(korean){const n=norm(korean).replace(/[~～]/g,'');return P.find(p=>norm(p.k)===n)||null}
+return {P,mk,A,E,MOD,PLAIN,HON,forms,okFor,findPattern,NONVOL,IRR};
+})();
+
+/* ============================ Grammar drills ============================ */
+/* Grammar cards (pos "grammar", korean = a pattern below) show a typed drill with a random word each time.
+   Words come from the "Drill words" tab of the sync sheet (base, meaning_en, type, irregular, honorific);
+   the list below is the built-in fallback. Rows the engine can't handle safely are skipped. */
+const DRILL_GID='1930582049';
+const DRILL_BUILTIN=`먹다|eat|verb|regular|드시다
+마시다|drink|verb|regular|드시다
+자다|sleep|verb|regular|주무시다
+말하다|speak, say|verb|하다|말씀하시다
+죽다|die|verb|regular|돌아가시다
+있다|be (somewhere), have|exist|있다|계시다
+없다|not be, not have|exist|있다|
+읽다|read|verb|regular|
+앉다|sit|verb|regular|
+입다|wear (clothes)|verb|regular|
+찾다|look for, find|verb|regular|
+받다|receive|verb|regular|
+닫다|close|verb|regular|
+믿다|believe|verb|regular|
+웃다|laugh, smile|verb|regular|
+씻다|wash|verb|regular|
+벗다|take off (clothes)|verb|regular|
+잡다|catch, hold|verb|regular|
+접다|fold|verb|regular|
+씹다|chew|verb|regular|
+넣다|put in|verb|regular|
+신다|put on (shoes)|verb|regular|
+감다|wash (hair), close (eyes)|verb|regular|
+남다|remain, be left|verb|regular|
+끊다|quit, cut off|verb|regular|
+잊다|forget|verb|regular|
+찍다|take (a photo)|verb|regular|
+닦다|wipe, brush (teeth)|verb|regular|
+갚다|pay back|verb|regular|
+쌓다|pile up|verb|regular|
+늦다|be late|verb|regular|
+참다|hold back, endure|verb|regular|
+심다|plant|verb|regular|
+뽑다|pull out, pick|verb|regular|
+숨다|hide (oneself)|verb|regular|
+얻다|get, obtain|verb|regular|
+맡다|take charge of|verb|regular|
+붙다|stick, pass (an exam)|verb|regular|
+녹다|melt|verb|regular|
+젖다|get wet|verb|regular|
+굶다|skip a meal, starve|verb|regular|
+담다|put in (a container)|verb|regular|
+밟다|step on|verb|regular|
+가다|go|verb|regular|
+오다|come|verb|regular|
+보다|see, watch|verb|regular|
+사다|buy|verb|regular|
+타다|ride, get on|verb|regular|
+만나다|meet|verb|regular|
+일어나다|get up|verb|regular|
+끝나다|end, be over|verb|regular|
+나가다|go out|verb|regular|
+들어가다|go in|verb|regular|
+나오다|come out|verb|regular|
+들어오다|come in|verb|regular|
+돌아오다|come back|verb|regular|
+돌아가다|go back|verb|regular|
+내려가다|go down|verb|regular|
+올라가다|go up|verb|regular|
+갈아타다|transfer (trains)|verb|regular|
+다니다|attend, go regularly|verb|regular|
+기다리다|wait|verb|regular|
+가르치다|teach|verb|regular|
+배우다|learn|verb|regular|
+주다|give|verb|regular|
+바꾸다|change, exchange|verb|regular|
+보내다|send, spend (time)|verb|regular|
+지내다|get along, spend time|verb|regular|
+내다|pay, hand in|verb|regular|
+세우다|stop (a car), set up|verb|regular|
+춤추다|dance|verb|regular|
+싸우다|fight|verb|regular|
+키우다|raise (a pet)|verb|regular|
+외우다|memorize|verb|regular|
+지우다|erase|verb|regular|
+피우다|smoke|verb|regular|
+나누다|share, divide|verb|regular|
+맞추다|adjust, fit|verb|regular|
+꾸다|dream (a dream)|verb|regular|
+두다|put, leave|verb|regular|
+서다|stand|verb|regular|
+켜다|turn on|verb|regular|
+펴다|open, unfold|verb|regular|
+건너다|cross|verb|regular|
+되다|become|verb|regular|
+쉬다|rest|verb|regular|
+뛰다|run, jump|verb|regular|
+바뀌다|be changed|verb|regular|
+사귀다|make friends, date|verb|regular|
+내리다|get off|verb|regular|
+버리다|throw away|verb|regular|
+달리다|run|verb|regular|
+그리다|draw|verb|regular|
+던지다|throw|verb|regular|
+떨어지다|fall, fail|verb|regular|
+헤어지다|break up, part|verb|regular|
+넘어지다|fall over|verb|regular|
+고치다|fix|verb|regular|
+가지다|have, own|verb|regular|
+빌리다|borrow|verb|regular|
+놀라다|be surprised|verb|regular|
+잃어버리다|lose (something)|verb|regular|
+잊어버리다|forget completely|verb|regular|
+치다|hit, play (tennis, piano)|verb|regular|
+지다|lose (a game)|verb|regular|
+이기다|win|verb|regular|
+모이다|gather|verb|regular|
+시키다|order (food)|verb|regular|
+마치다|finish|verb|regular|
+느끼다|feel|verb|regular|
+지키다|keep, protect|verb|regular|
+다치다|get hurt|verb|regular|
+숨기다|hide (something)|verb|regular|
+옮기다|move (something)|verb|regular|
+즐기다|enjoy|verb|regular|
+생기다|come up, appear|verb|regular|
+빠지다|fall into, miss out|verb|regular|
+빼다|take out, remove|verb|regular|
+깨다|wake up, break|verb|regular|
+공부하다|study|verb|하다|
+일하다|work|verb|하다|
+운동하다|exercise|verb|하다|
+요리하다|cook|verb|하다|
+청소하다|clean|verb|하다|
+세탁하다|do laundry|verb|하다|
+전화하다|call (on the phone)|verb|하다|
+이야기하다|talk|verb|하다|
+여행하다|travel|verb|하다|
+준비하다|prepare|verb|하다|
+연습하다|practise|verb|하다|
+시작하다|start|verb|하다|
+결혼하다|marry|verb|하다|
+사랑하다|love|verb|하다|
+생각하다|think|verb|하다|
+노래하다|sing|verb|하다|
+산책하다|take a walk|verb|하다|
+쇼핑하다|shop|verb|하다|
+예약하다|reserve, book|verb|하다|
+주문하다|order|verb|하다|
+대답하다|answer|verb|하다|
+질문하다|ask a question|verb|하다|
+설명하다|explain|verb|하다|
+도착하다|arrive|verb|하다|
+출발하다|depart|verb|하다|
+졸업하다|graduate|verb|하다|
+입학하다|enter (a school)|verb|하다|
+취직하다|get a job|verb|하다|
+이사하다|move (house)|verb|하다|
+걱정하다|worry|verb|하다|
+약속하다|promise|verb|하다|
+초대하다|invite|verb|하다|
+소개하다|introduce|verb|하다|
+부탁하다|ask a favour|verb|하다|
+선택하다|choose|verb|하다|
+사용하다|use|verb|하다|
+계획하다|plan|verb|하다|
+저축하다|save (money)|verb|하다|
+등산하다|go hiking|verb|하다|
+번역하다|translate|verb|하다|
+복습하다|review (lessons)|verb|하다|
+살다|live|verb|ㄹ-stem|
+알다|know|verb|ㄹ-stem|
+만들다|make|verb|ㄹ-stem|
+놀다|play, hang out|verb|ㄹ-stem|
+울다|cry|verb|ㄹ-stem|
+팔다|sell|verb|ㄹ-stem|
+열다|open|verb|ㄹ-stem|
+걸다|hang, make (a call)|verb|ㄹ-stem|
+들다|lift, hold|verb|ㄹ-stem|
+밀다|push|verb|ㄹ-stem|
+풀다|solve, untie|verb|ㄹ-stem|
+졸다|doze off|verb|ㄹ-stem|
+떨다|shiver|verb|ㄹ-stem|
+벌다|earn|verb|ㄹ-stem|
+불다|blow|verb|ㄹ-stem|
+날다|fly|verb|ㄹ-stem|
+돌다|turn|verb|ㄹ-stem|
+끌다|drag, pull|verb|ㄹ-stem|
+듣다|listen, hear|verb|ㄷ|
+걷다|walk|verb|ㄷ|
+묻다|ask|verb|ㄷ|
+싣다|load|verb|ㄷ|
+깨닫다|realise|verb|ㄷ|
+돕다|help|verb|ㅂ|
+눕다|lie down|verb|ㅂ|
+줍다|pick up|verb|ㅂ|
+굽다|grill, bake|verb|ㅂ|
+짓다|build, make (a name)|verb|ㅅ|
+낫다|get better (recover)|verb|ㅅ|
+붓다|pour, swell|verb|ㅅ|
+젓다|stir|verb|ㅅ|
+긋다|draw (a line)|verb|ㅅ|
+모르다|not know|verb|르|
+부르다|call, sing|verb|르|
+고르다|choose|verb|르|
+자르다|cut|verb|르|
+오르다|go up, rise|verb|르|
+누르다|press|verb|르|
+흐르다|flow|verb|르|
+마르다|dry, get thin|verb|르|
+기르다|raise, grow|verb|르|
+서두르다|hurry|verb|르|
+쓰다|write, use|verb|으-drop|
+끄다|turn off|verb|으-drop|
+뜨다|open (eyes), float|verb|으-drop|
+잠그다|lock|verb|으-drop|
+담그다|soak, make (kimchi)|verb|으-drop|
+모으다|collect, save up|verb|으-drop|
+따르다|follow, pour|verb|으-drop|
+들르다|drop by|verb|으-drop|
+치르다|pay, take (an exam)|verb|으-drop|
+좋다|good|adjective|regular|
+많다|many, a lot|adjective|regular|
+적다|few, little|adjective|regular|
+작다|small|adjective|regular|
+높다|high|adjective|regular|
+낮다|low|adjective|regular|
+짧다|short|adjective|regular|
+넓다|wide, spacious|adjective|regular|
+좁다|narrow|adjective|regular|
+같다|same|adjective|regular|
+싫다|dislikeable|adjective|regular|
+괜찮다|okay|adjective|regular|
+얇다|thin|adjective|regular|
+굵다|thick|adjective|regular|
+맑다|clear (weather)|adjective|regular|
+밝다|bright|adjective|regular|
+깊다|deep|adjective|regular|
+젊다|young|adjective|regular|
+싸다|cheap|adjective|regular|
+비싸다|expensive|adjective|regular|
+짜다|salty|adjective|regular|
+느리다|slow|adjective|regular|
+어리다|young (child)|adjective|regular|
+흐리다|cloudy|adjective|regular|
+맛있다|tasty|adjective|있다|
+맛없다|not tasty|adjective|있다|
+재미있다|fun, interesting|adjective|있다|
+재미없다|boring|adjective|있다|
+멋있다|cool, stylish|adjective|있다|
+조용하다|quiet|adjective|하다|
+깨끗하다|clean|adjective|하다|
+따뜻하다|warm|adjective|하다|
+시원하다|cool, refreshing|adjective|하다|
+피곤하다|tired|adjective|하다|
+친절하다|kind|adjective|하다|
+유명하다|famous|adjective|하다|
+행복하다|happy|adjective|하다|
+편하다|comfortable|adjective|하다|
+불편하다|uncomfortable|adjective|하다|
+중요하다|important|adjective|하다|
+필요하다|necessary|adjective|하다|
+복잡하다|complicated, crowded|adjective|하다|
+간단하다|simple|adjective|하다|
+심심하다|bored|adjective|하다|
+똑똑하다|smart|adjective|하다|
+건강하다|healthy|adjective|하다|
+위험하다|dangerous|adjective|하다|
+안전하다|safe|adjective|하다|
+지루하다|boring|adjective|하다|
+날씬하다|slim|adjective|하다|
+착하다|kind-hearted|adjective|하다|
+이상하다|strange|adjective|하다|
+비슷하다|similar|adjective|하다|
+궁금하다|curious|adjective|하다|
+덥다|hot (weather)|adjective|ㅂ|
+춥다|cold (weather)|adjective|ㅂ|
+쉽다|easy|adjective|ㅂ|
+어렵다|difficult|adjective|ㅂ|
+맵다|spicy|adjective|ㅂ|
+가볍다|light|adjective|ㅂ|
+무겁다|heavy|adjective|ㅂ|
+귀엽다|cute|adjective|ㅂ|
+아름답다|beautiful|adjective|ㅂ|
+반갑다|glad (to meet)|adjective|ㅂ|
+고맙다|thankful|adjective|ㅂ|
+즐겁다|enjoyable|adjective|ㅂ|
+가깝다|close, near|adjective|ㅂ|
+무섭다|scary|adjective|ㅂ|
+시끄럽다|noisy|adjective|ㅂ|
+부럽다|envious|adjective|ㅂ|
+외롭다|lonely|adjective|ㅂ|
+부끄럽다|shy, embarrassed|adjective|ㅂ|
+뜨겁다|hot (to the touch)|adjective|ㅂ|
+차갑다|cold (to the touch)|adjective|ㅂ|
+더럽다|dirty|adjective|ㅂ|
+싱겁다|bland|adjective|ㅂ|
+어둡다|dark|adjective|ㅂ|
+곱다|fine, pretty|adjective|ㅂ|
+빨갛다|red|adjective|ㅎ|
+파랗다|blue|adjective|ㅎ|
+노랗다|yellow|adjective|ㅎ|
+하얗다|white|adjective|ㅎ|
+까맣다|black|adjective|ㅎ|
+그렇다|be so, like that|adjective|ㅎ|
+빠르다|fast|adjective|르|
+다르다|different|adjective|르|
+배부르다|full (stomach)|adjective|르|
+크다|big|adjective|으-drop|
+바쁘다|busy|adjective|으-drop|
+아프다|sick, hurt|adjective|으-drop|
+기쁘다|glad|adjective|으-drop|
+슬프다|sad|adjective|으-drop|
+예쁘다|pretty|adjective|으-drop|
+나쁘다|bad|adjective|으-drop|
+배고프다|hungry|adjective|으-drop|
+길다|long|adjective|ㄹ-stem|
+멀다|far|adjective|ㄹ-stem|
+달다|sweet|adjective|ㄹ-stem|
+힘들다|hard, tiring|adjective|ㄹ-stem|
+학생이다|be a student|noun||
+선생님이다|be a teacher|noun||
+회사원이다|be an office worker|noun||
+의사이다|be a doctor|noun||
+가수이다|be a singer|noun||
+친구이다|be a friend|noun||
+주말이다|be the weekend|noun||
+방학이다|be school vacation|noun||
+휴가이다|be a holiday (leave)|noun||
+생일이다|be (one's) birthday|noun||
+처음이다|be the first time|noun||`;
+const DRILL_KEY='kvf.drillwords.v1';
+function drillRowsToWords(rows){return rows.map(r=>GR.mk(r)).filter(Boolean)}
+function builtinDrillWords(){return drillRowsToWords(DRILL_BUILTIN.split('\n').map(l=>{const p=l.split('|');return {base:p[0],meaning_en:p[1],type:p[2],irregular:p[3],honorific:p[4]}}))}
+let drillWords=(()=>{const c=readJSON(DRILL_KEY,null);const w=c&&Array.isArray(c.rows)?drillRowsToWords(c.rows):[];return w.length>=20?w:builtinDrillWords()})();
+function sheetTabUrl(u,gid){
+  u=String(u||'').trim();if(!u)return '';
+  let m=u.match(/^https?:\/\/docs\.google\.com\/spreadsheets\/d\/e\/([\w-]+)\/pub(html)?\b/);
+  if(m)return 'https://docs.google.com/spreadsheets/d/e/'+m[1]+'/pub?gid='+gid+'&single=true&output=csv';
+  m=u.match(/^https?:\/\/docs\.google\.com\/spreadsheets\/d\/([\w-]{20,})/);
+  if(m)return 'https://docs.google.com/spreadsheets/d/'+m[1]+'/export?format=csv&gid='+gid;
+  return '';
+}
+/* silent: on any failure the cached or built-in word list stays in use */
+async function loadDrillWords(){
+  const url=sheetTabUrl(settings.syncUrl,DRILL_GID);if(!url)return;
+  try{
+    const res=await fetch(url,{cache:'no-store',redirect:'follow'});if(!res.ok)return;
+    const t=await res.text();if(/^\s*</.test(t))return;
+    const rows=parseDelimited(t);if(rows.length<2)return;
+    const h=rows[0].map(x=>String(x).trim().toLowerCase());
+    const obj=rows.slice(1).map(r=>{const o={};h.forEach((k,i)=>o[k]=String(r[i]||'').trim());return o});
+    const w=drillRowsToWords(obj);
+    if(w.length>=20){drillWords=w;lsSet(DRILL_KEY,JSON.stringify({at:new Date().toISOString(),rows:obj}))}
+  }catch(e){}
+}
+function isGrammar(c){return !!c&&(c.pos==='grammar'||c.unit==='Grammar')}
+/* flashcards, stats and the normal quizzes use only word cards; grammar cards are reference + Grammar drill */
+function deck(){return cards.filter(c=>!isGrammar(c))}
+function drillPattern(c){return isGrammar(c)?GR.findPattern(c.korean):null}
+function grammarCards(){return cards.filter(c=>drillPattern(c))}
+let lastDrillBase='';
+/* {id, p, w, ans:[model answer, other accepted forms], ok} or null */
+function makeDrill(c){
+  const p=drillPattern(c);if(!p)return null;
+  let opts=drillWords.map(w=>({w,ans:GR.forms(p,w)})).filter(x=>x.ans&&x.ans.length);
+  if(opts.length>1)opts=opts.filter(x=>x.w.base!==lastDrillBase);
+  if(!opts.length)return null;
+  const x=opts[Math.floor(Math.random()*opts.length)];lastDrillBase=x.w.base;
+  return {id:c.id,p,w:x.w,ans:x.ans,ok:false};
+}
+function drillOk(d,val){const v=norm(val);return !!v&&d.ans.some(a=>norm(a)===v)}
+function drillPromptHTML(d){
+  return '<div class="quiz-prompt" style="font-size:clamp(18px,4.6vw,24px)">Change using <span lang="ko">'+esc(d.p.k)+'</span>:</div>'+
+    '<div class="word-big" lang="ko" style="margin:6px 0 2px">'+esc(d.w.base)+'</div>'+
+    '<div class="muted small">'+esc(d.w.meaning||'')+(d.w.meaning?' · ':'')+'answer as <span lang="ko">'+esc(d.p.shape)+'</span></div>';
+}
+function drillFbHTML(d,c,skip){
+  const model='<span lang="ko" style="font-size:22px">'+esc(d.ans[0])+'</span> '+speakBtn(d.ans[0],1);
+  if(d.ok)return '정답! ✓ '+model;
+  return (skip?'':'Not quite. ')+model+(c&&c.notes?'<div class="small muted" style="font-weight:500;margin-top:6px;text-align:left">'+esc(c.notes)+'</div>':'');
+}
+
 /* ============================ Quiz ============================ */
 const quiz={mode:'mc',source:'studied',n:10,items:[],i:0,score:0,answered:false,options:[],running:false};
 function quizPool(){
-  let pool=quiz.source==='all'?cards.slice():quiz.source==='hard'?cards.filter(c=>srs[c.id]&&(srs[c.id].lapses>0)):quiz.source==='tricky'?cards.filter(isTricky):cards.filter(c=>statusOf(c)!=='new');
-  if(quiz.source.startsWith('unit:')){const u=quiz.source.slice(5);pool=cards.filter(c=>c.unit===u)}
+  const D=deck();
+  let pool=quiz.source==='all'?D.slice():quiz.source==='hard'?D.filter(c=>srs[c.id]&&(srs[c.id].lapses>0)):quiz.source==='tricky'?D.filter(isTricky):D.filter(c=>statusOf(c)!=='new');
+  if(quiz.source.startsWith('unit:')){const u=quiz.source.slice(5);pool=D.filter(c=>c.unit===u)}
   return pool.filter(c=>c.korean&&c.meaning_en);
 }
 function renderQuiz(){
   const a=$('#quizArea');
   if(!quiz.running){
-    const units=[...new Set(cards.map(c=>c.unit).filter(Boolean))].sort(), nTricky=cards.filter(isTricky).length;
+    const D=deck(),units=[...new Set(D.map(c=>c.unit).filter(Boolean))].sort(), nTricky=D.filter(isTricky).length, G=grammarCards();
     a.innerHTML='<div class="quiz-card"><h2>Quiz practice</h2><p class="muted small">Practice outside the schedule — quizzes don’t change your spaced-repetition reviews.</p>'+
-      '<div class="seg" id="quizMode" style="margin:6px 0 14px"><button data-qmode="mc" class="'+(quiz.mode==='mc'?'on':'')+'">Multiple choice (한→EN)</button><button data-qmode="type" class="'+(quiz.mode==='type'?'on':'')+'">Typing (EN→한)</button></div><br>'+
-      '<div class="row" style="justify-content:center"><select id="quizSource"><option value="studied">Words I’ve studied</option><option value="all">All words</option><option value="hard">Words I’ve forgotten before</option><option value="tricky"'+(nTricky?'':' disabled')+'>Tricky words only ('+nTricky+')</option>'+units.map(u=>'<option value="unit:'+esc(u)+'">Unit: '+esc(u)+'</option>').join('')+'</select>'+
+      '<div class="seg" id="quizMode" style="margin:6px 0 14px"><button data-qmode="mc" class="'+(quiz.mode==='mc'?'on':'')+'">Multiple choice (한→EN)</button><button data-qmode="type" class="'+(quiz.mode==='type'?'on':'')+'">Typing (EN→한)</button>'+(G.length?'<button data-qmode="grammar" class="'+(quiz.mode==='grammar'?'on':'')+'">Grammar drill</button>':'')+'</div><br>'+
+      '<div class="row" style="justify-content:center">'+(quiz.mode==='grammar'?'<select id="quizPattern"><option value="">All patterns ('+G.length+')</option>'+G.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.korean)+'</option>').join('')+'</select>':'<select id="quizSource"><option value="studied">Words I’ve studied</option><option value="all">All words</option><option value="hard">Words I’ve forgotten before</option><option value="tricky"'+(nTricky?'':' disabled')+'>Tricky words only ('+nTricky+')</option>'+units.map(u=>'<option value="unit:'+esc(u)+'">Unit: '+esc(u)+'</option>').join('')+'</select>')+
       '<select id="quizN"><option>5</option><option selected>10</option><option>20</option><option value="999">All</option></select>'+
       '<button class="btn primary" data-action="quiz-start">Start</button></div><p class="small muted" id="quizMsg"></p></div>';
+    if(quiz.mode==='grammar'){$('#quizPattern').value=quiz.pattern||'';if($('#quizPattern').value!==(quiz.pattern||''))$('#quizPattern').value='';$('#quizMsg').textContent='Type the changed form. Each question picks a random pattern and word.';$('#quizN').value=String(quiz.n);return}
     if(quiz.source==='tricky'&&!nTricky)quiz.source='studied';
     $('#quizSource').value=quiz.source;if(!$('#quizSource').value)$('#quizSource').value='studied';
     const qm=$('#quizMsg'),hint=()=>{qm.textContent=$('#quizSource').value==='tricky'&&nTricky<4?'Only '+nTricky+' tricky word'+(nTricky===1?'':'s')+' — a short quiz (answer choices still come from your whole deck).':nTricky?'':'Tricky words (forgotten 2+ times, not mastered) will appear here once you have some.'};
@@ -997,17 +1541,18 @@ function renderQuiz(){
     if(pct>=80)confetti();return;
   }
   const c=getCard(quiz.items[quiz.i]);if(!c){quiz.i++;return renderQuiz()}
+  const qd=quiz.mode==='grammar'?quizDrill(c):null;if(quiz.mode==='grammar'&&!qd){quiz.i++;return renderQuiz()}
   const head='<div class="row" style="justify-content:space-between"><span class="muted small">Question '+(quiz.i+1)+' / '+quiz.items.length+'</span><span class="row"><span class="muted small">Score '+quiz.score+'</span><button class="btn sm" data-action="quiz-exit">✕ Quit</button></span></div><div class="progressbar" style="margin:8px 0"><i style="width:'+Math.round(100*quiz.i/quiz.items.length)+'%"></i></div>';
   if(quiz.mode==='mc'){
     if(!quiz.answered){
-      const others=shuffle(cards.filter(x=>x.id!==c.id&&norm(x.meaning_en)!==norm(c.meaning_en)));
+      const others=shuffle(deck().filter(x=>x.id!==c.id&&norm(x.meaning_en)!==norm(c.meaning_en)));
       const opts=[c];for(const o of others){if(opts.length>=4)break;if(!opts.some(p=>norm(p.meaning_en)===norm(o.meaning_en)))opts.push(o)}
       quiz.options=shuffle(opts).map(o=>o.id);
     }
     a.innerHTML='<div class="quiz-card">'+head+'<div class="word-big" lang="ko" style="margin-top:18px">'+esc(c.korean)+'</div><div>'+speakBtn(c.korean)+'</div>'+
       '<div class="mc" id="mc">'+quiz.options.map((id,k)=>'<button data-action="mc-pick" data-id="'+esc(id)+'"><span class="n">'+(k+1)+'</span><span>'+esc(getCard(id).meaning_en)+'</span></button>').join('')+'</div><div class="quiz-fb" id="quizFb"></div></div>';
   }else{
-    a.innerHTML='<div class="quiz-card">'+head+'<div class="quiz-prompt">'+esc(c.meaning_en)+'</div><div class="pos">'+esc(c.pos)+'</div>'+
+    a.innerHTML='<div class="quiz-card">'+head+(qd?'<div style="margin-top:12px">'+drillPromptHTML(qd)+'</div>':'<div class="quiz-prompt">'+esc(c.meaning_en)+'</div><div class="pos">'+esc(c.pos)+'</div>')+
       '<input type="text" class="quiz-input" id="quizInput" lang="ko" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="한국어로 입력하세요">'+
       '<div class="row" style="justify-content:center;margin-top:10px"><button class="btn primary" data-action="type-check" id="typeCheck">Check ↵</button><button class="btn" data-action="type-hint">Hint</button><button class="btn" data-action="type-skip">Show answer</button></div>'+
       '<div class="quiz-fb" id="quizFb"></div></div>';
@@ -1015,9 +1560,16 @@ function renderQuiz(){
   }
 }
 function startQuiz(){
-  const src=$('#quizSource'),n=$('#quizN');if(src)quiz.source=src.value;if(n)quiz.n=Number(n.value);
+  const src=$('#quizSource'),n=$('#quizN'),pat=$('#quizPattern');if(src)quiz.source=src.value;if(n)quiz.n=Number(n.value);if(pat)quiz.pattern=pat.value;
+  if(quiz.mode==='grammar'){
+    /* a round of drills: patterns in shuffled cycles (no immediate repeats), a random word per question */
+    const G=grammarCards().filter(c=>!quiz.pattern||c.id===quiz.pattern);if(!G.length){toast('No grammar patterns yet — sync your sheet');return}
+    const len=quiz.n>=999?Math.max(G.length,10):quiz.n,items=[];
+    while(items.length<len){const cyc=shuffle(G.map(c=>c.id));if(G.length>1&&cyc[0]===items[items.length-1])cyc.push(cyc.shift());items.push(...cyc)}
+    quiz.items=items.slice(0,len);quiz.i=0;quiz.score=0;quiz.answered=false;quiz.drill=null;quiz.running=true;renderQuiz();return;
+  }
   let pool=quizPool();
-  if(pool.length<1&&quiz.source==='studied'){pool=cards.slice();toast('No studied words yet — using all words')}
+  if(pool.length<1&&quiz.source==='studied'){pool=deck();toast('No studied words yet — using all words')}
   if(!pool.length){toast('No words to quiz');return}
   quiz.items=shuffle(pool).slice(0,quiz.n).map(c=>c.id);quiz.i=0;quiz.score=0;quiz.answered=false;quiz.running=true;renderQuiz();
 }
@@ -1028,6 +1580,9 @@ function mcPick(id){
   const fb=$('#quizFb');fb.className='quiz-fb '+(ok?'ok':'bad');fb.innerHTML=ok?'CORRECT! 맞아요 ✓':'GOOD TRY! <span class="muted">'+esc(c.korean)+' = '+esc(c.meaning_en)+'</span>';
   setTimeout(()=>{quiz.i++;quiz.answered=false;renderQuiz()},ok?900:1700);
 }
+/* Grammar drill: one drill per question (same word if the question re-renders) */
+function quizDrill(c){const key=quiz.i+':'+c.id;if(quiz.drill&&quiz.drill.key===key)return quiz.drill;quiz.drill=makeDrill(c);if(quiz.drill)quiz.drill.key=key;return quiz.drill}
+function curQuizDrill(){if(quiz.mode!=='grammar')return null;const c=getCard(quiz.items[quiz.i]);return c&&quiz.drill&&quiz.drill.key===quiz.i+':'+c.id?quiz.drill:null}
 function answers(c){const base=String(c.korean);const parts=base.split(/[\/,;]| or /).map(s=>s.trim()).filter(Boolean);const all=new Set([norm(base)]);parts.forEach(p=>{all.add(norm(p));all.add(norm(p.replace(/\(.*?\)/g,'')))});return all}
 function typeCheck(skip){
   const c=getCard(quiz.items[quiz.i]),inp=$('#quizInput'),fb=$('#quizFb');
@@ -1035,9 +1590,11 @@ function typeCheck(skip){
   const val=inp?inp.value:'';
   if(!skip&&!val.trim()){inp&&inp.focus();return}
   quiz.answered=true;
-  const ok=!skip&&answers(c).has(norm(val));
+  const qd=curQuizDrill();
+  const ok=!skip&&(qd?drillOk(qd,val):answers(c).has(norm(val)));
   if(ok)quiz.score++;
   fb.className='quiz-fb '+(ok?'ok':'bad');
+  if(qd){qd.ok=ok;fb.innerHTML=drillFbHTML(qd,c,skip)+(!ok&&!skip?'<div style="margin-top:6px"><button class="btn sm" data-action="type-override">I was right (count it)</button></div>':'');if(inp)inp.disabled=true;const b=$('#typeCheck');if(b)b.textContent='Next ↵';if(ok||settings.autoSpeak)speak(qd.ans[0]);setTimeout(()=>{if(b)b.focus()},20);return}
   fb.innerHTML=(ok?'정답! ✓ ':(skip?'':'Not quite. '))+'<span lang="ko" style="font-size:22px">'+esc(c.korean)+'</span> '+speakBtn(c.korean,1)+(c.example_ko?'<div class="small muted" style="font-weight:500;margin-top:6px" lang="ko">'+esc(c.example_ko)+'</div>':'')+
     (!ok&&!skip?'<div style="margin-top:6px"><button class="btn sm" data-action="type-override">I was right (count it)</button></div>':'');
   if(inp)inp.disabled=true;
@@ -1061,12 +1618,13 @@ function renderWords(){
   const q=norm($('#fSearch').value),u=$('#fUnit').value,tg=$('#fTag').value,st=$('#fStatus').value;
   const rows=cards.filter(c=>{
     if(u&&c.unit!==u)return false;if(tg&&!c.tags.includes(tg))return false;
+    if(st&&isGrammar(c))return false;
     if(st==='due'){if(!isDue(c))return false}else if(st==='tricky'){if(!isTricky(c))return false}else if(st&&statusOf(c)!==st)return false;
     if(q){const hay=norm([c.korean,c.meaning_en,c.hanja,c.notes,c.example_ko,c.example_en,c.related,c.tags.join(' '),c.pos].join(' '));if(!hay.includes(q))return false}
     return true;
   });
   $('#wordCount').textContent='· '+rows.length+' of '+cards.length;
-  $('#wordTable').innerHTML=rows.length?rows.map(c=>{const s=srs[c.id],stt=statusOf(c);return '<tr><td>'+speakBtn(c.korean,1)+'</td><td class="k" lang="ko">'+esc(c.korean)+(c.hanja?' <span class="muted small" style="font-weight:400">'+esc(c.hanja)+'</span>':'')+(isTricky(c)?' <span class="tagchip chip-tricky" title="Forgotten '+s.lapses+' times">tricky</span>':'')+'</td><td>'+esc(c.meaning_en)+'</td><td class="hide-sm muted">'+esc(c.pos)+'</td><td class="hide-sm small">'+esc(c.unit)+'</td><td><span class="tagchip st-'+stt+'">'+stt+'</span></td><td class="hide-sm small muted">'+(s&&s.introduced?esc(s.due):'—')+'</td><td class="actions"><button class="btn sm" data-action="edit-word" data-id="'+esc(c.id)+'">Edit</button></td></tr>'}).join('')
+  $('#wordTable').innerHTML=rows.length?rows.map(c=>{const s=srs[c.id],stt=isGrammar(c)?'grammar':statusOf(c);return '<tr><td>'+speakBtn(c.korean,1)+'</td><td class="k" lang="ko">'+esc(c.korean)+(c.hanja?' <span class="muted small" style="font-weight:400">'+esc(c.hanja)+'</span>':'')+(isTricky(c)?' <span class="tagchip chip-tricky" title="Forgotten '+s.lapses+' times">tricky</span>':'')+'</td><td>'+esc(c.meaning_en)+'</td><td class="hide-sm muted">'+esc(c.pos)+'</td><td class="hide-sm small">'+esc(c.unit)+'</td><td><span class="tagchip st-'+stt+'">'+stt+'</span></td><td class="hide-sm small muted">'+(s&&s.introduced?esc(s.due):'—')+'</td><td class="actions"><button class="btn sm" data-action="edit-word" data-id="'+esc(c.id)+'">Edit</button></td></tr>'}).join('')
     :'<tr><td colspan="8" class="muted" style="text-align:center;padding:24px">No words match.</td></tr>';
 }
 function openForm(id){
@@ -1237,9 +1795,9 @@ function streak(){let d=today(),n=0;if(!(log[d]&&log[d].reviews))d=addDays(d,-1)
 function updateHeader(){$('#streakNum').textContent=streak()}
 function renderProgress(){
   const L=dayLog(),t=today();
-  const counts={new:0,learning:0,mastered:0};cards.forEach(c=>counts[statusOf(c)]++);
-  const due=cards.filter(c=>isDue(c,t)).length,tom=cards.filter(c=>{const s=srs[c.id];return s&&s.introduced&&s.due===addDays(t,1)}).length;
-  const tiles=[[streak(),'Day streak',1],[L.new+' / '+settings.newPerDay,'New words today'],[L.reviews,'Cards studied today'],[due,'Reviews due'],[cards.length,'Total words'],[counts.learning,'Learning'],[counts.mastered,'Mastered'],[counts.new,'Not seen yet']];
+  const D=deck(),counts={new:0,learning:0,mastered:0};D.forEach(c=>counts[statusOf(c)]++);
+  const due=D.filter(c=>isDue(c,t)).length,tom=D.filter(c=>{const s=srs[c.id];return s&&s.introduced&&s.due===addDays(t,1)}).length;
+  const tiles=[[streak(),'Day streak',1],[L.new+' / '+settings.newPerDay,'New words today'],[L.reviews,'Cards studied today'],[due,'Reviews due'],[D.length,'Total words'],[counts.learning,'Learning'],[counts.mastered,'Mastered'],[counts.new,'Not seen yet']];
   $('#statTiles').innerHTML=tiles.map(x=>'<div class="stat'+(x[2]?' hl':'')+'"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>').join('');
   const days=[];for(let i=6;i>=0;i--){const d=addDays(t,-i);days.push({d,l:log[d]||{new:0,reviews:0}})}
   const max=Math.max(5,...days.map(x=>x.l.reviews));
@@ -1256,9 +1814,9 @@ function renderProgress(){
   });
   $('#chart').innerHTML=svg+'</svg>';
   renderStoryProgress();
-  const tk=cards.filter(isTricky);
+  const tk=deck().filter(isTricky);
   $('#trickyPanel').innerHTML='<h2>Tricky words ('+tk.length+')</h2>'+(tk.length?'<div class="row">'+tk.map(c=>'<span class="tagchip chip-tricky" lang="ko" title="'+esc(c.meaning_en)+'">'+esc(c.korean)+'</span>').join('')+'</div>':'<p class="muted small">No tricky words right now — words you forget twice or more show up here until mastered.</p>');
-  const m=cards.filter(c=>statusOf(c)==='mastered');
+  const m=deck().filter(c=>statusOf(c)==='mastered');
   $('#masteredPanel').innerHTML='<h2>Mastered words ('+m.length+')</h2>'+(m.length?'<div class="row">'+m.map(c=>'<span class="tagchip st-mastered" lang="ko" title="'+esc(c.meaning_en)+'">'+esc(c.korean)+'</span>').join('')+'</div>':'<p class="muted small">No words mastered yet — a word is mastered when its review interval reaches 21 days. Keep practicing!</p>');
 }
 
@@ -1422,7 +1980,7 @@ function blankChoices(s,q){
   const ans=q.ans_ko,verb=/다$/.test(ans),seen=new Set([norm(ans)]),out=[ans];
   const ok=w=>{w=String(w||'').trim();if(!w||seen.has(norm(w))||/다$/.test(w)!==verb||w.includes(ans)||ans.includes(w)||w.length>ans.length+4)return false;return true};
   for(const w of shuffle(s.vocab.map(v=>v.ko))){if(out.length>=4)break;if(ok(w)){seen.add(norm(w));out.push(w)}}
-  if(out.length<4)for(const c of shuffle(cards.filter(c=>c.korean&&!/[\s\/(),]/.test(c.korean)))){if(out.length>=4)break;if(ok(c.korean)){seen.add(norm(c.korean));out.push(c.korean)}}
+  if(out.length<4)for(const c of shuffle(deck().filter(c=>c.korean&&!/[\s\/(),]/.test(c.korean)))){if(out.length>=4)break;if(ok(c.korean)){seen.add(norm(c.korean));out.push(c.korean)}}
   return shuffle(out);
 }
 function qChoices(s,q,key){
@@ -1857,7 +2415,7 @@ document.addEventListener('click',e=>{
     case 'download-template-json':download('vocab-template.json',JSON.stringify({cards:TEMPLATE_ROWS.map(r=>Object.assign({},r,{tags:parseTags(r.tags)}))},null,2),'application/json');break;
     case 'export':exportBackup();break;
     case 'export-csv':download('korean-vocab-'+today()+'.csv','\uFEFF'+toCSV(cards),'text/csv');break;
-    case 'sync-now':settings.syncUrl=$('#sSyncUrl').value.trim();save();syncNow(true);if(!settings.storiesUrl)loadStoriesFromUrl(false);break;
+    case 'sync-now':settings.syncUrl=$('#sSyncUrl').value.trim();save();syncNow(true);loadDrillWords();if(!settings.storiesUrl)loadStoriesFromUrl(false);break;
     case 'clear-sync':settings.syncUrl='';settings.lastSync=null;if(!settings.storiesUrl){settings.lastStorySync=null;storyCache=null;lsDel(K.stories);rebuildStories()}save();renderSettings();toast('Sync URL cleared');break;
     case 'reset-progress':if(confirm('Reset all review progress? Your words are kept.')){srs={};log={};save();sess.built=false;refreshAll();toast('Progress reset')}break;
     case 'reset-all':if(confirm('Delete ALL words and progress from this browser? Export a backup first if unsure.')){cards=[];srs={};log={};storyProg={read:{},answers:{},scores:{}};storyReview={};saveStoryReview();save();sess.built=false;refreshAll();toast('Everything deleted')}break;
@@ -1866,7 +2424,7 @@ document.addEventListener('click',e=>{
     case 'mc-pick':mcPick(el.dataset.id);break;
     case 'type-check':typeCheck(false);break;
     case 'type-skip':typeCheck(true);break;
-    case 'type-hint':{const c=getCard(quiz.items[quiz.i]);const i=$('#quizInput');if(c&&i&&!quiz.answered){const ch=[...c.korean];const fb=$('#quizFb');fb.className='quiz-fb';fb.innerHTML='Hint: <span lang="ko">'+esc(ch[0])+'</span>'+' _'.repeat(Math.max(0,ch.length-1))+' <span class="muted small">('+ch.length+' characters)</span>';i.focus()}break}
+    case 'type-hint':{const c=getCard(quiz.items[quiz.i]);const i=$('#quizInput');if(c&&i&&!quiz.answered){const qd=curQuizDrill(),ch=[...(qd?qd.ans[0]:c.korean)];const fb=$('#quizFb');fb.className='quiz-fb';fb.innerHTML='Hint: <span lang="ko">'+esc(ch[0])+'</span>'+' _'.repeat(Math.max(0,ch.length-1))+' <span class="muted small">('+ch.length+' characters)</span>';i.focus()}break}
     case 'story-open':openStory(el.dataset.id);break;
     case 'story-back':closeStory();break;
     case 'story-en':toggleEnglish();break;
@@ -1902,7 +2460,7 @@ document.addEventListener('keydown',e=>{
   if(e.isComposing||e.keyCode===229)return;
   if($('#modalBg').classList.contains('open')){if(e.key==='Escape')closeForm();return}
   const tag=(e.target.tagName||'').toLowerCase();
-  if(tab==='quiz'&&quiz.running&&quiz.mode==='type'&&e.key==='Enter'&&(e.target.id==='quizInput'||quiz.answered)){e.preventDefault();typeCheck(false);return}
+  if(tab==='quiz'&&quiz.running&&(quiz.mode==='type'||quiz.mode==='grammar')&&e.key==='Enter'&&(e.target.id==='quizInput'||quiz.answered)){e.preventDefault();typeCheck(false);return}
   if(tag==='input'||tag==='textarea'||tag==='select'||e.ctrlKey||e.metaKey||e.altKey)return;
   if(tab==='stories'){
     if(e.key==='Escape'){if($('#vpop'))closePop();else if(storyUI.open)closeStory();return}
@@ -1938,9 +2496,10 @@ showTab((location.hash||'#study').slice(1));
 updateHeader();
 if(settings.autoSync&&settings.syncUrl)setTimeout(()=>syncNow(false),400);
 if(settings.storiesUrl||(settings.autoSync&&settings.syncUrl&&storiesSource().url))setTimeout(()=>loadStoriesFromUrl(false),700);
+if(settings.autoSync&&settings.syncUrl)setTimeout(loadDrillWords,900);
 
 /* Small hook for testing / power users in the console */
-window.KVF={get cards(){return cards},get srs(){return srs},get settings(){return settings},get log(){return log},get session(){return sess},parseAny,mergeCards,importText,exportBackup,syncNow,schedule,toCSV,romanize,get stories(){return STORIES},get storyProgress(){return storyProg},storyRowsToMap,parseStoryText,loadStoriesFromUrl,storiesUrlFrom,STORIES_GID,get storyReview(){return storyReview}};
+window.KVF={get cards(){return cards},get srs(){return srs},get settings(){return settings},get log(){return log},get session(){return sess},parseAny,mergeCards,importText,exportBackup,syncNow,schedule,toCSV,romanize,get stories(){return STORIES},get storyProgress(){return storyProg},storyRowsToMap,parseStoryText,loadStoriesFromUrl,storiesUrlFrom,STORIES_GID,get storyReview(){return storyReview},get quiz(){return quiz},GR,get drillWords(){return drillWords},makeDrill,loadDrillWords,DRILL_GID,deck};
 })();
 </script>
 <script>
