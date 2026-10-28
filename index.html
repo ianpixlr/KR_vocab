@@ -133,6 +133,8 @@ label.check{display:flex;gap:8px;align-items:center;margin:8px 0;font-size:14px;
 @media (hover:hover){.grade:hover{filter:brightness(1.07);transform:translateY(-2px)}} .grade:active{transform:scale(.94)}
 .g1{background:var(--again)} .g2{background:var(--hard)} .g3{background:var(--good)} .g4{background:var(--easy)}
 .shortcuts{text-align:center;margin-top:12px;font-size:12px;color:var(--muted)}
+.knowrow{text-align:center;margin-top:10px}
+.knowbtn{color:var(--muted);font-weight:600}
 .done{text-align:center;padding:40px 20px}
 .done .big{font-size:56px;animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
 @keyframes pop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
@@ -543,7 +545,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
     <div class="help" id="helpBox" hidden>
       <div class="panel">
         <h2>How it works</h2>
-        <p>Each day you get up to <b>10 new words</b> (change it in Settings) plus any reviews that are due. Flip the card, then grade yourself honestly — the app schedules the next review using spaced repetition (SM‑2 style: roughly 1 → 3 → 8 → 20 days…). A word counts as <b>mastered</b> once its interval reaches 21 days.</p>
+        <p>Each day you get up to <b>10 new words</b> (change it in Settings) plus any reviews that are due. Flip the card, then grade yourself honestly — the app schedules the next review using spaced repetition (SM‑2 style: roughly 1 → 3 → 8 → 20 days…). A word counts as <b>mastered</b> once its interval reaches 21 days. If a new word is one you already know, tap <b>I know this</b> to mark it mastered right away (it comes back for one check in 21 days, and it doesn’t use up a daily new-word slot).</p>
         <h3>Keyboard shortcuts</h3>
         <ul>
           <li><span class="kbd">Space</span> / <span class="kbd">Enter</span> flip the card</li>
@@ -852,6 +854,25 @@ function grade(g){
   updateHeader();
   if(!sess.cur&&sess.done>0)confetti();
 }
+/* "I know this" on a brand-new card: introduce it straight at the mastered interval (21d).
+   reps:2 so its first check review grows normally (Good ≈ 21×ease ≈ 53d) and Again lapses as usual.
+   It is logged as L.known, not L.new, so it does not use up one of the daily new-word slots. */
+function knowWord(){
+  const id=sess.cur,c=getCard(id);if(!c||statusOf(c)!=='new')return;
+  const t=today();
+  srs[id]={reps:2,interval:21,ease:2.5,lapses:0,introduced:t,last:t,due:addDays(t,21),masteredDate:t};
+  const L=dayLog(t);L.known=(L.known||0)+1;
+  /* the freed slot goes to the next unseen word, if the daily limit allows */
+  const allowed=Math.max(0,Number(settings.newPerDay)+sess.extraNew-L.new);
+  const queuedNew=sess.queue.filter(q=>{const x=getCard(q);return x&&statusOf(x)==='new'});
+  if(queuedNew.length<allowed){const nx=cards.find(x=>statusOf(x)==='new'&&!sess.queue.includes(x.id));if(nx){sess.queue.push(nx.id);sess.total++}}
+  sess.done++;
+  save();
+  toast('Marked as known: '+c.korean);
+  nextCard();
+  updateHeader();
+  if(!sess.cur&&sess.done>0)confetti();
+}
 function renderStudy(){
   const area=$('#studyArea');
   $$('#dirSeg button').forEach(b=>b.classList.toggle('on',b.dataset.dir===settings.direction));
@@ -894,9 +915,10 @@ function renderStudy(){
 }
 function renderControls(){
   const el=$('#controls');if(!el)return;
-  if(!sess.flipped){el.innerHTML='<button class="btn primary showbtn" data-action="flip">Show answer <span class="kbd" style="margin-left:6px;background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.3)">Space</span></button><div class="shortcuts"><span class="kbd">P</span> pronounce · <span class="kbd">Space</span> flip</div>';return}
+  const c=getCard(sess.cur),know=c&&statusOf(c)==='new'?'<div class="knowrow"><button class="btn sm knowbtn" data-action="know-word" title="Skip learning and mark this word as mastered">I know this</button></div>':'';
+  if(!sess.flipped){el.innerHTML='<button class="btn primary showbtn" data-action="flip">Show answer <span class="kbd" style="margin-left:6px;background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.3)">Space</span></button>'+know+'<div class="shortcuts"><span class="kbd">P</span> pronounce · <span class="kbd">Space</span> flip</div>';return}
   const s=srs[sess.cur];const names=['','Again','Hard','Good','Easy'];
-  el.innerHTML='<div class="grades">'+[1,2,3,4].map(g=>'<button class="grade g'+g+'" data-action="grade" data-g="'+g+'">'+names[g]+'<small>'+ivLabel(schedule(s,g).interval)+' · '+g+'</small></button>').join('')+'</div><div class="shortcuts"><span class="kbd">1</span>–<span class="kbd">4</span> grade · <span class="kbd">P</span> word · <span class="kbd">E</span> example</div>';
+  el.innerHTML='<div class="grades">'+[1,2,3,4].map(g=>'<button class="grade g'+g+'" data-action="grade" data-g="'+g+'">'+names[g]+'<small>'+ivLabel(schedule(s,g).interval)+' · '+g+'</small></button>').join('')+'</div>'+know+'<div class="shortcuts"><span class="kbd">1</span>–<span class="kbd">4</span> grade · <span class="kbd">P</span> word · <span class="kbd">E</span> example</div>';
 }
 function confetti(){const box=$('#confetti');const cols=['#4f46e5','#7c3aed','#22a06b','#f59e0b','#e5484d','#3b82f6'];let h='';for(let i=0;i<40;i++){h+='<i style="left:'+(Math.random()*100)+'%;background:'+cols[i%cols.length]+';animation-delay:'+(Math.random()*.5)+'s;animation-duration:'+(1.2+Math.random())+'s"></i>'}box.innerHTML=h;setTimeout(()=>box.innerHTML='',2600)}
 /* ---- Perfect-score celebration (in-story comprehension check) ---- */
@@ -1822,6 +1844,7 @@ document.addEventListener('click',e=>{
   switch(a){
     case 'flip':flip();break;
     case 'grade':grade(Number(el.dataset.g));break;
+    case 'know-word':knowWord();break;
     case 'more-new':sess.extraNew+=5;buildQueue();break;
     case 'goto':showTab(el.dataset.tab);break;
     case 'add-word':openForm(null);break;
