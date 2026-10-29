@@ -112,6 +112,8 @@ label.check{display:flex;gap:8px;align-items:center;margin:8px 0;font-size:14px;
 .speak.playing{animation:pulse 1s infinite}
 .speak.lg{width:84px;height:84px}.speak.lg .ico{width:38px;height:38px}
 .tagchip.chip-tricky{background:rgba(229,72,77,.12);color:#c2323a}
+.tagchip.chip-lv{background:transparent;color:var(--muted);border:1px solid var(--border);font-weight:600;padding:1px 7px}
+.lv-row{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:10px;margin:8px 0}.lv-row b{font-size:14px}.lv-bar{height:6px;border-radius:999px;background:var(--border);overflow:hidden}.lv-bar i{display:block;height:100%;background:var(--good)}.lv-num{min-width:120px;text-align:right;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
 .typo-row{padding:6px 0;border-top:1px solid var(--border)}.typo-row:first-child{border-top:0}
 [data-theme=dark] .tagchip.chip-tricky{color:#ff8a8d}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(79,70,229,.45)}100%{box-shadow:0 0 0 12px rgba(79,70,229,0)}}
@@ -429,6 +431,9 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
         <select id="fStatus" aria-label="Filter by status">
           <option value="">All statuses</option><option value="new">New</option><option value="learning">Learning</option><option value="mastered">Mastered</option><option value="due">Reviews due</option><option value="tricky">Tricky</option><option value="typos">Typing mistakes</option>
         </select>
+        <select id="fLevel" aria-label="Filter by word level">
+          <option value="">All levels</option><option value="초급">초급</option><option value="중급">중급</option><option value="고급">고급</option><option value="none">No level</option>
+        </select>
       </div>
       <div class="tablewrap"><table>
         <thead><tr><th></th><th>Korean</th><th>Meaning</th><th class="hide-sm">POS</th><th class="hide-sm">Unit</th><th>Status</th><th class="hide-sm">Due</th><th></th></tr></thead>
@@ -454,6 +459,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
       <div class="legend"><span><i style="background:var(--accent)"></i>New words learned</span><span><i style="background:var(--good)"></i>Reviews</span></div>
     </div>
     <div class="panel" id="storyProgress"></div>
+    <div class="panel" id="levelPanel"></div>
     <div class="panel" id="trickyPanel"></div>
     <div class="panel" id="typoPanel"></div>
     <div class="panel" id="masteredPanel"></div>
@@ -548,6 +554,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
       <div class="panel">
         <h2>How it works</h2>
         <p>Each day you get up to <b>10 new words</b> (change it in Settings) plus any reviews that are due. Flip the card, then grade yourself honestly — the app schedules the next review using spaced repetition (SM‑2 style: roughly 1 → 3 → 8 → 20 days…). A word counts as <b>mastered</b> once its interval reaches 21 days. If a new word is one you already know, tap <b>I know this</b> to mark it mastered right away (it comes back for one check in 21 days, and it doesn’t use up a daily new-word slot).</p>
+        <p><b>Word levels:</b> words in your sheet's <code>level</code> column show a small 초급, 중급 or 고급 tag from the 국립국어원 learner vocabulary list, you can filter by level in the Words tab, and <b>Progress → Word levels</b> shows how many of each you have mastered.</p>
         <p><b>Typing mistakes:</b> when you get a word wrong in <b>Quiz → Typing</b>, it is listed under <b>Progress → Typing mistakes</b> with what you typed, counts as <b>Again</b> on its review schedule (once per day), and stays on the list until you type it correctly twice in a row; pick the <b>Typing mistakes</b> quiz source to retry those words.</p>
         <p><b>Grammar practice</b> is separate from your flashcards: pick <b>Quiz → Grammar drill</b> to change a random word with a random pattern (unit Grammar in the Words tab), using words from the <b>Drill words</b> tab of your sheet (<code>base, meaning_en, type, irregular, honorific</code>).</p>
         <h3>Keyboard shortcuts</h3>
@@ -607,7 +614,7 @@ details.adv summary{cursor:pointer;font-weight:600;font-size:13.5px;color:var(--
           <li><b>Sync URL (self-updating)</b> — keep your list in a Google Sheet. In Sheets: <b>File → Share → Publish to web</b> → <b>Entire document</b> → <b>Comma-separated values (.csv)</b> → Publish, and copy the link (a link to just the Vocab tab, <code>…pub?gid=…&amp;single=true&amp;output=csv</code>, works too). Paste it in <b>Settings → Sync</b>. The same link also loads your Stories tab. Every time you open the app, new rows are added automatically. A GitHub “raw” CSV/JSON link works too (normal github.com/…/blob/… links are converted automatically).</li>
         </ol>
         <h3>Column format</h3>
-        <p class="small"><code>id, korean, hanja, pos, meaning_en, example_ko, example_en, notes, related, unit, tags, date_added</code></p>
+        <p class="small"><code>id, korean, hanja, pos, meaning_en, example_ko, example_en, notes, related, unit, tags, date_added, level</code></p>
         <ul class="small">
           <li>Only <code>korean</code> and <code>meaning_en</code> are required; column order doesn't matter when there's a header row. Header aliases like <code>word</code>, <code>english</code>, <code>meaning</code>, <code>example</code> also work.</li>
           <li><code>tags</code>: separate with <code>;</code> (e.g. <code>travel;verbs</code>). <code>date_added</code>: <code>YYYY-MM-DD</code>. Leave <code>id</code> blank and the app makes one.</li>
@@ -675,7 +682,10 @@ const SEED_CARDS = [
  {id:'ian-11',korean:'읽다',hanja:'',pos:'verb',meaning_en:'to read',example_ko:'자기 전에 보통 책을 읽어요.',example_en:'I usually read a book before going to bed.',notes:'Regular. Pronunciation: 읽다 [익따], 읽어요 [일거요], 읽고 [일꼬].',related:'쓰다 (to write) · 책 (book)',tags:['verbs','core']}
 ].map(c=>Object.assign({unit:IAN_UNIT,date_added:SEED_DATE},c));
 
-const FIELDS = ['id','korean','hanja','pos','meaning_en','example_ko','example_en','notes','related','unit','tags','date_added'];
+const FIELDS = ['id','korean','hanja','pos','meaning_en','example_ko','example_en','notes','related','unit','tags','date_added','level'];
+/* Word level (국립국어원 한국어 학습용 어휘 목록 2003: A/B/C = 초급/중급/고급). Anything else is treated as blank. */
+const LEVELS=['초급','중급','고급'];
+function normLevel(v){v=String(v==null?'':v).trim();const m={a:'초급',b:'중급',c:'고급','1':'초급','2':'중급','3':'고급',beginner:'초급',intermediate:'중급',advanced:'고급'}[v.toLowerCase()];return m||(LEVELS.includes(v)?v:'')}
 const TEMPLATE_ROWS = [
  {id:'',korean:'이사하다',hanja:'移徙',pos:'verb',meaning_en:'to move (house)',example_ko:'다음 달에 학교 근처로 이사할 거예요.',example_en:"I'm going to move near the school next month.",notes:'하다 verb: 이사해요 / 이사했어요. Noun: 이사.',related:'이삿짐 (moving boxes)',unit:'Example (replace with your unit, e.g. Unit 1 – Daily life)',tags:'daily life;home',date_added:'2026-10-21'},
  {id:'',korean:'어울리다',hanja:'',pos:'verb',meaning_en:'to suit, to look good on; to get along',example_ko:'그 색깔이 정말 잘 어울려요.',example_en:'That colour really suits you.',notes:'N이/가 N에게 어울리다. 잘 어울려요 is a common compliment.',related:'맞다 (to fit)',unit:'Example (replace with your unit, e.g. Unit 1 – Daily life)',tags:'shopping;compliments',date_added:'2026-10-21'},
@@ -747,6 +757,7 @@ function normCard(c){
   if(!c)return null;
   const o={};
   FIELDS.forEach(f=>{o[f]=f==='tags'?parseTags(c.tags):String(c[f]==null?'':c[f]).trim()});
+  o.level=normLevel(o.level);
   if(c.romanization)o.romanization=String(c.romanization).trim();
   if(!o.korean&&!o.meaning_en)return null;
   if(!o.id)o.id=uid();
@@ -903,7 +914,7 @@ function renderStudy(){
   }
   const c=getCard(sess.cur), st=statusOf(c), ko2en=sess.dir!=='en2ko', listen=sess.dir==='listen';
   const roman=settings.showRoman?'<div class="roman">'+esc(c.romanization||romanize(c.korean))+'</div>':'';
-  const meta='<div class="top-meta"><span class="tagchip st-'+st+'">'+st+'</span><span>'+esc(c.unit)+'</span></div>';
+  const meta='<div class="top-meta"><span class="tagchip st-'+st+'">'+st+'</span>'+lvChip(c)+'<span>'+esc(c.unit)+'</span></div>';
   const koBlock='<div class="word-big" lang="ko">'+esc(c.korean)+'</div>'+roman;
   const front=listen
     ? '<div class="center"><button class="speak lg" data-action="speak" data-text="'+esc(c.korean)+'" title="Play again" aria-label="Play the word again"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="muted small" style="margin-top:12px">Listen and recall the meaning</div></div><div class="hint">Tap or press <span class="kbd">Space</span> to flip</div>'
@@ -1642,18 +1653,20 @@ function fillFilters(){
   fu.value=units.includes(vu)?vu:'';ft.value=tags.includes(vt)?vt:'';
   $('#unitList').innerHTML=units.map(u=>'<option value="'+esc(u)+'">').join('');
 }
+function lvChip(c){return c&&c.level&&!isGrammar(c)?'<span class="tagchip chip-lv" lang="ko" title="Word level (국립국어원 learner list)">'+esc(c.level)+'</span>':''}
 function renderWords(){
   fillFilters();
-  const q=norm($('#fSearch').value),u=$('#fUnit').value,tg=$('#fTag').value,st=$('#fStatus').value;
+  const q=norm($('#fSearch').value),u=$('#fUnit').value,tg=$('#fTag').value,st=$('#fStatus').value,lv=$('#fLevel').value;
   const rows=cards.filter(c=>{
+    if(lv){if(isGrammar(c))return false;if(lv==='none'?c.level:c.level!==lv)return false}
     if(u&&c.unit!==u)return false;if(tg&&!c.tags.includes(tg))return false;
     if(st&&isGrammar(c))return false;
     if(st==='due'){if(!isDue(c))return false}else if(st==='tricky'){if(!isTricky(c))return false}else if(st==='typos'){if(!isTypo(c))return false}else if(st&&statusOf(c)!==st)return false;
-    if(q){const hay=norm([c.korean,c.meaning_en,c.hanja,c.notes,c.example_ko,c.example_en,c.related,c.tags.join(' '),c.pos].join(' '));if(!hay.includes(q))return false}
+    if(q){const hay=norm([c.korean,c.meaning_en,c.hanja,c.notes,c.example_ko,c.example_en,c.related,c.tags.join(' '),c.pos,c.level].join(' '));if(!hay.includes(q))return false}
     return true;
   });
   $('#wordCount').textContent='· '+rows.length+' of '+cards.length;
-  $('#wordTable').innerHTML=rows.length?rows.map(c=>{const s=srs[c.id],stt=isGrammar(c)?'grammar':statusOf(c);return '<tr><td>'+speakBtn(c.korean,1)+'</td><td class="k" lang="ko">'+esc(c.korean)+(c.hanja?' <span class="muted small" style="font-weight:400">'+esc(c.hanja)+'</span>':'')+(isTricky(c)?' <span class="tagchip chip-tricky" title="Forgotten '+s.lapses+' times">tricky</span>':'')+'</td><td>'+esc(c.meaning_en)+'</td><td class="hide-sm muted">'+esc(c.pos)+'</td><td class="hide-sm small">'+esc(c.unit)+'</td><td><span class="tagchip st-'+stt+'">'+stt+'</span></td><td class="hide-sm small muted">'+(s&&s.introduced?esc(s.due):'—')+'</td><td class="actions"><button class="btn sm" data-action="edit-word" data-id="'+esc(c.id)+'">Edit</button></td></tr>'}).join('')
+  $('#wordTable').innerHTML=rows.length?rows.map(c=>{const s=srs[c.id],stt=isGrammar(c)?'grammar':statusOf(c);return '<tr><td>'+speakBtn(c.korean,1)+'</td><td class="k" lang="ko">'+esc(c.korean)+(c.hanja?' <span class="muted small" style="font-weight:400">'+esc(c.hanja)+'</span>':'')+(lvChip(c)?' '+lvChip(c):'')+(isTricky(c)?' <span class="tagchip chip-tricky" title="Forgotten '+s.lapses+' times">tricky</span>':'')+'</td><td>'+esc(c.meaning_en)+'</td><td class="hide-sm muted">'+esc(c.pos)+'</td><td class="hide-sm small">'+esc(c.unit)+'</td><td><span class="tagchip st-'+stt+'">'+stt+'</span></td><td class="hide-sm small muted">'+(s&&s.introduced?esc(s.due):'—')+'</td><td class="actions"><button class="btn sm" data-action="edit-word" data-id="'+esc(c.id)+'">Edit</button></td></tr>'}).join('')
     :'<tr><td colspan="8" class="muted" style="text-align:center;padding:24px">No words match.</td></tr>';
 }
 function openForm(id){
@@ -1704,7 +1717,7 @@ function parseDelimited(text){
 const ALIASES={id:['id'],korean:['korean','word','ko','hangul','한국어','단어','kr','term'],hanja:['hanja','한자','chinese'],pos:['pos','partofspeech','part_of_speech','type','wordclass','품사'],
   meaning_en:['meaning_en','meaning','english','en','definition','translation','뜻','meaning_english','gloss'],example_ko:['example_ko','example','examplesentence','sentence','example_korean','예문','sentence_ko'],
   example_en:['example_en','exampletranslation','example_english','sentence_en','translation_example','examplemeaning'],notes:['notes','note','grammar','tips','memo','메모','comment','comments'],
-  related:['related','synonymsantonyms','synonyms','antonyms','relatedwords','synonyms_antonyms','related_words','synonym','antonym'],unit:['unit','lesson','chapter','book','과','source'],tags:['tags','tag','labels','category'],date_added:['date_added','date','added','dateadded'],romanization:['romanization','romaja','roman']};
+  related:['related','synonymsantonyms','synonyms','antonyms','relatedwords','synonyms_antonyms','related_words','synonym','antonym'],unit:['unit','lesson','chapter','book','과','source'],tags:['tags','tag','labels','category'],date_added:['date_added','date','added','dateadded'],level:['level','word_level','wordlevel','등급','nikl_level','nikllevel'],romanization:['romanization','romaja','roman']};
 function hdrKey(h){const n=String(h).trim().toLowerCase().replace(/[\s\-()\/.]+/g,'_').replace(/^_+|_+$/g,'');const n2=n.replace(/_/g,'');for(const [k,al] of Object.entries(ALIASES)){if(al.includes(n)||al.includes(n2))return k}return null}
 function rowsToCards(rows){
   if(!rows.length)return [];
@@ -1844,12 +1857,20 @@ function renderProgress(){
   });
   $('#chart').innerHTML=svg+'</svg>';
   renderStoryProgress();
+  renderLevelPanel(D);
   const tk=deck().filter(isTricky);
   $('#trickyPanel').innerHTML='<h2>Tricky words ('+tk.length+')</h2>'+(tk.length?'<div class="row">'+tk.map(c=>'<span class="tagchip chip-tricky" lang="ko" title="'+esc(c.meaning_en)+'">'+esc(c.korean)+'</span>').join('')+'</div>':'<p class="muted small">No tricky words right now — words you forget twice or more show up here until mastered.</p>');
   const ty=typoList();
   $('#typoPanel').innerHTML='<h2>Typing mistakes ('+ty.length+')</h2>'+(ty.length?'<div class="typo-list">'+ty.map(c=>{const e=typos[c.id];return '<div class="typo-row"><span class="tagchip chip-tricky" lang="ko">'+esc(c.korean)+'</span> <span>'+esc(c.meaning_en)+'</span><div class="small muted">Missed '+e.misses+' time'+(e.misses===1?'':'s')+(e.last?' · you typed: <span lang="ko">'+esc(e.last)+'</span>':'')+'</div></div>'}).join('')+'</div>':'<p class="muted small">No typing mistakes right now. Words you get wrong in the typing quiz show up here until you type them correctly twice in a row.</p>');
   const m=deck().filter(c=>statusOf(c)==='mastered');
   $('#masteredPanel').innerHTML='<h2>Mastered words ('+m.length+')</h2>'+(m.length?'<div class="row">'+m.map(c=>'<span class="tagchip st-mastered" lang="ko" title="'+esc(c.meaning_en)+'">'+esc(c.korean)+'</span>').join('')+'</div>':'<p class="muted small">No words mastered yet — a word is mastered when its review interval reaches 21 days. Keep practicing!</p>');
+}
+
+function levelCounts(D){const r={};LEVELS.forEach(l=>r[l]={total:0,mastered:0});let none=0;(D||deck()).forEach(c=>{const x=r[c.level];if(!x){none++;return}x.total++;if(statusOf(c)==='mastered')x.mastered++});return {by:r,none}}
+function renderLevelPanel(D){
+  const el=$('#levelPanel');if(!el)return;const k=levelCounts(D);
+  el.innerHTML='<h2>Word levels</h2>'+LEVELS.map(l=>{const x=k.by[l],p=x.total?Math.round(100*x.mastered/x.total):0;return '<div class="lv-row" data-level="'+l+'"><b lang="ko">'+l+'</b><div class="lv-bar" role="img" aria-label="'+l+': '+x.mastered+' of '+x.total+' mastered"><i style="width:'+p+'%"></i></div><span class="lv-num">'+x.mastered+' / '+x.total+' mastered</span></div>'}).join('')+
+    '<p class="small muted" style="margin:8px 0 0">'+k.none+' word'+(k.none===1?' has':'s have')+' no level. Levels come from the 국립국어원 learner vocabulary list (한국어 학습용 어휘 목록, 2003), and this panel is not an official proficiency level.</p>';
 }
 
 /* ============================ Stories (graded reading) ============================ */
@@ -2484,7 +2505,7 @@ document.addEventListener('click',e=>{
 $('#fmDelete').addEventListener('click',()=>deleteWord($('#fmId').value));
 $('#wordForm').addEventListener('submit',submitForm);
 $('#modalBg').addEventListener('mousedown',e=>{if(e.target.id==='modalBg')closeForm()});
-['fSearch','fUnit','fTag','fStatus'].forEach(id=>$('#'+id).addEventListener('input',renderWords));
+['fSearch','fUnit','fTag','fStatus','fLevel'].forEach(id=>$('#'+id).addEventListener('input',renderWords));
 $('#importFile').addEventListener('change',e=>{handleFile(e.target.files[0]);e.target.value=''});
 $('#restoreFile').addEventListener('change',e=>{handleFile(e.target.files[0]);e.target.value=''});
 $('#darkModeToggle').addEventListener('click',()=>{const dark=document.documentElement.getAttribute('data-theme')==='dark';settings.theme=dark?'light':'dark';save();applyTheme();if(tab==='settings')renderSettings()});
