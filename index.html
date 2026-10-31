@@ -1125,7 +1125,8 @@ const P=[
  {k:'-(으)ㄹ 테니까',shape:'-(으)ㄹ 테니까',types:[V],tail:' 테니까',f:w=>[E(w,'ㄹ')]},
  {k:'-도록',shape:'-도록',types:[V],vol:VOL,tail:'도록',f:w=>[w.stem]},
  {k:'-(으)니까',shape:'-(으)니까',types:ALL,f:w=>w.type===NO?N.니까(w):[E(w,'니까')]},
- {k:'-(으)ㄴ 적이 있다',shape:'-(으)ㄴ 적이 있어요',types:[V],tail:' 적이 있어요',alt:[' 적이 있다',' 적이 없어요'],f:w=>[E(w,'ㄴ')]}
+ {k:'-(으)ㄴ 적이 있다',shape:'-(으)ㄴ 적이 있어요',types:[V],tail:' 적이 있어요',alt:[' 적이 있다',' 적이 없어요'],f:w=>[E(w,'ㄴ')]},
+ {k:'-아/어지다',shape:'-아/어져요',types:[J],tail:'져요',alt:['지다','졌어요','집니다'],skip:new Set(['반갑다','고맙다','그렇다']),f:w=>[A(w)]}
 ];
 /* compose a trailing conjoining final (ᆸ) onto the previous syllable */
 function fix(s){return s.replace(/([\uAC00-\uD7A3])ᆸ/g,(m,c)=>setFin(c,T.ㅂ))}
@@ -1134,6 +1135,7 @@ function okFor(p,w){
   if(p.hon&&w.type===X&&!w.hon)return false;
   if(p.hon&&NOHON.has(w.base))return false;
   if(p.vol&&NONVOL.has(w.base))return false;
+  if(p.skip&&p.skip.has(w.base))return false;
   return true;
 }
 /* all accepted answers, first one is the model answer; null if the combo isn't covered */
