@@ -830,13 +830,15 @@ function speakBtn(text,sm){if(!text)return '';return '<button class="speak'+(sm?
 
 /* ============================ Session ============================ */
 const sess={queue:[],cur:null,flipped:false,dir:'ko2en',date:null,extraNew:0,total:0,done:0,built:false};
+/* unseen words in sheet order, with the Everyday unit (most common daily words) introduced first */
+function newCards(){const n=deck().filter(c=>statusOf(c)==='new');return n.filter(c=>c.unit==='Everyday').concat(n.filter(c=>c.unit!=='Everyday'))}
 function buildQueue(){
   const t=today();
   if(sess.date!==t){sess.extraNew=0}
   sess.date=t;
   const due=shuffle(deck().filter(c=>isDue(c,t))).sort((a,b)=>srs[a.id].due<srs[b.id].due?-1:srs[a.id].due>srs[b.id].due?1:0).map(c=>c.id);
   const allowed=Math.max(0,Number(settings.newPerDay)+sess.extraNew-dayLog(t).new);
-  const news=deck().filter(c=>statusOf(c)==='new').slice(0,allowed).map(c=>c.id);
+  const news=newCards().slice(0,allowed).map(c=>c.id);
   const q=[];let i=0,j=0;
   while(i<due.length||j<news.length){if(i<due.length)q.push(due[i++]);if(i<due.length)q.push(due[i++]);if(j<news.length)q.push(news[j++]);}
   sess.queue=q;sess.total=q.length;sess.done=0;sess.built=true;sess.cur=null;
@@ -886,7 +888,7 @@ function knowWord(){
   /* the freed slot goes to the next unseen word, if the daily limit allows */
   const allowed=Math.max(0,Number(settings.newPerDay)+sess.extraNew-L.new);
   const queuedNew=sess.queue.filter(q=>{const x=getCard(q);return x&&statusOf(x)==='new'});
-  if(queuedNew.length<allowed){const nx=deck().find(x=>statusOf(x)==='new'&&!sess.queue.includes(x.id));if(nx){sess.queue.push(nx.id);sess.total++}}
+  if(queuedNew.length<allowed){const nx=newCards().find(x=>!sess.queue.includes(x.id));if(nx){sess.queue.push(nx.id);sess.total++}}
   sess.done++;
   save();
   toast('Marked as known: '+c.korean);
